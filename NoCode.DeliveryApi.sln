@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kjac.NoCode.DeliveryApi", "src\Kjac.NoCode.DeliveryApi\Kjac.NoCode.DeliveryApi.csproj", "{6F6D90F8-BE97-4204-9D35-2017357B53D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kjac.NoCode.DeliveryApi.Site", "src\Kjac.NoCode.DeliveryApi.Site\Kjac.NoCode.DeliveryApi.Site.csproj", "{6766845F-8F12-4805-BDB1-3DCECEB2778B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F6D90F8-BE97-4204-9D35-2017357B53D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F6D90F8-BE97-4204-9D35-2017357B53D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F6D90F8-BE97-4204-9D35-2017357B53D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F6D90F8-BE97-4204-9D35-2017357B53D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6766845F-8F12-4805-BDB1-3DCECEB2778B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6766845F-8F12-4805-BDB1-3DCECEB2778B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6766845F-8F12-4805-BDB1-3DCECEB2778B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6766845F-8F12-4805-BDB1-3DCECEB2778B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

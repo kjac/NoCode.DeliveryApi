@@ -1,5 +1,11 @@
 {
     "id": "Kjac.NoCode.DeliveryApi",
-    "name": "Kjac.NoCode.DeliveryApi",
-    "allowPackageTelemetry": true
+    "name": "No-code Delivery API",
+    "allowPackageTelemetry": true,
+    "javascript": [
+        "~/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/overview.controller.js",
+        "~/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/filter.controller.js",
+        "~/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/sort.controller.js",
+        "~/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/nocodedeliveryapi.resource.js",
+    ]
 }

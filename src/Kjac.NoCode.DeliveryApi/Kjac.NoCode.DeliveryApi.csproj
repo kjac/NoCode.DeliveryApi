@@ -3,7 +3,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <StaticWebAssetBasePath>App_Plugins/Kjac.NoCode.DeliveryApi</StaticWebAssetBasePath>
+    <StaticWebAssetBasePath>App_Plugins/NoCodeDeliveryApi</StaticWebAssetBasePath>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -16,7 +16,8 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Umbraco.Cms.Web.Website" Version="13.0.0-rc3" />
-    <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="13.0.0-rc3" />
+    <PackageReference Include="Umbraco.Cms.Api.Delivery" Version="13.0.0-rc4" />
+    <PackageReference Include="Umbraco.Cms.Web.Website" Version="13.0.0-rc4" />
+    <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="13.0.0-rc4" />
   </ItemGroup>
 </Project>

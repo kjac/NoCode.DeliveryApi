@@ -1,4 +1,5 @@
-﻿using Kjac.NoCode.DeliveryApi.Repositories;
+﻿using Kjac.NoCode.DeliveryApi.Configuration;
+using Kjac.NoCode.DeliveryApi.Repositories;
 using Kjac.NoCode.DeliveryApi.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Umbraco.Cms.Core.Composing;
@@ -17,5 +18,7 @@ public sealed class Composer : IComposer
         builder.Services.AddSingleton<IFilterRepository, FilterRepository>();
         builder.Services.AddSingleton<ISortRepository, SortRepository>();
         builder.Services.AddSingleton<IModelAliasGenerator, ModelAliasGenerator>();
+
+        builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
     }
 }

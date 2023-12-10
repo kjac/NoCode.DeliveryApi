@@ -6,6 +6,8 @@ namespace Kjac.NoCode.DeliveryApi.DeliveryApi.Querying;
 
 public sealed class NoCodeSort : ISortHandler
 {
+    private static readonly char[] SortOperatorChars = new[] { ':' };
+
     private readonly ISortService _sortService;
 
     public NoCodeSort(ISortService sortService)
@@ -32,5 +34,5 @@ public sealed class NoCodeSort : ISortHandler
     }
 
     private static string[] Split(string query)
-        => query.Split(new[] { ':' });
+        => query.Split(SortOperatorChars, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 }

@@ -22,7 +22,7 @@ public partial class NoCodeFilter : IFilterHandler
             return false;
         }
 
-        var parts = query.Split(FilterOperatorChars);
+        var parts = query.Split(FilterOperatorChars, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         return parts.Length == 2 && _filterService.ExistsAsync(parts.First()).GetAwaiter().GetResult();
     }
 

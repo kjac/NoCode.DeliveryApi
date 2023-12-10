@@ -1,4 +1,4 @@
-﻿using Kjac.NoCode.DeliveryApi.Configuration;
+﻿using Kjac.NoCode.DeliveryApi.OpenApi;
 using Kjac.NoCode.DeliveryApi.Repositories;
 using Kjac.NoCode.DeliveryApi.Services;
 using Microsoft.Extensions.DependencyInjection;

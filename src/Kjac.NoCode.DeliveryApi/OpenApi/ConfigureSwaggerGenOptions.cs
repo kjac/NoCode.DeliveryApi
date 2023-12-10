@@ -1,9 +1,8 @@
-﻿using Kjac.NoCode.DeliveryApi.OpenApi;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Kjac.NoCode.DeliveryApi.Configuration;
+namespace Kjac.NoCode.DeliveryApi.OpenApi;
 
 public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
 {

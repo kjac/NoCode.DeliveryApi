@@ -1,6 +1,4 @@
-﻿using Umbraco.Cms.Core;
-
-namespace Kjac.NoCode.DeliveryApi.DeliveryApi.Indexing.PropertyTypeParsing;
+﻿namespace Kjac.NoCode.DeliveryApi.DeliveryApi.Indexing.PropertyTypeParsing;
 
 internal class MultiNodeTreePickerParser : PropertyTypeParserBase
 {

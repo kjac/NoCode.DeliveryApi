@@ -2,16 +2,16 @@
 
 namespace Kjac.NoCode.DeliveryApi.DeliveryApi.Indexing.PropertyTypeParsing;
 
-internal abstract class StringArrayParser : PropertyTypeParserBase
+internal abstract class StringArrayParser : JsonPropertyTypeParserBase
 {
-    private readonly IJsonSerializer _jsonSerializer;
-
     protected StringArrayParser(IJsonSerializer jsonSerializer)
-        => _jsonSerializer = jsonSerializer;
+        : base(jsonSerializer)
+    {
+    }
 
     public override object[]? ParseIndexFieldValue(object propertyValue)
         => propertyValue is string stringValue
-            ? ParseStringArrayValueAsFieldValue(stringValue, _jsonSerializer)
+            ? ParseStringArrayValueAsFieldValue(stringValue)
             : null;
 
 }

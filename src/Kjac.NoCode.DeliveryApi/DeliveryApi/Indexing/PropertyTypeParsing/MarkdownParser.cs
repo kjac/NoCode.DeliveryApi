@@ -2,7 +2,7 @@
 
 namespace Kjac.NoCode.DeliveryApi.DeliveryApi.Indexing.PropertyTypeParsing;
 
-internal class MarkdownParser : PropertyTypeParserBase
+internal partial class MarkdownParser : PropertyTypeParserBase
 {
     public override object[]? ParseIndexFieldValue(object propertyValue)
     {
@@ -10,7 +10,14 @@ internal class MarkdownParser : PropertyTypeParserBase
         {
             return null;
         }
-        var valueWithoutMarkdownChars = Regex.Replace(stringValue, @"[#=*_>.,0-9\-!\[\]\(\)`@\/:""]", " ");
-        return new object[] { Regex.Replace(valueWithoutMarkdownChars, @"\s+", " ") };
+
+        var valueWithoutMarkdownChars = MarkdownCleanupRegex().Replace(stringValue, " ");
+        return new object[] { WhitespaceCleanupRegex().Replace(valueWithoutMarkdownChars, " ") };
     }
+
+    [GeneratedRegex(@"[#=*_>.,0-9\-!\[\]\(\)`@\/:""]")]
+    private static partial Regex MarkdownCleanupRegex();
+
+    [GeneratedRegex(@"\s+")]
+    private static partial Regex WhitespaceCleanupRegex();
 }

@@ -1,7 +1,7 @@
 (function () {
     "use strict";
-console.log("Overview controller loaded")
-    function NoCodeDeliveryApiOverviewController($scope, umbRequestHelper, overlayService, notificationsService, editorService, noCodeDeliveryApiResource) {
+
+    function NoCodeDeliveryApiOverviewController($scope, $timeout, $routeParams, umbRequestHelper, overlayService, notificationsService, editorService, navigationService, noCodeDeliveryApiResource) {
         const vm = this;
 
         vm.addFilter = addFilter;
@@ -20,7 +20,12 @@ console.log("Overview controller loaded")
                 vm.loading = false;
             });
         }
-        
+
+        // set the tree root as active
+        $timeout(function () {
+            navigationService.syncTree({ tree: $routeParams.tree, path: [-1], activate: true });
+        });
+
         reload();
 
         // ####################### FILTERS #######################

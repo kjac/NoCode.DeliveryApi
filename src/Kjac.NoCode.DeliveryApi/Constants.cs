@@ -4,7 +4,7 @@ internal static class Constants
 {
     public const string TreeAlias = "noCodeDeliveryApi";
 
-    public const string TreeIcon = "icon-filter-arrows";
+    public const string TreeIcon = "no-code-delivery-api";
 
     public const string BackOfficeArea = "NoCodeDeliveryApi";
 }

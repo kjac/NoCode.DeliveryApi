@@ -10,7 +10,7 @@ public abstract class ModelBase : IIndexFieldModel
 
     public string Alias { get; set; } = string.Empty;
 
-    public string IndexFieldName { get; init; } = string.Empty;
+    public string IndexFieldName { get; set; } = string.Empty;
 
     public PrimitiveFieldType PrimitiveFieldType { get; init; }
 

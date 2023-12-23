@@ -27,10 +27,10 @@ internal abstract class ServiceBase<TModel> where TModel : ModelBase, new()
     public async Task<bool> ExistsAsync(string alias)
         => await _repository.GetAsync(alias) is not null;
     
-    protected async Task<bool> AddAsync(FieldType fieldType, PrimitiveFieldType primitiveFieldType, string name, Action<TModel> map)
+    protected async Task<bool> AddAsync(FieldType fieldType, PrimitiveFieldType primitiveFieldType, string name, string? indexFieldName, Action<TModel> map)
     {
-        var next = _fieldBufferService.GetField(fieldType);
-        if (next is null)
+        indexFieldName ??= _fieldBufferService.GetField(fieldType)?.IndexFieldName;
+        if (indexFieldName is null)
         {
             return false;
         }
@@ -47,7 +47,7 @@ internal abstract class ServiceBase<TModel> where TModel : ModelBase, new()
             Key = Guid.NewGuid(),
             Name = name,
             Alias = alias,
-            IndexFieldName = next.IndexFieldName,
+            IndexFieldName = indexFieldName,
             PrimitiveFieldType = primitiveFieldType
         };
         map(model);

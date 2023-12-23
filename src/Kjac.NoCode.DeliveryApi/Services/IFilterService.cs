@@ -10,7 +10,7 @@ public interface IFilterService
 
     Task<bool> ExistsAsync(string alias);
 
-    Task<bool> AddAsync(string name, string[] propertyAliases, FilterMatchType filterMatchType, PrimitiveFieldType primitiveFieldType);
+    Task<bool> AddAsync(string name, string[] propertyAliases, FilterMatchType filterMatchType, PrimitiveFieldType primitiveFieldType, string? indexFieldName = null);
 
     Task<bool> UpdateAsync(Guid key, string name, string[] propertyAliases);
 

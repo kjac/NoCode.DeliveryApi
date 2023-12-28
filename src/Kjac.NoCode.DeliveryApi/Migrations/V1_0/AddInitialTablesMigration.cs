@@ -13,13 +13,17 @@ internal class AddInitialTablesMigration : MigrationBase
 
     protected override void Migrate()
     {
-        if (TableExists(TableNames.FilterTable) == false)
+        if (TableExists(TableNames.FilterTable) is false)
         {
             Create.Table<FilterDto>().Do();
         }
-        if (TableExists(TableNames.SortTable) == false)
+        if (TableExists(TableNames.SortTable) is false)
         {
             Create.Table<SortDto>().Do();
+        }
+        if (TableExists(TableNames.ClientTable) is false)
+        {
+            Create.Table<ClientDto>().Do();
         }
     }
 }

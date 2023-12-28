@@ -2,6 +2,6 @@
 
 namespace Kjac.NoCode.DeliveryApi.Repositories;
 
-internal interface ISortRepository : IQueryRepositoryBase<SortModel>
+internal interface IClientRepository : IRepositoryBase<ClientModel>
 {
 }

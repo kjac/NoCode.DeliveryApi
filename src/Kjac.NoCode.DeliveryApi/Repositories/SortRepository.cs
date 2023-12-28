@@ -5,7 +5,7 @@ using Umbraco.Cms.Infrastructure.Scoping;
 
 namespace Kjac.NoCode.DeliveryApi.Repositories;
 
-internal class SortRepository : RepositoryBase<SortDto, SortModel>, ISortRepository
+internal class SortRepository : QueryRepositoryBase<SortDto, SortModel>, ISortRepository
 {
     public SortRepository(IScopeProvider scopeProvider, IRuntimeState runtimeState)
         : base(scopeProvider, runtimeState)

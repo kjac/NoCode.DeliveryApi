@@ -15,8 +15,8 @@ internal abstract class RepositoryBase<TDto, TModel> : IRepositoryBase<TModel>
     private readonly IRuntimeState _runtimeState;
 
     // cache
+    protected List<TModel> Cache { get; private set; } = new();
     private readonly SemaphoreSlim _cacheLock = new SemaphoreSlim(1, 1);
-    private List<TModel> _cache = new();
     private bool _cacheLoaded = false;
 
     protected RepositoryBase(IScopeProvider scopeProvider, IRuntimeState runtimeState)
@@ -32,19 +32,13 @@ internal abstract class RepositoryBase<TDto, TModel> : IRepositoryBase<TModel>
     public async Task<IEnumerable<TModel>> GetAllAsync()
     {
         await EnsureCache();
-        return _cache.ToArray();
-    }
-
-    public async Task<TModel?> GetAsync(string alias)
-    {
-        await EnsureCache();
-        return _cache.FirstOrDefault(model => model.Alias.InvariantEquals(alias));
+        return Cache.ToArray();
     }
     
     public async Task<TModel?> GetAsync(Guid key)
     {
         await EnsureCache();
-        return _cache.FirstOrDefault(model => model.Key == key);
+        return Cache.FirstOrDefault(model => model.Key == key);
     }
 
     public async Task<bool> CreateAsync(TModel model)
@@ -112,7 +106,7 @@ internal abstract class RepositoryBase<TDto, TModel> : IRepositoryBase<TModel>
     private TDto BuildDto(TModel model)
         => MapModelToDto(model, new TDto());
 
-    private async Task EnsureCache(bool forceReload = false)
+    protected async Task EnsureCache(bool forceReload = false)
     {
         bool IsLoaded() => forceReload is false && _cacheLoaded is true;
 
@@ -144,7 +138,7 @@ internal abstract class RepositoryBase<TDto, TModel> : IRepositoryBase<TModel>
         {
             using var scope = _scopeProvider.CreateScope();
             var dtos = await scope.Database.FetchAsync<TDto>();
-            _cache = dtos?.Select(ParseModel).ToList() ?? [];
+            Cache = dtos?.Select(ParseModel).ToList() ?? [];
         }
         catch
         {
@@ -152,7 +146,7 @@ internal abstract class RepositoryBase<TDto, TModel> : IRepositoryBase<TModel>
             // this is expected to happen as the tables haven't been created at this point.
             if (_runtimeState.Level < RuntimeLevel.Run)
             {
-                _cache = new List<TModel>();
+                Cache = new List<TModel>();
                 return;
             }
 

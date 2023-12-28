@@ -4,8 +4,11 @@
     "allowPackageTelemetry": true,
     "javascript": [
         "~/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/overview.controller.js",
+        "~/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/query.controller.js",
         "~/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/filter.controller.js",
         "~/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/sort.controller.js",
+        "~/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/client.controller.js",
+        "~/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/clients.controller.js",
         "~/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/nocodedeliveryapi.resource.js",
     ]
 }

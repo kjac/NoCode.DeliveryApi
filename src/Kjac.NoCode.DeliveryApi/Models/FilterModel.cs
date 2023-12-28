@@ -3,7 +3,7 @@ using Umbraco.Cms.Core.DeliveryApi;
 
 namespace Kjac.NoCode.DeliveryApi.Models;
 
-public sealed class FilterModel : ModelBase
+public sealed class FilterModel : QueryModelBase
 {
     public IEnumerable<string> PropertyAliases { get; set; } = Enumerable.Empty<string>();
 

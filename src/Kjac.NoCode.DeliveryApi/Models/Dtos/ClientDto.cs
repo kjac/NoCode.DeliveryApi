@@ -4,13 +4,13 @@ using Umbraco.Cms.Infrastructure.Persistence.DatabaseAnnotations;
 
 namespace Kjac.NoCode.DeliveryApi.Models.Dtos;
 
-[TableName(TableNames.SortTable)]
+[TableName(TableNames.ClientTable)]
 [PrimaryKey("id")]
 [ExplicitColumns]
-internal class SortDto : QueryDtoBase
+internal class ClientDto : DtoBase
 {
-    [Column(Name = "property")]
+    [Column(Name = "origin")]
     [NullSetting(NullSetting = NullSettings.NotNull)]
-    [Length(512)]
-    public string PropertyAlias { get; set; } = null!;
+    [Length(256)]
+    public string Origin { get; set; } = null!;
 }

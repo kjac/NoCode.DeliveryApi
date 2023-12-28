@@ -3,7 +3,7 @@ using Umbraco.Cms.Core.DeliveryApi;
 
 namespace Kjac.NoCode.DeliveryApi.Models;
 
-public sealed class SortModel : ModelBase
+public sealed class SortModel : QueryModelBase
 {
     public string PropertyAlias { get; set; } = string.Empty;
     

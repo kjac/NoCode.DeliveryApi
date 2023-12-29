@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+﻿using Kjac.NoCode.DeliveryApi.Models;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -17,17 +18,19 @@ internal class CorsPolicyService : ICorsPolicyService
         _logger = logger;
         _options = options.Value;
     }
-    
+
     public async Task ApplyClientOriginsAsync()
     {
-        var policy = _options.GetPolicy(Constants.CorsPolicyName);
+        CorsPolicy? policy = _options.GetPolicy(Constants.CorsPolicyName);
         if (policy is null)
         {
-            _logger.LogWarning("Could not find CORS policy: {CorsPolicyName} - automatic CORS handling is disabled for the Delivery API.", Constants.CorsPolicyName);
+            _logger.LogWarning(
+                "Could not find CORS policy: {CorsPolicyName} - automatic CORS handling is disabled for the Delivery API.",
+                Constants.CorsPolicyName);
             return;
         }
-        
-        var clients = await _clientService.GetAllAsync();
+
+        IEnumerable<ClientModel> clients = await _clientService.GetAllAsync();
         var origins = clients.Select(client => client.Origin).ToArray();
 
         policy.Origins.Clear();

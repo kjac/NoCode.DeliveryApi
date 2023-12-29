@@ -11,12 +11,22 @@ internal class FilterService : QueryServiceBase<FilterModel>, IFilterService
     {
     }
 
-    public async Task<bool> AddAsync(string name, string[] propertyAliases, FilterMatchType filterMatchType, PrimitiveFieldType primitiveFieldType, string? indexFieldName = null)
-        => await AddAsync(primitiveFieldType.FilterFieldType(filterMatchType), primitiveFieldType, name, indexFieldName, filter =>
-        {
-            filter.PropertyAliases = propertyAliases;
-            filter.FilterMatchType = filterMatchType;
-        });
+    public async Task<bool> AddAsync(
+        string name,
+        string[] propertyAliases,
+        FilterMatchType filterMatchType,
+        PrimitiveFieldType primitiveFieldType,
+        string? indexFieldName = null)
+        => await AddAsync(
+            primitiveFieldType.FilterFieldType(filterMatchType),
+            primitiveFieldType,
+            name,
+            indexFieldName,
+            filter =>
+            {
+                filter.PropertyAliases = propertyAliases;
+                filter.FilterMatchType = filterMatchType;
+            });
 
     public async Task<bool> UpdateAsync(Guid key, string name, string[] propertyAliases)
         => await UpdateAsync(key, name, filter => filter.PropertyAliases = propertyAliases);

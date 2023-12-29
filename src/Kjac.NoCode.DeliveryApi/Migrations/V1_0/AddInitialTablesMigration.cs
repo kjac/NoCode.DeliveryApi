@@ -17,10 +17,12 @@ internal class AddInitialTablesMigration : MigrationBase
         {
             Create.Table<FilterDto>().Do();
         }
+
         if (TableExists(TableNames.SortTable) is false)
         {
             Create.Table<SortDto>().Do();
         }
+
         if (TableExists(TableNames.ClientTable) is false)
         {
             Create.Table<ClientDto>().Do();

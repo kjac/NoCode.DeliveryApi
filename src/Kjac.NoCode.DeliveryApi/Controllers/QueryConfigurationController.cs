@@ -1,4 +1,5 @@
 ﻿using Kjac.NoCode.DeliveryApi.Deployment;
+using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Services;
 using Kjac.NoCode.DeliveryApi.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,10 @@ public sealed class QueryConfigurationController : UmbracoAuthorizedJsonControll
     private readonly ISortService _sortService;
     private readonly IDeployService _deployService;
 
-    public QueryConfigurationController(IFilterService filterService, ISortService sortService, IDeployService deployService)
+    public QueryConfigurationController(
+        IFilterService filterService,
+        ISortService sortService,
+        IDeployService deployService)
     {
         _filterService = filterService;
         _sortService = sortService;
@@ -24,9 +28,9 @@ public sealed class QueryConfigurationController : UmbracoAuthorizedJsonControll
     [HttpGet]
     public async Task<IActionResult> All()
     {
-        var filters = await _filterService.GetAllAsync();
-        var sorts = await _sortService.GetAllAsync();
-        
+        IEnumerable<FilterModel> filters = await _filterService.GetAllAsync();
+        IEnumerable<SortModel> sorts = await _sortService.GetAllAsync();
+
         return Ok(new OverviewViewModel
         {
             Filters = filters.Select(filter => new FilterViewModel
@@ -60,9 +64,9 @@ public sealed class QueryConfigurationController : UmbracoAuthorizedJsonControll
             requestModel.PropertyAliases,
             requestModel.FilterMatchType,
             requestModel.PrimitiveFieldType));
-    
+
     [HttpPut]
-    public async Task<IActionResult>  UpdateFilter(UpdateFilterRequestModel requestModel)
+    public async Task<IActionResult> UpdateFilter(UpdateFilterRequestModel requestModel)
         => await ExportOnChange(async () => await _filterService.UpdateAsync(
             requestModel.Key,
             requestModel.Name,

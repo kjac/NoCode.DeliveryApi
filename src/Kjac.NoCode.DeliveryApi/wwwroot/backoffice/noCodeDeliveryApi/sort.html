@@ -1,64 +1,68 @@
 <div ng-controller="NoCodeDeliveryApi.SortController as vm">
 
-    <form novalidate name="sortForm" val-form-manager>
+  <form name="sortForm" novalidate val-form-manager>
 
-        <umb-editor-view>
+    <umb-editor-view>
 
-            <umb-editor-header
-                    name="model.title"
-                    name-locked="true"
-                    hide-alias="true"
-                    hide-icon="true"
-                    hide-description="true">
-            </umb-editor-header>
+      <umb-editor-header
+        hide-alias="true"
+        hide-description="true"
+        hide-icon="true"
+        name="model.title"
+        name-locked="true">
+      </umb-editor-header>
 
-            <umb-editor-container>
+      <umb-editor-container>
 
-                <umb-box>
+        <umb-box>
 
-                    <umb-box-content>
+          <umb-box-content>
 
-                        <umb-control-group label="Name" description="Sorter names must be unique. They are used to auto-generate the sorter alias, which will be used for querying the Delivery API.">
-                            <input type="text" name="sortName" ng-model="vm.sort.name" umb-auto-focus required maxlength="40" ng-change="vm.validateSortName()" />
-                        </umb-control-group>
+            <umb-control-group description="Sorter names must be unique. They are used to auto-generate the sorter alias, which will be used for querying the Delivery API."
+                               label="Name">
+              <input maxlength="40" name="sortName" ng-change="vm.validateSortName()" ng-model="vm.sort.name" required type="text"
+                     umb-auto-focus/>
+            </umb-control-group>
 
-                        <umb-control-group label="Property alias" description="The alias of the content property whose value should be used for sorting.">
-                            <input type="text" ng-pattern="vm.propertyAliasPattern" ng-model="vm.sort.propertyAlias" required />
-                        </umb-control-group>
+            <umb-control-group description="The alias of the content property whose value should be used for sorting."
+                               label="Property alias">
+              <input ng-model="vm.sort.propertyAlias" ng-pattern="vm.propertyAliasPattern" required type="text"/>
+            </umb-control-group>
 
-                        <umb-control-group label="Field type" description="The field type determines how the sorting works. A Number field performs correct sorting on numeric values, while a Date field ensures correct sorting of date values. If the value is neither numeric nor a date, use a String field to perform alphanumeric sorting.">
-                            <select class="umb-dropdown" ng-model="vm.sort.primitiveFieldType" required ng-disabled="vm.sort.key">
-                                <option value="String">String</option>
-                                <option value="Number">Number</option>
-                                <option value="Date">Date</option>
-                            </select>
-                        </umb-control-group>
+            <umb-control-group description="The field type determines how the sorting works. A Number field performs correct sorting on numeric values, while a Date field ensures correct sorting of date values. If the value is neither numeric nor a date, use a String field to perform alphanumeric sorting."
+                               label="Field type">
+              <select class="umb-dropdown" ng-disabled="vm.sort.key" ng-model="vm.sort.primitiveFieldType" required>
+                <option value="String">String</option>
+                <option value="Number">Number</option>
+                <option value="Date">Date</option>
+              </select>
+            </umb-control-group>
 
-                    </umb-box-content>
-                </umb-box>
+          </umb-box-content>
+        </umb-box>
 
-            </umb-editor-container>
+      </umb-editor-container>
 
-            <umb-editor-footer>
-                <umb-editor-footer-content-right>
-                    <umb-button
-                            type="button"
-                            button-style="link"
-                            label-key="general_close"
-                            shortcut="esc"
-                            action="vm.close()">
-                    </umb-button>
-                    <umb-button
-                            type="button"
-                            button-style="success"
-                            label-key="general_submit"
-                            state="vm.saveButtonState"
-                            action="vm.save()">
-                    </umb-button>
-                </umb-editor-footer-content-right>
-            </umb-editor-footer>
-        </umb-editor-view>
+      <umb-editor-footer>
+        <umb-editor-footer-content-right>
+          <umb-button
+            action="vm.close()"
+            button-style="link"
+            label-key="general_close"
+            shortcut="esc"
+            type="button">
+          </umb-button>
+          <umb-button
+            action="vm.save()"
+            button-style="success"
+            label-key="general_submit"
+            state="vm.saveButtonState"
+            type="button">
+          </umb-button>
+        </umb-editor-footer-content-right>
+      </umb-editor-footer>
+    </umb-editor-view>
 
-    </form>
+  </form>
 
 </div>

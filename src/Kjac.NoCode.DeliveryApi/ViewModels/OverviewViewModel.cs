@@ -7,7 +7,7 @@ internal class OverviewViewModel
 {
     [DataMember(Name = "filters")]
     public required IEnumerable<FilterViewModel> Filters { get; init; }
-    
+
     [DataMember(Name = "sorts")]
     public required IEnumerable<SortViewModel> Sorts { get; init; }
 

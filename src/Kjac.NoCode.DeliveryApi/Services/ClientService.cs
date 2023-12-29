@@ -23,7 +23,7 @@ internal class ClientService : IClientService
 
     public async Task<bool> UpdateAsync(Guid key, string name, string origin)
     {
-        var model = await _repository.GetAsync(key);
+        ClientModel? model = await _repository.GetAsync(key);
         if (model is null)
         {
             return false;

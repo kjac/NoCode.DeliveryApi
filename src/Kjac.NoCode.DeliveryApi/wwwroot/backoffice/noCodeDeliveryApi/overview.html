@@ -1,24 +1,25 @@
-<div data-element="editor-no-code-delivery-api" ng-controller="NoCodeDeliveryApi.OverviewController as vm" class="clearfix">
+<div class="clearfix" data-element="editor-no-code-delivery-api"
+     ng-controller="NoCodeDeliveryApi.OverviewController as vm">
 
-    <umb-editor-view footer="false">
+  <umb-editor-view footer="false">
 
-        <umb-editor-header
-                name="'No-Code Delivery API'"
-                name-locked="true"
-                hide-icon="true"
-                hide-description="true"
-                hide-alias="true"
-                navigation="vm.page.navigation">
-        </umb-editor-header>
+    <umb-editor-header
+      hide-alias="true"
+      hide-description="true"
+      hide-icon="true"
+      name="'No-Code Delivery API'"
+      name-locked="true"
+      navigation="vm.page.navigation">
+    </umb-editor-header>
 
-        <umb-editor-container>
+    <umb-editor-container>
 
-            <umb-editor-sub-views
-                    sub-views="vm.page.navigation" model="vm.page">
-            </umb-editor-sub-views>
+      <umb-editor-sub-views
+        model="vm.page" sub-views="vm.page.navigation">
+      </umb-editor-sub-views>
 
-        </umb-editor-container>
+    </umb-editor-container>
 
-    </umb-editor-view>
+  </umb-editor-view>
 
 </div>

@@ -19,7 +19,8 @@ internal sealed class DeployService : IDeployService
 
     private const string FileName = "configuration.json";
 
-    public DeployService(IFilterService filterService, ISortService sortService, IHostEnvironment hostEnvironment, ILogger<DeployService> logger)
+    public DeployService(IFilterService filterService, ISortService sortService, IHostEnvironment hostEnvironment,
+        ILogger<DeployService> logger)
     {
         _filterService = filterService;
         _sortService = sortService;
@@ -29,9 +30,10 @@ internal sealed class DeployService : IDeployService
 
     public async Task ExportAsync()
     {
-        var filters = await _filterService.GetAllAsync();
-        var sorts = await _sortService.GetAllAsync();
-        var configDeployModel = new ConfigDeployModel {
+        IEnumerable<FilterModel> filters = await _filterService.GetAllAsync();
+        IEnumerable<SortModel> sorts = await _sortService.GetAllAsync();
+        var configDeployModel = new ConfigDeployModel
+        {
             Filters = filters.Select(FilterDeployModel.FromFilterModel).ToArray(),
             Sorters = sorts.Select(SortDeployModel.FromSortModel).ToArray()
         };
@@ -71,7 +73,7 @@ internal sealed class DeployService : IDeployService
         {
             return;
         }
-        
+
         await HandleImportAsync(
             (await _filterService.GetAllAsync()).ToArray(),
             configDeployModel.Filters,
@@ -103,42 +105,40 @@ internal sealed class DeployService : IDeployService
         );
     }
 
-    private async Task HandleImportAsync<T, TD>(T[] known, TD[] config, Func<Guid, Task> deleteAsync, Func<TD, Task> addAsync, Func<T, TD, Task> updateAsync)
+    private async Task HandleImportAsync<T, TD>(T[] known, TD[] config, Func<Guid, Task> deleteAsync,
+        Func<TD, Task> addAsync, Func<T, TD, Task> updateAsync)
         where T : ModelBase
         where TD : DeployModelBase
     {
         var knownByKey = known.ToDictionary(k => k.Key);
         var configByKey = config.ToDictionary(c => c.Key);
 
-        var obsolete = known.Where(k => configByKey.ContainsKey(k.Key) is false).ToArray();
-        var missing = config.Where(c => knownByKey.ContainsKey(c.Key) is false).ToArray();
-        var current = known.Except(obsolete).ToArray();
+        T[] obsolete = known.Where(k => configByKey.ContainsKey(k.Key) is false).ToArray();
+        TD[] missing = config.Where(c => knownByKey.ContainsKey(c.Key) is false).ToArray();
+        T[] current = known.Except(obsolete).ToArray();
 
-        foreach (var modelBase in obsolete)
+        foreach (T modelBase in obsolete)
         {
             await deleteAsync(modelBase.Key);
         }
 
-        foreach (var modelBase in missing)
+        foreach (TD modelBase in missing)
         {
             await addAsync(modelBase);
         }
 
-        foreach (var modelBase in current)
+        foreach (T modelBase in current)
         {
             await updateAsync(modelBase, configByKey[modelBase.Key]);
         }
     }
-    
+
     private string GetDirectoryPath()
-    {
-        return Path.Combine(_hostEnvironment.MapPathContentRoot(Umbraco.Cms.Core.Constants.SystemDirectories.Umbraco), DirectoryName);
-    }
+        => Path.Combine(_hostEnvironment.MapPathContentRoot(Umbraco.Cms.Core.Constants.SystemDirectories.Umbraco),
+            DirectoryName);
 
     private string GetFilePath()
-    {
-        return Path.Combine(GetDirectoryPath(), FileName);
-    }
+        => Path.Combine(GetDirectoryPath(), FileName);
 
     private JsonSerializerOptions SerializerOptions() => new()
     {
@@ -149,10 +149,10 @@ internal sealed class DeployService : IDeployService
 
     private class ConfigDeployModel
     {
-        public required FilterDeployModel[] Filters { get; set; }
+        public required FilterDeployModel[] Filters { get; init; }
 
-        // NOTE: it's called Sorters because that's how the UI mention Sorts :) 
-        public required SortDeployModel[] Sorters { get; set; }
+        // NOTE: it's called Sorters because that's how the UI mention Sorts :)
+        public required SortDeployModel[] Sorters { get; init; }
     }
 
     private class FilterDeployModel : DeployModelBase
@@ -171,7 +171,7 @@ internal sealed class DeployService : IDeployService
             IndexFieldName = filterModel.IndexFieldName
         };
     }
-    
+
     private class SortDeployModel : DeployModelBase
     {
         public required string PropertyAlias { get; init; }
@@ -191,7 +191,7 @@ internal sealed class DeployService : IDeployService
         public required Guid Key { get; init; }
 
         public required string Name { get; init; }
-        
+
         public required PrimitiveFieldType PrimitiveFieldType { get; init; }
 
         public required string IndexFieldName { get; init; }

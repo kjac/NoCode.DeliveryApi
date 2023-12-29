@@ -31,13 +31,13 @@ public sealed class NoCodeDeliveryApiTreeController : TreeController
 
     protected override ActionResult<TreeNode?> CreateRootNode(FormCollection queryStrings)
     {
-        var rootResult = base.CreateRootNode(queryStrings);
+        ActionResult<TreeNode?> rootResult = base.CreateRootNode(queryStrings);
         if (rootResult.Result is not null)
         {
             return rootResult;
         }
 
-        var root = rootResult.Value;
+        TreeNode? root = rootResult.Value;
 
         if (root is not null)
         {

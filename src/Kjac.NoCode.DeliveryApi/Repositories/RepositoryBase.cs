@@ -1,7 +1,9 @@
 ﻿using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Models.Dtos;
+using NPoco;
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Services;
+using Umbraco.Cms.Infrastructure.Persistence;
 using Umbraco.Cms.Infrastructure.Scoping;
 using Umbraco.Extensions;
 
@@ -28,13 +30,13 @@ internal abstract class RepositoryBase<TDto, TModel> : IRepositoryBase<TModel>
     protected abstract TModel ParseModel(TDto dto);
 
     protected abstract TDto MapModelToDto(TModel model, TDto dto);
-    
+
     public async Task<IEnumerable<TModel>> GetAllAsync()
     {
         await EnsureCache();
         return Cache.ToArray();
     }
-    
+
     public async Task<TModel?> GetAsync(Guid key)
     {
         await EnsureCache();
@@ -44,8 +46,8 @@ internal abstract class RepositoryBase<TDto, TModel> : IRepositoryBase<TModel>
     public async Task<bool> CreateAsync(TModel model)
     {
         bool result;
-        var dto = BuildDto(model);
-        using (var scope = _scopeProvider.CreateScope())
+        TDto dto = BuildDto(model);
+        using (IScope scope = _scopeProvider.CreateScope())
         {
             result = await scope.Database.InsertAsync(dto) is not null;
             scope.Complete();
@@ -58,9 +60,9 @@ internal abstract class RepositoryBase<TDto, TModel> : IRepositoryBase<TModel>
     public async Task<bool> UpdateAsync(TModel model)
     {
         bool result;
-        using (var scope = _scopeProvider.CreateScope())
+        using (IScope scope = _scopeProvider.CreateScope())
         {
-            var dto = await scope.Database.QueryAsync<TDto>(scope.Database.SqlContext.Sql()
+            TDto? dto = await scope.Database.QueryAsync<TDto>(scope.Database.SqlContext.Sql()
                 .Select<TDto>()
                 .From<TDto>()
                 .Where<TDto>(f => f.Key == model.Key)
@@ -83,9 +85,9 @@ internal abstract class RepositoryBase<TDto, TModel> : IRepositoryBase<TModel>
     public async Task<bool> DeleteAsync(Guid key)
     {
         bool result;
-        using (var scope = _scopeProvider.CreateScope())
+        using (IScope scope = _scopeProvider.CreateScope())
         {
-            var sql = scope.Database.SqlContext.Sql()
+            Sql<ISqlContext> sql = scope.Database.SqlContext.Sql()
                 .Delete<TDto>()
                 .Where<TDto>(x => x.Key == key);
 
@@ -131,13 +133,13 @@ internal abstract class RepositoryBase<TDto, TModel> : IRepositoryBase<TModel>
             _cacheLock.Release();
         }
     }
-    
+
     private async Task LoadFromRepository()
     {
         try
         {
-            using var scope = _scopeProvider.CreateScope();
-            var dtos = await scope.Database.FetchAsync<TDto>();
+            using IScope scope = _scopeProvider.CreateScope();
+            List<TDto>? dtos = await scope.Database.FetchAsync<TDto>();
             Cache = dtos?.Select(ParseModel).ToList() ?? [];
         }
         catch
@@ -152,5 +154,5 @@ internal abstract class RepositoryBase<TDto, TModel> : IRepositoryBase<TModel>
 
             throw;
         }
-    }  
+    }
 }

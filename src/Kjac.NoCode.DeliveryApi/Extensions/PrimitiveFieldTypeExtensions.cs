@@ -15,7 +15,7 @@ internal static class PrimitiveFieldTypeExtensions
             PrimitiveFieldType.Date => FieldType.Date,
             _ => throw new ArgumentOutOfRangeException(nameof(primitiveFieldType))
         };
-    
+
     public static FieldType SortFieldType(this PrimitiveFieldType primitiveFieldType)
         => primitiveFieldType switch
         {

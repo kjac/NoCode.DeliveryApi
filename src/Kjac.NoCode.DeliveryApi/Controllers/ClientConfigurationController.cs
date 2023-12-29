@@ -1,4 +1,5 @@
-﻿using Kjac.NoCode.DeliveryApi.Services;
+﻿using Kjac.NoCode.DeliveryApi.Models;
+using Kjac.NoCode.DeliveryApi.Services;
 using Kjac.NoCode.DeliveryApi.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Web.BackOffice.Controllers;
@@ -21,7 +22,7 @@ public sealed class ClientConfigurationController : UmbracoAuthorizedJsonControl
     [HttpGet]
     public async Task<IActionResult> All()
     {
-        var clients = await _clientService.GetAllAsync();
+        IEnumerable<ClientModel> clients = await _clientService.GetAllAsync();
         return Ok(clients.Select(client => new ClientViewModel
         {
             Key = client.Key,

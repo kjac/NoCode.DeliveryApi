@@ -7,21 +7,17 @@ internal class FieldBufferService : IFieldBufferService
 {
     private readonly FieldType[] _allFieldTypes = new[]
     {
-        FieldType.StringRaw,
-        FieldType.StringAnalyzed,
-        FieldType.StringSortable,
-        FieldType.Number,
-        FieldType.Date
+        FieldType.StringRaw, FieldType.StringAnalyzed, FieldType.StringSortable, FieldType.Number, FieldType.Date
     };
-        
+
     private readonly List<BufferIndexFieldModel> _buffer;
 
     public FieldBufferService()
         => _buffer = _allFieldTypes.SelectMany(fieldType => CreateFields(fieldType, 10)).ToList();
-        
+
     public IIndexFieldModel? GetField(FieldType fieldType)
     {
-        var next = _buffer.FirstOrDefault(f => f.IndexFieldType == fieldType);
+        BufferIndexFieldModel? next = _buffer.FirstOrDefault(f => f.IndexFieldType == fieldType);
         if (next is null)
         {
             return null;
@@ -34,7 +30,7 @@ internal class FieldBufferService : IFieldBufferService
     public IEnumerable<IIndexFieldModel> AvailableFields() => _buffer;
 
     public bool IsDepleted() => _allFieldTypes.Any(IsDepleted);
-        
+
     private static BufferIndexFieldModel[] CreateFields(FieldType fieldType, int count)
         => Enumerable.Range(0, count).Select(_ => CreateField(fieldType)).ToArray();
 

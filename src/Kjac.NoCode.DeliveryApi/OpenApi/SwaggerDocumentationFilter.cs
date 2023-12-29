@@ -13,7 +13,7 @@ namespace Kjac.NoCode.DeliveryApi.OpenApi;
 public class SwaggerDocumentationFilter : IParameterFilter
 {
     private const string QueryParamsDocsUrl = "https://docs.umbraco.com/umbraco-cms/reference/content-delivery-api#query-parameters";
-    
+
     private readonly IFilterService _filterService;
     private readonly ISortService _sortService;
 
@@ -29,7 +29,7 @@ public class SwaggerDocumentationFilter : IParameterFilter
         {
             return;
         }
-        
+
         switch (parameter.Name)
         {
             case "filter":
@@ -43,8 +43,8 @@ public class SwaggerDocumentationFilter : IParameterFilter
 
     private void AddFilterDocumentation(OpenApiParameter parameter)
     {
-        var filters = _filterService.GetAllAsync().GetAwaiter().GetResult();
-        foreach (var filter in filters)
+        IEnumerable<FilterModel> filters = _filterService.GetAllAsync().GetAwaiter().GetResult();
+        foreach (FilterModel filter in filters)
         {
             parameter.Examples[$"No-Code: {filter.Name}"] = new OpenApiExample
             {
@@ -99,8 +99,8 @@ public class SwaggerDocumentationFilter : IParameterFilter
 
     private void AddSortDocumentation(OpenApiParameter parameter)
     {
-        var sorts = _sortService.GetAllAsync().GetAwaiter().GetResult();
-        foreach (var sort in sorts)
+        IEnumerable<SortModel> sorts = _sortService.GetAllAsync().GetAwaiter().GetResult();
+        foreach (SortModel sort in sorts)
         {
             parameter.Examples[$"No-Code: {sort.Name} (ascending)"] = new OpenApiExample
             {

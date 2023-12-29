@@ -26,8 +26,13 @@ internal abstract class QueryServiceBase<TModel> where TModel : QueryModelBase, 
 
     public async Task<bool> ExistsAsync(string alias)
         => await _repository.GetAsync(alias) is not null;
-    
-    protected async Task<bool> AddAsync(FieldType fieldType, PrimitiveFieldType primitiveFieldType, string name, string? indexFieldName, Action<TModel> map)
+
+    protected async Task<bool> AddAsync(
+        FieldType fieldType,
+        PrimitiveFieldType primitiveFieldType,
+        string name,
+        string? indexFieldName,
+        Action<TModel> map)
     {
         indexFieldName ??= _fieldBufferService.GetField(fieldType)?.IndexFieldName;
         if (indexFieldName is null)
@@ -57,7 +62,7 @@ internal abstract class QueryServiceBase<TModel> where TModel : QueryModelBase, 
 
     protected async Task<bool> UpdateAsync(Guid key, string name, Action<TModel> map)
     {
-        var model = await _repository.GetAsync(key);
+        TModel? model = await _repository.GetAsync(key);
         if (model is null)
         {
             return false;

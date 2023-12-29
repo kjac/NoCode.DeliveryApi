@@ -48,5 +48,5 @@ public sealed class Composer : IComposer
         public DeliveryApiCorsPipelineFilter()
             : base(nameof(DeliveryApiCorsPipelineFilter)) =>
             PostRouting = app => app.UseCors(Constants.CorsPolicyName);
-    }    
+    }
 }

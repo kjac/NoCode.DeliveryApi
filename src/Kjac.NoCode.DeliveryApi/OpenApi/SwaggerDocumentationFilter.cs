@@ -55,6 +55,24 @@ public class SwaggerDocumentationFilter : IParameterFilter
                 }
             };
         }
+
+        parameter.Examples["No-Code: Is Not"] = new OpenApiExample
+        {
+            Description = "This filter ensures that a specific content item (identified by its key) is excluded from the query result.",
+            Value = new OpenApiArray
+            {
+                new OpenApiString($"nocIsNot:content-key")
+            }
+        };
+
+        parameter.Examples["No-Code: Level"] = new OpenApiExample
+        {
+            Description = $"This filter allows for querying the content level in the content tree.\n\nUse whole numbers (integers) only.\n\nMultiple values can be supplied, causing the filter to perform a logical OR between these values. Use a comma to separate values, e.g. `nocLevel:2,3,4`.{ReadMoreDescription()}",
+            Value = new OpenApiArray
+            {
+                new OpenApiString($"nocLevel:2")
+            }
+        };
     }
 
     private string FilterDescription(FilterModel filterModel)
@@ -82,10 +100,12 @@ public class SwaggerDocumentationFilter : IParameterFilter
             description.Append($"\n\nMultiple values can be supplied, causing the filter to perform a logical OR between these values. Use a comma to separate values, e.g. `{filterModel.Alias}:value1,value2`.");
         }
 
-        description.Append($"\n\nRead more about filtering and the filter syntax in [the Umbraco documentation]({QueryParamsDocsUrl})");
+        description.Append(ReadMoreDescription());
 
         return description.ToString();
     }
+
+    private static string ReadMoreDescription() => $"\n\nRead more about filtering and the filter syntax in [the Umbraco documentation]({QueryParamsDocsUrl})";
 
     private string FilterValue(FilterModel filterModel)
         => filterModel.IndexFieldType switch
@@ -136,6 +156,8 @@ public class SwaggerDocumentationFilter : IParameterFilter
         );
 
         description.Append(" Use `asc` or `desc` to sort ascending or descending, respectively.");
+
+        description.Append($"\n\nThe sorting is performed on the content property `{sortModel.PropertyAlias}`");
 
         description.Append($"\n\nRead more about sorting in [the Umbraco documentation]({QueryParamsDocsUrl})");
 

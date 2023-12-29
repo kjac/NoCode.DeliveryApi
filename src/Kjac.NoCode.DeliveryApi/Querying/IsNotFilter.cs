@@ -13,15 +13,12 @@ public sealed class IsNotFilter : IFilterHandler
     {
         var fieldValue = filter[FilterSpecifier.Length..];
 
-        // there might be several values for the filter
-        var values = fieldValue.Split(',');
-
         return new FilterOption
         {
-            // NOTE: this field is part of the core indexing, so we'll reuse it here. we really should add our own
-            //       field to the index so we're not dependent on the core indexing, but this works for now.
+            // NOTE: this field is part of the core indexing, so we'll reuse it here
             FieldName = "itemId",
-            Values = values,
+            // NOTE: it does not make any sense to have multiple values here, as it would end up returning everything
+            Values = new [] { fieldValue },
             Operator = FilterOperation.IsNot
         };
     }

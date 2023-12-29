@@ -1,15 +1,17 @@
 ﻿using System.Text.RegularExpressions;
 using Kjac.NoCode.DeliveryApi.Indexing;
-using Umbraco.Cms.Api.Delivery.Querying.Filters;
+using Umbraco.Cms.Core.DeliveryApi;
 
 namespace Kjac.NoCode.DeliveryApi.Querying;
 
-public partial class LevelFilter : ContainsFilterBase
+public partial class LevelFilter : FilterBase, IFilterHandler
 {
-    protected override string FieldName => LevelIndexer.FieldName;
+    public bool CanHandle(string query)
+        => LevelParserRegex().IsMatch(query);
 
-    protected override Regex QueryParserRegex => CreateLevelRegex();
+    public FilterOption BuildFilterOption(string filter)
+        => ParseFilterOption(filter, LevelParserRegex(), _ => LevelIndexer.FieldName);
 
     [GeneratedRegex("nocLevel(?<operator>[><:]{1,2})(?<value>.*)", RegexOptions.IgnoreCase)]
-    private static partial Regex CreateLevelRegex();
+    private static partial Regex LevelParserRegex();
 }

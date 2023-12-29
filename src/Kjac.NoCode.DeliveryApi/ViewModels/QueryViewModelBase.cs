@@ -3,15 +3,8 @@ using Kjac.NoCode.DeliveryApi.Models;
 
 namespace Kjac.NoCode.DeliveryApi.ViewModels;
 
-[DataContract]
-public abstract class ItemViewModelBase
+public abstract class QueryViewModelBase : ViewModelBase
 {
-    [DataMember(Name = "key")]
-    public required Guid Key { get; init; }
-
-    [DataMember(Name = "name")]
-    public required string Name { get; init; }
-
     [DataMember(Name = "alias")]
     public required string Alias { get; init; }
 

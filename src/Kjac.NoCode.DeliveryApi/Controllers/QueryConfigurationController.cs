@@ -7,24 +7,24 @@ using Umbraco.Cms.Web.Common.Attributes;
 namespace Kjac.NoCode.DeliveryApi.Controllers;
 
 [PluginController(Constants.BackOfficeArea)]
-public sealed class ConfigurationController : UmbracoAuthorizedJsonController
+public sealed class QueryConfigurationController : UmbracoAuthorizedJsonController
 {
     private readonly IFilterService _filterService;
     private readonly ISortService _sortService;
 
-    public ConfigurationController(IFilterService filterService, ISortService sortService)
+    public QueryConfigurationController(IFilterService filterService, ISortService sortService)
     {
         _filterService = filterService;
         _sortService = sortService;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> All()
     {
         var filters = await _filterService.GetAllAsync();
         var sorts = await _sortService.GetAllAsync();
         
-        return Ok(new AllItemsViewModel
+        return Ok(new OverviewViewModel
         {
             Filters = filters.Select(filter => new FilterViewModel
             {

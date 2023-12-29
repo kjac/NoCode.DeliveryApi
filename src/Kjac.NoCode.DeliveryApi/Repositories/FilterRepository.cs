@@ -5,7 +5,7 @@ using Umbraco.Cms.Infrastructure.Scoping;
 
 namespace Kjac.NoCode.DeliveryApi.Repositories;
 
-internal class FilterRepository : RepositoryBase<FilterDto, FilterModel>, IFilterRepository
+internal class FilterRepository : QueryRepositoryBase<FilterDto, FilterModel>, IFilterRepository
 {
     public FilterRepository(IScopeProvider scopeProvider, IRuntimeState runtimeState)
         : base(scopeProvider, runtimeState)

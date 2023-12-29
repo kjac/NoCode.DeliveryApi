@@ -5,7 +5,7 @@
         const vm = this;
 
         vm.sort = $scope.model.sort;
-        vm.propertyAliasPattern = noCodeDeliveryApiResource.propertyAliasPattern();
+        vm.propertyAliasPattern = noCodeDeliveryApiResource.query.propertyAliasPattern();
 
         vm.save = save;
         vm.close = close;
@@ -15,6 +15,7 @@
             if ($scope.model && $scope.model.submit && formHelper.submitForm({scope: $scope})) {
                 if(vm.sort.key){
                     noCodeDeliveryApiResource
+                        .query
                         .updateSort(vm.sort)
                         .then(data => {
                             $scope.model.submit();
@@ -22,6 +23,7 @@
                 }
                 else {
                     noCodeDeliveryApiResource
+                        .query
                         .addSort(vm.sort)
                         .then(data => {
                             $scope.model.submit();

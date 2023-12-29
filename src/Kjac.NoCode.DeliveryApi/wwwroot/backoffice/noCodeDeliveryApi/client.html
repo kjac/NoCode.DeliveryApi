@@ -1,0 +1,56 @@
+<div ng-controller="NoCodeDeliveryApi.ClientController as vm">
+
+    <form novalidate name="clientForm" val-form-manager>
+
+        <umb-editor-view>
+
+            <umb-editor-header
+                    name="model.title"
+                    name-locked="true"
+                    hide-alias="true"
+                    hide-icon="true"
+                    hide-description="true">
+            </umb-editor-header>
+
+            <umb-editor-container>
+
+                <umb-box>
+
+                    <umb-box-content>
+
+                        <umb-control-group label="Name" description="The client pretty-name. This is only used for identification purposes.">
+                            <input type="text" name="clientName" ng-model="vm.client.name" umb-auto-focus required maxlength="40" />
+                        </umb-control-group>
+
+                        <umb-control-group label="Origin" description="The origin of the client. This will be used to apply CORS policies. Must be a well-formed URL including the HTTP scheme, e.g. https://mydomain.com or http://localhost:3000.">
+                            <input type="url" name="clientOrigin" ng-model="vm.client.origin" required maxlength="200" />
+                        </umb-control-group>
+
+                    </umb-box-content>
+                </umb-box>
+
+            </umb-editor-container>
+
+            <umb-editor-footer>
+                <umb-editor-footer-content-right>
+                    <umb-button
+                            type="button"
+                            button-style="link"
+                            label-key="general_close"
+                            shortcut="esc"
+                            action="vm.close()">
+                    </umb-button>
+                    <umb-button
+                            type="button"
+                            button-style="success"
+                            label-key="general_submit"
+                            state="vm.saveButtonState"
+                            action="vm.save()">
+                    </umb-button>
+                </umb-editor-footer-content-right>
+            </umb-editor-footer>
+        </umb-editor-view>
+
+    </form>
+
+</div>

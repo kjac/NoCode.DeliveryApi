@@ -1,130 +1,21 @@
-<div data-element="editor-dynamic-deliver-api" ng-controller="NoCodeDeliveryApi.OverviewController as vm" class="clearfix">
-    <umb-load-indicator ng-if="vm.loading"></umb-load-indicator>
+<div data-element="editor-no-code-delivery-api" ng-controller="NoCodeDeliveryApi.OverviewController as vm" class="clearfix">
 
-    <umb-editor-view footer="false" ng-if="!vm.loading">
+    <umb-editor-view footer="false">
 
-        <umb-editor-header name="'No-Code Delivery API'"
-                           name-locked="true"
-                           hide-icon="true"
-                           hide-description="true"
-                           hide-alias="true">
+        <umb-editor-header
+                name="'No-Code Delivery API'"
+                name-locked="true"
+                hide-icon="true"
+                hide-description="true"
+                hide-alias="true"
+                navigation="vm.page.navigation">
         </umb-editor-header>
 
         <umb-editor-container>
 
-            <umb-editor-sub-header>
-
-                <umb-editor-sub-header-content-left>
-                    <h4>Filters</h4>
-                </umb-editor-sub-header-content-left>
-
-            </umb-editor-sub-header>
-
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Alias</th>
-                    <th>Property aliases</th>
-                    <th>Match type</th>
-                    <th>Field type</th>
-                    <th>Index name</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="filter in vm.filters track by filter.key" ng-click="vm.editFilter(filter)" class="cursor-pointer">
-                    <td>
-                        <umb-icon icon="icon-filter" class="language-icon"></umb-icon>
-                        <span>{{ filter.name }}</span>
-                    </td>
-                    <td class="muted">
-                        {{ filter.alias }}
-                    </td>
-                    <td>
-                        {{ filter.propertyAliases.join(', ') }}
-                    </td>
-                    <td>
-                        {{ filter.filterMatchType }}
-                    </td>
-                    <td>
-                        {{ filter.primitiveFieldType }}
-                    </td>
-                    <td class="muted">
-                        {{ filter.fieldName }}
-                    </td>
-                    <td style="text-align: right;">
-                        <umb-button type="button"
-                                    action="vm.deleteFilter(filter, $event)"
-                                    button-style="danger"
-                                    size="xxs"
-                                    label="Delete">
-                        </umb-button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-            <umb-button type="button"
-                        action="vm.addFilter()"
-                        button-style="outline"
-                        label="Add filter">
-            </umb-button>
-
-            <umb-editor-sub-header class="mt3">
-
-                <umb-editor-sub-header-content-left>
-                    <h4>Sorters</h4>
-                </umb-editor-sub-header-content-left>
-
-            </umb-editor-sub-header>
-
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Alias</th>
-                    <th>Property alias</th>
-                    <th>Field type</th>
-                    <th>Index name</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="sort in vm.sorts track by sort.key" ng-click="vm.editSort(sort)" class="cursor-pointer">
-                    <td>
-                        <umb-icon icon="icon-ordered-list" class="language-icon"></umb-icon>
-                        <span>{{ sort.name }}</span>
-                    </td>
-                    <td class="muted">
-                        {{ sort.alias }}
-                    </td>
-                    <td>
-                        {{ sort.propertyAlias }}
-                    </td>
-                    <td>
-                        {{ sort.primitiveFieldType }}
-                    </td>
-                    <td class="muted">
-                        {{ sort.fieldName }}
-                    </td>
-                    <td style="text-align: right;">
-                        <umb-button type="button"
-                                    action="vm.deleteSort(sort, $event)"
-                                    button-style="danger"
-                                    size="xxs"
-                                    label="Delete">
-                        </umb-button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-            <umb-button type="button"
-                        action="vm.addSort()"
-                        button-style="outline"
-                        label="Add sorter">
-            </umb-button>
+            <umb-editor-sub-views
+                    sub-views="vm.page.navigation" model="vm.page">
+            </umb-editor-sub-views>
 
         </umb-editor-container>
 

@@ -4,7 +4,7 @@ using Kjac.NoCode.DeliveryApi.Repositories;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
-internal class FilterService : ServiceBase<FilterModel>, IFilterService
+internal class FilterService : QueryServiceBase<FilterModel>, IFilterService
 {
     public FilterService(IFilterRepository repository, IFieldBufferService fieldBufferService, IModelAliasGenerator modelAliasGenerator)
         : base(repository, fieldBufferService, modelAliasGenerator)

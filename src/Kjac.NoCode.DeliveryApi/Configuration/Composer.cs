@@ -1,4 +1,5 @@
-﻿using Kjac.NoCode.DeliveryApi.Handlers;
+﻿using Kjac.NoCode.DeliveryApi.Deployment;
+using Kjac.NoCode.DeliveryApi.Handlers;
 using Kjac.NoCode.DeliveryApi.OpenApi;
 using Kjac.NoCode.DeliveryApi.Repositories;
 using Kjac.NoCode.DeliveryApi.Services;
@@ -20,6 +21,7 @@ public sealed class Composer : IComposer
         builder.Services.AddSingleton<IFieldBufferService, FieldBufferService>();
         builder.Services.AddSingleton<IClientService, ClientService>();
         builder.Services.AddSingleton<ICorsPolicyService, CorsPolicyService>();
+        builder.Services.AddSingleton<IDeployService, DeployService>();
         builder.Services.AddSingleton<IModelAliasGenerator, ModelAliasGenerator>();
         builder.Services.AddSingleton<IFilterRepository, FilterRepository>();
         builder.Services.AddSingleton<ISortRepository, SortRepository>();
@@ -37,6 +39,7 @@ public sealed class Composer : IComposer
         );
         builder.Services.Configure<UmbracoPipelineOptions>(options => options.AddFilter(new DeliveryApiCorsPipelineFilter()));
 
+        builder.AddNotificationAsyncHandler<UmbracoApplicationStartingNotification, StartingNotificationHandler>();
         builder.AddNotificationAsyncHandler<UmbracoApplicationStartedNotification, StartedNotificationHandler>();
     }
 

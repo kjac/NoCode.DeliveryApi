@@ -1,4 +1,5 @@
-﻿using Kjac.NoCode.DeliveryApi.Services;
+﻿using Kjac.NoCode.DeliveryApi.Deployment;
+using Kjac.NoCode.DeliveryApi.Services;
 using Kjac.NoCode.DeliveryApi.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Web.BackOffice.Controllers;
@@ -11,11 +12,13 @@ public sealed class QueryConfigurationController : UmbracoAuthorizedJsonControll
 {
     private readonly IFilterService _filterService;
     private readonly ISortService _sortService;
+    private readonly IDeployService _deployService;
 
-    public QueryConfigurationController(IFilterService filterService, ISortService sortService)
+    public QueryConfigurationController(IFilterService filterService, ISortService sortService, IDeployService deployService)
     {
         _filterService = filterService;
         _sortService = sortService;
+        _deployService = deployService;
     }
 
     [HttpGet]
@@ -52,43 +55,50 @@ public sealed class QueryConfigurationController : UmbracoAuthorizedJsonControll
 
     [HttpPost]
     public async Task<IActionResult> AddFilter(AddFilterRequestModel requestModel)
-    {
-        var result = await _filterService.AddAsync(requestModel.Name, requestModel.PropertyAliases, requestModel.FilterMatchType, requestModel.PrimitiveFieldType);
-        return result ? Ok() : BadRequest();
-    }
+        => await ExportOnChange(async () => await _filterService.AddAsync(
+            requestModel.Name,
+            requestModel.PropertyAliases,
+            requestModel.FilterMatchType,
+            requestModel.PrimitiveFieldType));
     
     [HttpPut]
     public async Task<IActionResult>  UpdateFilter(UpdateFilterRequestModel requestModel)
-    {
-        var result = await _filterService.UpdateAsync(requestModel.Key, requestModel.Name, requestModel.PropertyAliases);
-        return result ? Ok() : BadRequest();
-    }
+        => await ExportOnChange(async () => await _filterService.UpdateAsync(
+            requestModel.Key,
+            requestModel.Name,
+            requestModel.PropertyAliases));
 
     [HttpPost]
     public async Task<IActionResult> AddSort(AddSortRequestModel requestModel)
-    {
-        var result = await _sortService.AddAsync(requestModel.Name, requestModel.PropertyAlias, requestModel.PrimitiveFieldType);
-        return result ? Ok() : BadRequest();
-    }
-    
+        => await ExportOnChange(async () => await _sortService.AddAsync(
+            requestModel.Name,
+            requestModel.PropertyAlias,
+            requestModel.PrimitiveFieldType));
+
     [HttpPut]
     public async Task<IActionResult> UpdateSort(UpdateSortRequestModel requestModel)
-    {
-        var result = await _sortService.UpdateAsync(requestModel.Key, requestModel.Name, requestModel.PropertyAlias);
-        return result ? Ok() : BadRequest();
-    }
+        => await ExportOnChange(async () => await _sortService.UpdateAsync(
+            requestModel.Key,
+            requestModel.Name,
+            requestModel.PropertyAlias));
 
     [HttpDelete]
     public async Task<IActionResult> DeleteFilter(Guid key)
-    {
-        var result = await _filterService.DeleteAsync(key);
-        return result ? Ok() : BadRequest();
-    }
+        => await ExportOnChange(async () => await _filterService.DeleteAsync(key));
 
     [HttpDelete]
     public async Task<IActionResult> DeleteSort(Guid key)
+        => await ExportOnChange(async () => await _sortService.DeleteAsync(key));
+
+    // NOTE: this must be moved to an event handler eventually (to support load balancing), so we'll just handle it quick and dirty for now
+    private async Task<IActionResult> ExportOnChange(Func<Task<bool>> action)
     {
-        var result = await _sortService.DeleteAsync(key);
+        var result = await action();
+        if (result)
+        {
+            await _deployService.ExportAsync();
+        }
+
         return result ? Ok() : BadRequest();
     }
 }

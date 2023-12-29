@@ -32,28 +32,25 @@ public sealed class ClientConfigurationController : UmbracoAuthorizedJsonControl
 
     [HttpPost]
     public async Task<IActionResult> Add(AddClientRequestModel requestModel)
-    {
-        var result = await _clientService.AddAsync(requestModel.Name, requestModel.Origin);
-        return await ApplyCorsPoliciesOnSuccess(result);
-    }
-    
+        => await ApplyCorsPoliciesOnChange(async () => await _clientService.AddAsync(
+            requestModel.Name,
+            requestModel.Origin));
+
     [HttpPut]
     public async Task<IActionResult> Update(UpdateClientRequestModel requestModel)
-    {
-        var result = await _clientService.UpdateAsync(requestModel.Key, requestModel.Name, requestModel.Origin);
-        return await ApplyCorsPoliciesOnSuccess(result);
-    }
+        => await ApplyCorsPoliciesOnChange(async () => await _clientService.UpdateAsync(
+            requestModel.Key,
+            requestModel.Name,
+            requestModel.Origin));
 
     [HttpDelete]
     public async Task<IActionResult> Delete(Guid key)
-    {
-        var result = await _clientService.DeleteAsync(key);
-        return await ApplyCorsPoliciesOnSuccess(result);
-    }
+        => await ApplyCorsPoliciesOnChange(async () => await _clientService.DeleteAsync(key));
 
     // NOTE: this must be moved to an event handler eventually (to support load balancing), so we'll just handle it quick and dirty for now
-    private async Task<IActionResult> ApplyCorsPoliciesOnSuccess(bool result)
+    private async Task<IActionResult> ApplyCorsPoliciesOnChange(Func<Task<bool>> action)
     {
+        var result = await action();
         if (result)
         {
             await _corsPolicyService.ApplyClientOriginsAsync();

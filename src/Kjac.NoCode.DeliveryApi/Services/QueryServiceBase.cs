@@ -5,13 +5,13 @@ using Umbraco.Extensions;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
-internal abstract class ServiceBase<TModel> where TModel : ModelBase, new()
+internal abstract class QueryServiceBase<TModel> where TModel : QueryModelBase, new()
 {
-    private readonly IRepositoryBase<TModel> _repository;
+    private readonly IQueryRepositoryBase<TModel> _repository;
     private readonly IFieldBufferService _fieldBufferService;
     private readonly IModelAliasGenerator _modelAliasGenerator;
 
-    protected ServiceBase(IRepositoryBase<TModel> repository, IFieldBufferService fieldBufferService, IModelAliasGenerator modelAliasGenerator)
+    protected QueryServiceBase(IQueryRepositoryBase<TModel> repository, IFieldBufferService fieldBufferService, IModelAliasGenerator modelAliasGenerator)
     {
         _repository = repository;
         _fieldBufferService = fieldBufferService;

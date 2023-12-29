@@ -2,8 +2,7 @@
 
 namespace Kjac.NoCode.DeliveryApi.ViewModels;
 
-[DataContract]
-internal class SortViewModel : ItemViewModelBase
+internal class SortViewModel : QueryViewModelBase
 {
     [DataMember(Name = "propertyAlias")]
     public required string PropertyAlias { get; init; }

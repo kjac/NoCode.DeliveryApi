@@ -1,18 +1,8 @@
-﻿using Umbraco.Cms.Core.DeliveryApi;
+﻿namespace Kjac.NoCode.DeliveryApi.Models;
 
-namespace Kjac.NoCode.DeliveryApi.Models;
-
-public abstract class ModelBase : IIndexFieldModel
+public abstract class ModelBase
 {
     public Guid Key { get; init; }
 
     public string Name { get; set; } = string.Empty;
-
-    public string Alias { get; set; } = string.Empty;
-
-    public string IndexFieldName { get; init; } = string.Empty;
-
-    public PrimitiveFieldType PrimitiveFieldType { get; init; }
-
-    public abstract FieldType IndexFieldType { get; }
 }

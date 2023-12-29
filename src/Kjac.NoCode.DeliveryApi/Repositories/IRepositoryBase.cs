@@ -7,8 +7,6 @@ internal interface IRepositoryBase<TModel>
 {
     Task<IEnumerable<TModel>> GetAllAsync();
 
-    Task<TModel?> GetAsync(string alias);
-
     Task<TModel?> GetAsync(Guid key);
 
     Task<bool> CreateAsync(TModel model);

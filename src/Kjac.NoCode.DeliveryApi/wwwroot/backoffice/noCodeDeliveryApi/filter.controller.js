@@ -9,7 +9,7 @@
             ? vm.filter.propertyAliases.map(propertyAlias => ({ propertyAlias: propertyAlias }))
             : [];
         vm.newPropertyAlias = '';
-        vm.propertyAliasPattern = noCodeDeliveryApiResource.propertyAliasPattern();
+        vm.propertyAliasPattern = noCodeDeliveryApiResource.query.propertyAliasPattern();
 
         if(!vm.filter.filterMatchType){
             vm.filter.filterMatchType = 'Exact';
@@ -27,6 +27,7 @@
                 
                 if(vm.filter.key){
                     noCodeDeliveryApiResource
+                        .query
                         .updateFilter(vm.filter)
                         .then(data => {
                             $scope.model.submit();
@@ -34,6 +35,7 @@
                 }
                 else {
                     noCodeDeliveryApiResource
+                        .query
                         .addFilter(vm.filter)
                         .then(data => {
                             $scope.model.submit();

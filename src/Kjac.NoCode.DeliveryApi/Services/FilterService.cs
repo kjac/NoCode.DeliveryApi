@@ -1,13 +1,18 @@
 ﻿using Kjac.NoCode.DeliveryApi.Extensions;
 using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Repositories;
+using Umbraco.Cms.Core.Cache;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
 internal class FilterService : QueryServiceBase<FilterModel>, IFilterService
 {
-    public FilterService(IFilterRepository repository, IFieldBufferService fieldBufferService, IModelAliasGenerator modelAliasGenerator)
-        : base(repository, fieldBufferService, modelAliasGenerator)
+    public FilterService(
+        IFilterRepository repository,
+        IFieldBufferService fieldBufferService,
+        IModelAliasGenerator modelAliasGenerator,
+        DistributedCache distributedCache)
+        : base(repository, fieldBufferService, modelAliasGenerator, distributedCache)
     {
     }
 

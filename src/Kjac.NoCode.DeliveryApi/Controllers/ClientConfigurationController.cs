@@ -11,13 +11,9 @@ namespace Kjac.NoCode.DeliveryApi.Controllers;
 public sealed class ClientConfigurationController : UmbracoAuthorizedJsonController
 {
     private readonly IClientService _clientService;
-    private readonly ICorsPolicyService _corsPolicyService;
 
-    public ClientConfigurationController(IClientService clientService, ICorsPolicyService corsPolicyService)
-    {
-        _clientService = clientService;
-        _corsPolicyService = corsPolicyService;
-    }
+    public ClientConfigurationController(IClientService clientService)
+        => _clientService = clientService;
 
     [HttpGet]
     public async Task<IActionResult> All()
@@ -33,30 +29,24 @@ public sealed class ClientConfigurationController : UmbracoAuthorizedJsonControl
 
     [HttpPost]
     public async Task<IActionResult> Add(AddClientRequestModel requestModel)
-        => await ApplyCorsPoliciesOnChange(async () => await _clientService.AddAsync(
+        => await _clientService.AddAsync(
             requestModel.Name,
-            requestModel.Origin));
+            requestModel.Origin)
+        ? Ok()
+        : BadRequest();
 
     [HttpPut]
     public async Task<IActionResult> Update(UpdateClientRequestModel requestModel)
-        => await ApplyCorsPoliciesOnChange(async () => await _clientService.UpdateAsync(
+        => await _clientService.UpdateAsync(
             requestModel.Key,
             requestModel.Name,
-            requestModel.Origin));
+            requestModel.Origin)
+        ? Ok()
+        : BadRequest();
 
     [HttpDelete]
     public async Task<IActionResult> Delete(Guid key)
-        => await ApplyCorsPoliciesOnChange(async () => await _clientService.DeleteAsync(key));
-
-    // NOTE: this must be moved to an event handler eventually (to support load balancing), so we'll just handle it quick and dirty for now
-    private async Task<IActionResult> ApplyCorsPoliciesOnChange(Func<Task<bool>> action)
-    {
-        var result = await action();
-        if (result)
-        {
-            await _corsPolicyService.ApplyClientOriginsAsync();
-        }
-
-        return result ? Ok() : BadRequest();
-    }
+        => await _clientService.DeleteAsync(key)
+        ? Ok()
+        : BadRequest();
 }

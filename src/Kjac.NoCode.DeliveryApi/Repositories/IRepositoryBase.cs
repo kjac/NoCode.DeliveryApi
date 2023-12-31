@@ -14,4 +14,6 @@ internal interface IRepositoryBase<TModel>
     Task<bool> UpdateAsync(TModel model);
 
     Task<bool> DeleteAsync(Guid key);
+
+    void ReloadCache();
 }

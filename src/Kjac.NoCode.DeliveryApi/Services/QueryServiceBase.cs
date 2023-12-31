@@ -1,5 +1,7 @@
-﻿using Kjac.NoCode.DeliveryApi.Models;
+﻿using Kjac.NoCode.DeliveryApi.Caching;
+using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Repositories;
+using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.DeliveryApi;
 using Umbraco.Extensions;
 
@@ -10,12 +12,18 @@ internal abstract class QueryServiceBase<TModel> where TModel : QueryModelBase, 
     private readonly IQueryRepositoryBase<TModel> _repository;
     private readonly IFieldBufferService _fieldBufferService;
     private readonly IModelAliasGenerator _modelAliasGenerator;
+    private readonly DistributedCache _distributedCache;
 
-    protected QueryServiceBase(IQueryRepositoryBase<TModel> repository, IFieldBufferService fieldBufferService, IModelAliasGenerator modelAliasGenerator)
+    protected QueryServiceBase(
+        IQueryRepositoryBase<TModel> repository,
+        IFieldBufferService fieldBufferService,
+        IModelAliasGenerator modelAliasGenerator,
+        DistributedCache distributedCache)
     {
         _repository = repository;
         _fieldBufferService = fieldBufferService;
         _modelAliasGenerator = modelAliasGenerator;
+        _distributedCache = distributedCache;
     }
 
     public async Task<IEnumerable<TModel>> GetAllAsync()
@@ -57,7 +65,7 @@ internal abstract class QueryServiceBase<TModel> where TModel : QueryModelBase, 
         };
         map(model);
 
-        return await _repository.CreateAsync(model);
+        return await RefreshCacheOnChange(async () => await _repository.CreateAsync(model));
     }
 
     protected async Task<bool> UpdateAsync(Guid key, string name, Action<TModel> map)
@@ -79,12 +87,23 @@ internal abstract class QueryServiceBase<TModel> where TModel : QueryModelBase, 
         model.Alias = alias;
         map(model);
 
-        return await _repository.UpdateAsync(model);
+        return await RefreshCacheOnChange(async () => await _repository.UpdateAsync(model));
     }
 
     public async Task<bool> DeleteAsync(Guid key)
-        => await _repository.DeleteAsync(key);
+        => await RefreshCacheOnChange(async () => await _repository.DeleteAsync(key));
 
     public bool CanAdd()
         => _fieldBufferService.IsDepleted() is false;
+
+    private async Task<bool> RefreshCacheOnChange(Func<Task<bool>> action)
+    {
+        var result = await action();
+        if (result is true)
+        {
+            _distributedCache.RefreshQueryCache();
+        }
+
+        return result;
+    }
 }

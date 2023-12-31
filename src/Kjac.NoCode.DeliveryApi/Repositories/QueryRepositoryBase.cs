@@ -16,8 +16,5 @@ internal abstract class QueryRepositoryBase<TDto, TModel> : RepositoryBase<TDto,
     }
 
     public async Task<TModel?> GetAsync(string alias)
-    {
-        await EnsureCache();
-        return Cache.FirstOrDefault(model => model.Alias.InvariantEquals(alias));
-    }
+        => (await Cache()).FirstOrDefault(model => model.Alias.InvariantEquals(alias));
 }

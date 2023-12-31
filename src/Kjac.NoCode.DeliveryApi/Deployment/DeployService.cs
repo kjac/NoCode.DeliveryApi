@@ -5,6 +5,7 @@ using Kjac.NoCode.DeliveryApi.Services;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Umbraco.Cms.Core.Extensions;
+using Umbraco.Cms.Core.Sync;
 
 namespace Kjac.NoCode.DeliveryApi.Deployment;
 
@@ -13,23 +14,34 @@ internal sealed class DeployService : IDeployService
     private readonly IFilterService _filterService;
     private readonly ISortService _sortService;
     private readonly IHostEnvironment _hostEnvironment;
+    private readonly IServerRoleAccessor _serverRoleAccessor;
     private readonly ILogger<DeployService> _logger;
 
     private const string DirectoryName = "NoCodeDeliveryApi";
 
     private const string FileName = "configuration.json";
 
-    public DeployService(IFilterService filterService, ISortService sortService, IHostEnvironment hostEnvironment,
+    public DeployService(
+        IFilterService filterService,
+        ISortService sortService,
+        IHostEnvironment hostEnvironment,
+        IServerRoleAccessor serverRoleAccessor,
         ILogger<DeployService> logger)
     {
         _filterService = filterService;
         _sortService = sortService;
         _hostEnvironment = hostEnvironment;
+        _serverRoleAccessor = serverRoleAccessor;
         _logger = logger;
     }
 
     public async Task ExportAsync()
     {
+        if (CanDeploy() is false)
+        {
+            return;
+        }
+
         IEnumerable<FilterModel> filters = await _filterService.GetAllAsync();
         IEnumerable<SortModel> sorts = await _sortService.GetAllAsync();
         var configDeployModel = new ConfigDeployModel
@@ -52,6 +64,11 @@ internal sealed class DeployService : IDeployService
 
     public async Task ImportAsync()
     {
+        if (CanDeploy() is false)
+        {
+            return;
+        }
+
         var filePath = GetFilePath();
         if (File.Exists(filePath) is false)
         {
@@ -139,6 +156,9 @@ internal sealed class DeployService : IDeployService
 
     private string GetFilePath()
         => Path.Combine(GetDirectoryPath(), FileName);
+
+    private bool CanDeploy()
+        => _serverRoleAccessor.CurrentServerRole is not ServerRole.Subscriber;
 
     private JsonSerializerOptions SerializerOptions() => new()
     {

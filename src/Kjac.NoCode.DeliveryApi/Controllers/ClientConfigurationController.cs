@@ -23,7 +23,10 @@ public sealed class ClientConfigurationController : UmbracoAuthorizedJsonControl
         {
             Key = client.Key,
             Name = client.Name,
-            Origin = client.Origin
+            Origin = client.Origin,
+            PreviewUrlPath = client.PreviewUrlPath,
+            PublishedUrlPath = client.PublishedUrlPath,
+            Culture = client.Culture
         }));
     }
 
@@ -31,7 +34,10 @@ public sealed class ClientConfigurationController : UmbracoAuthorizedJsonControl
     public async Task<IActionResult> Add(AddClientRequestModel requestModel)
         => await _clientService.AddAsync(
             requestModel.Name,
-            requestModel.Origin)
+            requestModel.Origin,
+            requestModel.PreviewUrlPath,
+            requestModel.PublishedUrlPath,
+            requestModel.Culture)
         ? Ok()
         : BadRequest();
 
@@ -40,7 +46,10 @@ public sealed class ClientConfigurationController : UmbracoAuthorizedJsonControl
         => await _clientService.UpdateAsync(
             requestModel.Key,
             requestModel.Name,
-            requestModel.Origin)
+            requestModel.Origin,
+            requestModel.PreviewUrlPath,
+            requestModel.PublishedUrlPath,
+            requestModel.Culture)
         ? Ok()
         : BadRequest();
 

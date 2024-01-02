@@ -2,6 +2,7 @@
 using Kjac.NoCode.DeliveryApi.Handlers;
 using Kjac.NoCode.DeliveryApi.OpenApi;
 using Kjac.NoCode.DeliveryApi.Repositories;
+using Kjac.NoCode.DeliveryApi.Routing;
 using Kjac.NoCode.DeliveryApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +42,9 @@ public sealed class Composer : IComposer
 
         builder.AddNotificationAsyncHandler<UmbracoApplicationStartingNotification, StartingNotificationHandler>();
         builder.AddNotificationAsyncHandler<UmbracoApplicationStartedNotification, StartedNotificationHandler>();
+        builder.AddNotificationAsyncHandler<SendingContentNotification, SendingContentNotificationHandler>();
+
+        builder.UrlProviders().Insert<ClientUrlProvider>();
     }
 
     private class DeliveryApiCorsPipelineFilter : UmbracoPipelineFilter

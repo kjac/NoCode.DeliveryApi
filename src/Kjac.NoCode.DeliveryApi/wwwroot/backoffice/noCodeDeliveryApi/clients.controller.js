@@ -1,12 +1,17 @@
 (function () {
   "use strict";
 
-  function NoCodeDeliveryApiClientsController($scope, $timeout, $routeParams, umbRequestHelper, overlayService, notificationsService, editorService, navigationService, noCodeDeliveryApiResource) {
+  function NoCodeDeliveryApiClientsController($scope, $timeout, $routeParams, umbRequestHelper, overlayService, notificationsService, editorService, navigationService, languageResource, noCodeDeliveryApiResource) {
     const vm = this;
 
     vm.add = add;
     vm.edit = edit;
     vm.delete = remove;
+
+    vm.languages = [];
+    languageResource.getAll().then(function (languages) {
+      vm.languages = languages;
+    });
 
     function reload() {
       vm.loading = true;
@@ -31,7 +36,7 @@
       const dialog = {
         title: `${addOrEdit} client`,
         client: Utilities.copy(client),
-        allClients: vm.clients,
+        languages: vm.languages,
         view: '/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/client.html',
         size: "small",
         submit: function () {

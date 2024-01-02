@@ -23,9 +23,27 @@
               <input maxlength="40" name="clientName" ng-model="vm.client.name" required type="text" umb-auto-focus/>
             </umb-control-group>
 
-            <umb-control-group description="The origin of the client. This will be used to apply CORS policies. Must be a well-formed URL including the HTTP scheme, e.g. https://mydomain.com or http://localhost:3000."
+            <umb-control-group description="The origin of the client. This will be used to apply CORS policies and build outgoing links (if configured below). It must be a well-formed URL including the HTTP scheme, e.g. https://mydomain.com or http://localhost:3000."
                                label="Origin">
-              <input maxlength="200" name="clientOrigin" ng-model="vm.client.origin" required type="url"/>
+              <input maxlength="200" name="clientOrigin" ng-model="vm.client.origin" required type="url" placeholder="https://client-origin.io"/>
+            </umb-control-group>
+
+            <umb-control-group description="If the client supports preview, enter the path that triggers preview. The path will be appended to the origin. Various placeholders can be applied to provide context (see the docs for more info)."
+                               label="Preview path">
+              <input maxlength="200" name="clientOrigin" ng-model="vm.client.previewUrlPath" placeholder="/trigger-preview?id={id}" />
+            </umb-control-group>
+
+            <umb-control-group description="To link directly from the content editor &quot;Info&quot; section to the client, enter the path to use for the link. The path will be appended to the origin. Various placeholders can be applied to provide context (see the docs for more info)."
+                               label="Published path">
+              <input maxlength="200" name="clientOrigin" ng-model="vm.client.publishedUrlPath" placeholder="/{culture}/{path}" />
+            </umb-control-group>
+
+            <umb-control-group description="If the client only handles a specific language (culture), select that language here. This ensures that preview and/or published links are only available when editing content in the selected language."
+                               label="Language"
+                               ng-if="vm.languages.length > 1">
+              <select class="umb-dropdown" ng-disabled="!vm.client.previewUrlPath && !vm.client.publishedUrlPath" ng-model="vm.client.culture" ng-options="language.culture as language.name for language in vm.languages">
+                <option value="">All languages</option>
+              </select>
             </umb-control-group>
 
           </umb-box-content>

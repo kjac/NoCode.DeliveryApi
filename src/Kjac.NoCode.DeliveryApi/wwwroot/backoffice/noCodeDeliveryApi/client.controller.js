@@ -5,6 +5,7 @@
     const vm = this;
 
     vm.client = $scope.model.client;
+    vm.languages = $scope.model.languages;
 
     vm.save = save;
     vm.close = close;

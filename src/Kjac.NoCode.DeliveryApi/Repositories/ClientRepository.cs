@@ -2,6 +2,7 @@
 using Kjac.NoCode.DeliveryApi.Models.Dtos;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Infrastructure.Scoping;
+using Umbraco.Extensions;
 
 namespace Kjac.NoCode.DeliveryApi.Repositories;
 
@@ -17,7 +18,10 @@ internal class ClientRepository : RepositoryBase<ClientDto, ClientModel>, IClien
         {
             Key = dto.Key,
             Name = dto.Name,
-            Origin = dto.Origin
+            Origin = dto.Origin,
+            PreviewUrlPath = dto.PreviewUrlPath,
+            PublishedUrlPath = dto.PublishedUrlPath,
+            Culture = dto.Culture
         };
 
     protected override ClientDto MapModelToDto(ClientModel clientModel, ClientDto dto)
@@ -25,6 +29,9 @@ internal class ClientRepository : RepositoryBase<ClientDto, ClientModel>, IClien
         dto.Key = clientModel.Key;
         dto.Name = clientModel.Name;
         dto.Origin = clientModel.Origin;
+        dto.PreviewUrlPath = clientModel.PreviewUrlPath.NullOrWhiteSpaceAsNull();
+        dto.PublishedUrlPath = clientModel.PublishedUrlPath.NullOrWhiteSpaceAsNull();
+        dto.Culture = clientModel.Culture.NullOrWhiteSpaceAsNull();
 
         return dto;
     }

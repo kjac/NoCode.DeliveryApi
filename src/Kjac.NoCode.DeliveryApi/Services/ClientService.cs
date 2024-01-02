@@ -19,16 +19,19 @@ internal class ClientService : IClientService
     public async Task<IEnumerable<ClientModel>> GetAllAsync()
         => await _repository.GetAllAsync();
 
-    public async Task<bool> AddAsync(string name, string origin)
+    public async Task<bool> AddAsync(string name, string origin, string? previewUrlPath, string? publishedUrlPath, string? culture)
         => await RefreshCacheOnChange(async () => await _repository.CreateAsync(
             new ClientModel
             {
                 Key = Guid.NewGuid(),
                 Name = name,
-                Origin = origin
+                Origin = origin,
+                PreviewUrlPath = previewUrlPath,
+                PublishedUrlPath = publishedUrlPath,
+                Culture = culture
             }));
 
-    public async Task<bool> UpdateAsync(Guid key, string name, string origin)
+    public async Task<bool> UpdateAsync(Guid key, string name, string origin, string? previewUrlPath, string? publishedUrlPath, string? culture)
     {
         ClientModel? model = await _repository.GetAsync(key);
         if (model is null)
@@ -38,6 +41,9 @@ internal class ClientService : IClientService
 
         model.Name = name;
         model.Origin = origin;
+        model.PreviewUrlPath = previewUrlPath;
+        model.PublishedUrlPath = publishedUrlPath;
+        model.Culture = culture;
 
         return await RefreshCacheOnChange(() => _repository.UpdateAsync(model));
     }

@@ -4,14 +4,20 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <StaticWebAssetBasePath>App_Plugins/NoCodeDeliveryApi</StaticWebAssetBasePath>
+    <Authors>Kenn Jacobsen</Authors>
+    <PackageProjectUrl>https://github.com/kjac/NoCode.DeliveryApi</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Version>0.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>Kjac.NoCode.DeliveryApi</PackageId>
     <Product>Kjac.NoCode.DeliveryApi</Product>
-    <Title>Kjac.NoCode.DeliveryApi</Title>
-    <Description>...</Description>
-    <PackageTags>umbraco plugin package</PackageTags>
+    <Title>No-Code Delivery API</Title>
+    <Description>No-code tools for the Umbraco Delivery API</Description>
+    <PackageTags>umbraco plugin package delivery-api no-code umbraco-marketplace </PackageTags>
   </PropertyGroup>
 
 
@@ -19,5 +25,22 @@
     <PackageReference Include="Umbraco.Cms.Api.Delivery" Version="13.0.0" />
     <PackageReference Include="Umbraco.Cms.Web.Website" Version="13.0.0" />
     <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="13.0.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\nuget\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+      <Link>icon.png</Link>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 </Project>

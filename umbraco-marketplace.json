@@ -1,0 +1,24 @@
+{
+  "$schema": "https://marketplace.umbraco.com/umbraco-marketplace-schema.json",
+  "AuthorDetails": {
+    "Name": "Kenn Jacobsen"
+  },
+  "Category": "Headless",
+  "Description": "No-code tools for the Umbraco Delivery API. Allows for no-code definition of Delivery API filters and sorters, automatic CORS policies for API consumers and more.",
+  "DocumentationUrl": "https://github.com/kjac/NoCode.DeliveryApi",
+  "LicenseTypes": [ "Free" ],
+  "IssueTrackerUrl": "https://github.com/kjac/NoCode.DeliveryApi/issues",
+  "PackageType": "Package",
+  "Screenshots": [
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/kjac/NoCode.DeliveryApi/main/docs/overview.png",
+      "Caption": "The No-Code Delivery API overview."
+    },
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/kjac/NoCode.DeliveryApi/main/docs/swagger-ui-filter-example.png",
+      "Caption": "Built-in OpenAPI docs using Swagger UI."
+    }
+  ],
+  "Tags": [ "Headless", "Delivery API", "CORS", "Preview" ],
+  "Title": "No-Code Delivery API"
+}

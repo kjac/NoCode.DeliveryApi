@@ -67,7 +67,7 @@ public class SwaggerDocumentationFilter : IParameterFilter
 
         parameter.Examples["No-Code: Level"] = new OpenApiExample
         {
-            Description = $"This filter allows for querying the content level in the content tree.\n\nUse whole numbers (integers) only.\n\nMultiple values can be supplied, causing the filter to perform a logical OR between these values. Use a comma to separate values, e.g. `nocLevel:2,3,4`.{ReadMoreDescription()}",
+            Description = $"This filter allows for querying the content level in the content tree.\n\nUse whole numbers (integers) only.\n\nMultiple values can be supplied, causing the filter to perform a logical OR between these values. Use a comma to separate values, e.g. `nocLevel:2,3,4`.{RangeSyntaxDescription()}{ReadMoreDescription()}",
             Value = new OpenApiArray
             {
                 new OpenApiString($"nocLevel:2")
@@ -100,10 +100,18 @@ public class SwaggerDocumentationFilter : IParameterFilter
             description.Append($"\n\nMultiple values can be supplied, causing the filter to perform a logical OR between these values. Use a comma to separate values, e.g. `{filterModel.Alias}:value1,value2`.");
         }
 
+        description.Append(filterModel.IndexFieldType is FieldType.Date or FieldType.Number
+            ? RangeSyntaxDescription()
+            : BasicSyntaxDescription());
+
         description.Append(ReadMoreDescription());
 
         return description.ToString();
     }
+
+    private static string BasicSyntaxDescription() => "\n\nThe filter supports the following operators:\n* Use `:` for \"equal\".\n* Use `:!` for \"not equal\".";
+
+    private static string RangeSyntaxDescription() => $"{BasicSyntaxDescription()}\n* Use `>` for \"greater than\".\n* Use `>:` for \"greater than or equal\".\n* Use `<` for \"less than\".\n* Use `<:` for \"less than or equal\".";
 
     private static string ReadMoreDescription() => $"\n\nRead more about filtering and the filter syntax in [the Umbraco documentation]({QueryParamsDocsUrl})";
 

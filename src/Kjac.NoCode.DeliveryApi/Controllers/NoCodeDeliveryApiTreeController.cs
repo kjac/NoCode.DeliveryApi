@@ -9,7 +9,7 @@ using Umbraco.Cms.Web.Common.Attributes;
 
 namespace Kjac.NoCode.DeliveryApi.Controllers;
 
-[Tree(Umbraco.Cms.Core.Constants.Applications.Settings, Constants.TreeAlias, TreeTitle = "No-code Delivery API", TreeGroup = Umbraco.Cms.Core.Constants.Trees.Groups.Settings, SortOrder = 20)]
+[Tree(Umbraco.Cms.Core.Constants.Applications.Settings, Constants.TreeAlias, TreeTitle = "No-Code Delivery API", TreeGroup = Umbraco.Cms.Core.Constants.Trees.Groups.Settings, SortOrder = 20)]
 [PluginController(Constants.BackOfficeArea)]
 public sealed class NoCodeDeliveryApiTreeController : TreeController
 {

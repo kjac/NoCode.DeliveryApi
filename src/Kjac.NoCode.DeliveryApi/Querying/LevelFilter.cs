@@ -12,6 +12,6 @@ public partial class LevelFilter : FilterBase, IFilterHandler
     public FilterOption BuildFilterOption(string filter)
         => ParseFilterOption(filter, LevelParserRegex(), _ => LevelIndexer.FieldName);
 
-    [GeneratedRegex("nocLevel(?<operator>[><:]{1,2})(?<value>.*)", RegexOptions.IgnoreCase)]
+    [GeneratedRegex("nocLevel(?<operator>[><:!]{1,2})(?<value>.*)", RegexOptions.IgnoreCase)]
     private static partial Regex LevelParserRegex();
 }

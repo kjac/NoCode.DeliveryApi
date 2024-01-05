@@ -16,8 +16,8 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Umbraco.Cms.Api.Delivery" Version="13.0.0-rc4" />
-    <PackageReference Include="Umbraco.Cms.Web.Website" Version="13.0.0-rc4" />
-    <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="13.0.0-rc4" />
+    <PackageReference Include="Umbraco.Cms.Api.Delivery" Version="13.0.0" />
+    <PackageReference Include="Umbraco.Cms.Web.Website" Version="13.0.0" />
+    <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="13.0.0" />
   </ItemGroup>
 </Project>

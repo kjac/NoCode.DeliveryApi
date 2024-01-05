@@ -30,6 +30,7 @@ The created filters and sorters are automatically documented in the built-in Swa
 
 > [!IMPORTANT]
 > When a filter or a sorter is created or updated, the changes will immediately take effect for newly created content. All existing content however must be re-published for the changes to take effect. Alternatively, the "DeliveryApiContentIndex" can be rebuilt from the [Examine Management dashboard](https://docs.umbraco.com/umbraco-cms/reference/searching/examine/examine-management).
+> 
 > This also applies to the built-in filters shipped with this package (read more below).
 
 ### Filters

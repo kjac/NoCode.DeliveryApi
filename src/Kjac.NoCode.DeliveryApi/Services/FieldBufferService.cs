@@ -13,7 +13,7 @@ internal class FieldBufferService : IFieldBufferService
     private readonly List<BufferIndexFieldModel> _buffer;
 
     public FieldBufferService()
-        => _buffer = _allFieldTypes.SelectMany(fieldType => CreateFields(fieldType, 10)).ToList();
+        => _buffer = _allFieldTypes.SelectMany(fieldType => CreateFields(fieldType, 20)).ToList();
 
     public IIndexFieldModel? GetField(FieldType fieldType)
     {

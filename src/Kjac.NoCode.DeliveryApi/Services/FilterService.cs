@@ -21,11 +21,13 @@ internal sealed class FilterService : QueryServiceBase<FilterModel>, IFilterServ
         string[] propertyAliases,
         FilterMatchType filterMatchType,
         PrimitiveFieldType primitiveFieldType,
+        Guid? key = null,
         string? indexFieldName = null)
         => await AddAsync(
             primitiveFieldType.FilterFieldType(filterMatchType),
             primitiveFieldType,
             name,
+            key,
             indexFieldName,
             filter =>
             {

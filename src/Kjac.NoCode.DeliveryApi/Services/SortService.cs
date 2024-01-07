@@ -20,11 +20,13 @@ internal sealed class SortService : QueryServiceBase<SortModel>, ISortService
         string name,
         string propertyAlias,
         PrimitiveFieldType primitiveFieldType,
+        Guid? key = null,
         string? indexFieldName = null)
         => await AddAsync(
             primitiveFieldType.SortFieldType(),
             primitiveFieldType,
             name,
+            key,
             indexFieldName,
             sort => sort.PropertyAlias = propertyAlias);
 

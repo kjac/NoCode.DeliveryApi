@@ -14,6 +14,7 @@ public interface ISortService
         string name,
         string propertyAlias,
         PrimitiveFieldType primitiveFieldType,
+        Guid? key = null,
         string? indexFieldName = null);
 
     Task<bool> UpdateAsync(Guid key, string name, string propertyAlias);

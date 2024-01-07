@@ -15,6 +15,7 @@ public interface IFilterService
         string[] propertyAliases,
         FilterMatchType filterMatchType,
         PrimitiveFieldType primitiveFieldType,
+        Guid? key = null,
         string? indexFieldName = null);
 
     Task<bool> UpdateAsync(Guid key, string name, string[] propertyAliases);

@@ -18,7 +18,7 @@ internal sealed class DeployService : IDeployService
     private readonly IServerRoleAccessor _serverRoleAccessor;
     private readonly IDistributedCacheRefresher _distributedCacheRefresher;
     private readonly ILogger<DeployService> _logger;
-    private bool _isImporting = false;
+    private readonly SemaphoreSlim _importLock = new SemaphoreSlim(1, 1);
 
     private const string DirectoryName = "NoCodeDeliveryApi";
 
@@ -42,33 +42,38 @@ internal sealed class DeployService : IDeployService
 
     public async Task ExportAsync()
     {
-        if (_isImporting is true)
-        {
-            return;
-        }
-
         if (CanDeploy() is false)
         {
             return;
         }
 
-        IEnumerable<FilterModel> filters = await _filterService.GetAllAsync();
-        IEnumerable<SortModel> sorts = await _sortService.GetAllAsync();
-        var configDeployModel = new ConfigDeployModel
+        if (_importLock.CurrentCount is 0)
         {
-            Filters = filters.Select(FilterDeployModel.FromFilterModel).ToArray(),
-            Sorters = sorts.Select(SortDeployModel.FromSortModel).ToArray()
-        };
-        var configDeployData = JsonSerializer.Serialize(configDeployModel, SerializerOptions());
+            return;
+        }
+        await _importLock.WaitAsync();
 
         try
         {
+            IEnumerable<FilterModel> filters = await _filterService.GetAllAsync();
+            IEnumerable<SortModel> sorts = await _sortService.GetAllAsync();
+            var configDeployModel = new ConfigDeployModel
+            {
+                Filters = filters.Select(FilterDeployModel.FromFilterModel).ToArray(),
+                Sorters = sorts.Select(SortDeployModel.FromSortModel).ToArray()
+            };
+            var configDeployData = JsonSerializer.Serialize(configDeployModel, SerializerOptions());
+
             Directory.CreateDirectory(GetDirectoryPath());
             await File.WriteAllTextAsync(GetFilePath(), configDeployData);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Could not write {FileName} to disk", FileName);
+        }
+        finally
+        {
+            _importLock.Release();
         }
     }
 
@@ -101,24 +106,31 @@ internal sealed class DeployService : IDeployService
             return;
         }
 
+        await _importLock.WaitAsync();
         try
         {
-            _isImporting = true;
             _distributedCacheRefresher.Suspend();
 
             await HandleImportAsync(
                 (await _filterService.GetAllAsync()).ToArray(),
                 configDeployModel.Filters,
                 async key => await _filterService.DeleteAsync(key),
-                async filter => await _filterService.AddAsync(filter.Name, filter.PropertyAliases.ToArray(),
-                    filter.FilterMatchType, filter.PrimitiveFieldType, filter.IndexFieldName),
+                async filter => await _filterService.AddAsync(
+                    filter.Name,
+                    filter.PropertyAliases.ToArray(),
+                    filter.FilterMatchType,
+                    filter.PrimitiveFieldType,
+                    filter.Key,
+                    filter.IndexFieldName),
                 async (knownFilter, configFilter) =>
                 {
-                    var changed = configFilter.Name != knownFilter.Name ||
-                                  configFilter.PropertyAliases.SequenceEqual(knownFilter.PropertyAliases) is false;
+                    var changed = configFilter.Name != knownFilter.Name
+                                  || configFilter.PropertyAliases.SequenceEqual(knownFilter.PropertyAliases) is false;
                     if (changed)
                     {
-                        await _filterService.UpdateAsync(configFilter.Key, configFilter.Name,
+                        await _filterService.UpdateAsync(
+                            configFilter.Key,
+                            configFilter.Name,
                             configFilter.PropertyAliases.ToArray());
                     }
                 }
@@ -128,12 +140,16 @@ internal sealed class DeployService : IDeployService
                 (await _sortService.GetAllAsync()).ToArray(),
                 configDeployModel.Sorters,
                 async key => await _sortService.DeleteAsync(key),
-                async sort => await _sortService.AddAsync(sort.Name, sort.PropertyAlias, sort.PrimitiveFieldType,
+                async sort => await _sortService.AddAsync(
+                    sort.Name,
+                    sort.PropertyAlias,
+                    sort.PrimitiveFieldType,
+                    sort.Key,
                     sort.IndexFieldName),
                 async (knownSort, configSort) =>
                 {
-                    var changed = configSort.Name != knownSort.Name ||
-                                  configSort.PropertyAlias != knownSort.PropertyAlias;
+                    var changed = configSort.Name != knownSort.Name
+                                  || configSort.PropertyAlias != knownSort.PropertyAlias;
                     if (changed)
                     {
                         await _sortService.UpdateAsync(configSort.Key, configSort.Name, configSort.PropertyAlias);
@@ -146,7 +162,7 @@ internal sealed class DeployService : IDeployService
             _distributedCacheRefresher.Resume();
             _distributedCacheRefresher.RefreshQueryCache();
             _distributedCacheRefresher.RefreshClientsCache();
-            _isImporting = false;
+            _importLock.Release();
         }
     }
 

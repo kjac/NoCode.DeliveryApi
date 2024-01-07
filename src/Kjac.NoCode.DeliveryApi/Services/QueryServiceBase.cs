@@ -38,6 +38,7 @@ internal abstract class QueryServiceBase<TModel> where TModel : QueryModelBase, 
         FieldType fieldType,
         PrimitiveFieldType primitiveFieldType,
         string name,
+        Guid? key,
         string? indexFieldName,
         Action<TModel> map)
     {
@@ -56,7 +57,7 @@ internal abstract class QueryServiceBase<TModel> where TModel : QueryModelBase, 
 
         var model = new TModel
         {
-            Key = Guid.NewGuid(),
+            Key = key ?? Guid.NewGuid(),
             Name = name,
             Alias = alias,
             IndexFieldName = indexFieldName,

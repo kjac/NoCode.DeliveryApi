@@ -1,4 +1,5 @@
-﻿using Kjac.NoCode.DeliveryApi.Deployment;
+﻿using Kjac.NoCode.DeliveryApi.Caching;
+using Kjac.NoCode.DeliveryApi.Deployment;
 using Kjac.NoCode.DeliveryApi.Handlers;
 using Kjac.NoCode.DeliveryApi.OpenApi;
 using Kjac.NoCode.DeliveryApi.Repositories;
@@ -27,6 +28,7 @@ public sealed class Composer : IComposer
         builder.Services.AddSingleton<IFilterRepository, FilterRepository>();
         builder.Services.AddSingleton<ISortRepository, SortRepository>();
         builder.Services.AddSingleton<IClientRepository, ClientRepository>();
+        builder.Services.AddSingleton<IDistributedCacheRefresher, DistributedCacheRefresher>();
 
         builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
 

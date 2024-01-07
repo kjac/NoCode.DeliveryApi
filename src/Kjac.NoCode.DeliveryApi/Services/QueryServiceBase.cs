@@ -1,7 +1,6 @@
 ﻿using Kjac.NoCode.DeliveryApi.Caching;
 using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Repositories;
-using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.DeliveryApi;
 using Umbraco.Extensions;
 
@@ -12,18 +11,18 @@ internal abstract class QueryServiceBase<TModel> where TModel : QueryModelBase, 
     private readonly IQueryRepositoryBase<TModel> _repository;
     private readonly IFieldBufferService _fieldBufferService;
     private readonly IModelAliasGenerator _modelAliasGenerator;
-    private readonly DistributedCache _distributedCache;
+    private readonly IDistributedCacheRefresher _distributedCacheRefresher;
 
     protected QueryServiceBase(
         IQueryRepositoryBase<TModel> repository,
         IFieldBufferService fieldBufferService,
         IModelAliasGenerator modelAliasGenerator,
-        DistributedCache distributedCache)
+        IDistributedCacheRefresher distributedCacheRefresher)
     {
         _repository = repository;
         _fieldBufferService = fieldBufferService;
         _modelAliasGenerator = modelAliasGenerator;
-        _distributedCache = distributedCache;
+        _distributedCacheRefresher = distributedCacheRefresher;
     }
 
     public async Task<IEnumerable<TModel>> GetAllAsync()
@@ -101,7 +100,7 @@ internal abstract class QueryServiceBase<TModel> where TModel : QueryModelBase, 
         var result = await action();
         if (result is true)
         {
-            _distributedCache.RefreshQueryCache();
+            _distributedCacheRefresher.RefreshQueryCache();
         }
 
         return result;

@@ -477,3 +477,6 @@ appsettings-schema.*.json
 
 # Media files
 /wwwroot/media/
+
+# No-Code Delivery API files
+/umbraco/NoCodeDeliveryApi

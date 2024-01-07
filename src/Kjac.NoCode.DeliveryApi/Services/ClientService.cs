@@ -1,19 +1,18 @@
 ﻿using Kjac.NoCode.DeliveryApi.Caching;
 using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Repositories;
-using Umbraco.Cms.Core.Cache;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
 internal class ClientService : IClientService
 {
     private readonly IClientRepository _repository;
-    private readonly DistributedCache _distributedCache;
+    private readonly IDistributedCacheRefresher _distributedCacheRefresher;
 
-    public ClientService(IClientRepository repository, DistributedCache distributedCache)
+    public ClientService(IClientRepository repository, IDistributedCacheRefresher distributedCacheRefresher)
     {
         _repository = repository;
-        _distributedCache = distributedCache;
+        _distributedCacheRefresher = distributedCacheRefresher;
     }
 
     public async Task<IEnumerable<ClientModel>> GetAllAsync()
@@ -56,7 +55,7 @@ internal class ClientService : IClientService
         var result = await action();
         if (result is true)
         {
-            _distributedCache.RefreshClientsCache();
+            _distributedCacheRefresher.RefreshClientsCache();
         }
 
         return result;

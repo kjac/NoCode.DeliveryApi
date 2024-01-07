@@ -1,7 +1,7 @@
-﻿using Kjac.NoCode.DeliveryApi.Extensions;
+﻿using Kjac.NoCode.DeliveryApi.Caching;
+using Kjac.NoCode.DeliveryApi.Extensions;
 using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Repositories;
-using Umbraco.Cms.Core.Cache;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
@@ -11,8 +11,8 @@ internal class SortService : QueryServiceBase<SortModel>, ISortService
         ISortRepository repository,
         IFieldBufferService fieldBufferService,
         IModelAliasGenerator modelAliasGenerator,
-        DistributedCache distributedCache)
-        : base(repository, fieldBufferService, modelAliasGenerator, distributedCache)
+        IDistributedCacheRefresher distributedCacheRefresher)
+        : base(repository, fieldBufferService, modelAliasGenerator, distributedCacheRefresher)
     {
     }
 

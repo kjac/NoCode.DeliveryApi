@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using Kjac.NoCode.DeliveryApi.Caching;
 using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Services;
 using Microsoft.Extensions.Hosting;
@@ -15,7 +16,9 @@ internal sealed class DeployService : IDeployService
     private readonly ISortService _sortService;
     private readonly IHostEnvironment _hostEnvironment;
     private readonly IServerRoleAccessor _serverRoleAccessor;
+    private readonly IDistributedCacheRefresher _distributedCacheRefresher;
     private readonly ILogger<DeployService> _logger;
+    private bool _isImporting = false;
 
     private const string DirectoryName = "NoCodeDeliveryApi";
 
@@ -26,17 +29,24 @@ internal sealed class DeployService : IDeployService
         ISortService sortService,
         IHostEnvironment hostEnvironment,
         IServerRoleAccessor serverRoleAccessor,
+        IDistributedCacheRefresher distributedCacheRefresher,
         ILogger<DeployService> logger)
     {
         _filterService = filterService;
         _sortService = sortService;
         _hostEnvironment = hostEnvironment;
         _serverRoleAccessor = serverRoleAccessor;
+        _distributedCacheRefresher = distributedCacheRefresher;
         _logger = logger;
     }
 
     public async Task ExportAsync()
     {
+        if (_isImporting is true)
+        {
+            return;
+        }
+
         if (CanDeploy() is false)
         {
             return;
@@ -91,35 +101,53 @@ internal sealed class DeployService : IDeployService
             return;
         }
 
-        await HandleImportAsync(
-            (await _filterService.GetAllAsync()).ToArray(),
-            configDeployModel.Filters,
-            async key => await _filterService.DeleteAsync(key),
-            async filter => await _filterService.AddAsync(filter.Name, filter.PropertyAliases.ToArray(), filter.FilterMatchType, filter.PrimitiveFieldType, filter.IndexFieldName),
-            async (knownFilter, configFilter) =>
-            {
-                var changed = configFilter.Name != knownFilter.Name || configFilter.PropertyAliases.SequenceEqual(knownFilter.PropertyAliases) is false;
-                if (changed)
-                {
-                    await _filterService.UpdateAsync(configFilter.Key, configFilter.Name, configFilter.PropertyAliases.ToArray());
-                }
-            }
-        );
+        try
+        {
+            _isImporting = true;
+            _distributedCacheRefresher.Suspend();
 
-        await HandleImportAsync(
-            (await _sortService.GetAllAsync()).ToArray(),
-            configDeployModel.Sorters,
-            async key => await _sortService.DeleteAsync(key),
-            async sort => await _sortService.AddAsync(sort.Name, sort.PropertyAlias, sort.PrimitiveFieldType, sort.IndexFieldName),
-            async (knownSort, configSort) =>
-            {
-                var changed = configSort.Name != knownSort.Name || configSort.PropertyAlias != knownSort.PropertyAlias;
-                if (changed)
+            await HandleImportAsync(
+                (await _filterService.GetAllAsync()).ToArray(),
+                configDeployModel.Filters,
+                async key => await _filterService.DeleteAsync(key),
+                async filter => await _filterService.AddAsync(filter.Name, filter.PropertyAliases.ToArray(),
+                    filter.FilterMatchType, filter.PrimitiveFieldType, filter.IndexFieldName),
+                async (knownFilter, configFilter) =>
                 {
-                    await _sortService.UpdateAsync(configSort.Key, configSort.Name, configSort.PropertyAlias);
+                    var changed = configFilter.Name != knownFilter.Name ||
+                                  configFilter.PropertyAliases.SequenceEqual(knownFilter.PropertyAliases) is false;
+                    if (changed)
+                    {
+                        await _filterService.UpdateAsync(configFilter.Key, configFilter.Name,
+                            configFilter.PropertyAliases.ToArray());
+                    }
                 }
-            }
-        );
+            );
+
+            await HandleImportAsync(
+                (await _sortService.GetAllAsync()).ToArray(),
+                configDeployModel.Sorters,
+                async key => await _sortService.DeleteAsync(key),
+                async sort => await _sortService.AddAsync(sort.Name, sort.PropertyAlias, sort.PrimitiveFieldType,
+                    sort.IndexFieldName),
+                async (knownSort, configSort) =>
+                {
+                    var changed = configSort.Name != knownSort.Name ||
+                                  configSort.PropertyAlias != knownSort.PropertyAlias;
+                    if (changed)
+                    {
+                        await _sortService.UpdateAsync(configSort.Key, configSort.Name, configSort.PropertyAlias);
+                    }
+                }
+            );
+        }
+        finally
+        {
+            _distributedCacheRefresher.Resume();
+            _distributedCacheRefresher.RefreshQueryCache();
+            _distributedCacheRefresher.RefreshClientsCache();
+            _isImporting = false;
+        }
     }
 
     private async Task HandleImportAsync<T, TD>(T[] known, TD[] config, Func<Guid, Task> deleteAsync,

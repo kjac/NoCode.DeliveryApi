@@ -3,7 +3,7 @@ using Umbraco.Extensions;
 
 namespace Kjac.NoCode.DeliveryApi.Indexing.PropertyTypeParsing;
 
-internal class MediaPickerParser : PropertyTypeParserBase
+internal sealed class MediaPickerParser : PropertyTypeParserBase
 {
     private readonly IJsonSerializer _jsonSerializer;
 

@@ -2,7 +2,7 @@
 
 namespace Kjac.NoCode.DeliveryApi.Indexing.PropertyTypeParsing;
 
-internal class DropDownListParser : StringArrayParser
+internal sealed class DropDownListParser : StringArrayParser
 {
     public DropDownListParser(IJsonSerializer jsonSerializer)
         : base(jsonSerializer)

@@ -7,7 +7,7 @@ namespace Kjac.NoCode.DeliveryApi.Models.Dtos;
 [TableName(TableNames.SortTable)]
 [PrimaryKey("id")]
 [ExplicitColumns]
-internal class SortDto : QueryDtoBase
+internal sealed class SortDto : QueryDtoBase
 {
     [Column(Name = "property")]
     [NullSetting(NullSetting = NullSettings.NotNull)]

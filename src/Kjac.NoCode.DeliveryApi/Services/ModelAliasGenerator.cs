@@ -2,7 +2,7 @@
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
-internal class ModelAliasGenerator : IModelAliasGenerator
+internal sealed class ModelAliasGenerator : IModelAliasGenerator
 {
     private readonly IShortStringHelper _shortStringHelper;
 

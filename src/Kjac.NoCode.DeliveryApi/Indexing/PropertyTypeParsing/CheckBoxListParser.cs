@@ -2,7 +2,7 @@
 
 namespace Kjac.NoCode.DeliveryApi.Indexing.PropertyTypeParsing;
 
-internal class CheckBoxListParser : StringArrayParser
+internal sealed class CheckBoxListParser : StringArrayParser
 {
     public CheckBoxListParser(IJsonSerializer jsonSerializer)
         : base(jsonSerializer)

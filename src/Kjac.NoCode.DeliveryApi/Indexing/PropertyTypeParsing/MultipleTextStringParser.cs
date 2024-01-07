@@ -1,6 +1,6 @@
 ﻿namespace Kjac.NoCode.DeliveryApi.Indexing.PropertyTypeParsing;
 
-internal class MultipleTextStringParser : PropertyTypeParserBase
+internal sealed class MultipleTextStringParser : PropertyTypeParserBase
 {
     public override object[]? ParseIndexFieldValue(object propertyValue)
         => propertyValue is string stringValue

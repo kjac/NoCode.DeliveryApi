@@ -3,7 +3,7 @@
 namespace Kjac.NoCode.DeliveryApi.ViewModels;
 
 [DataContract]
-public abstract class ViewModelBase
+internal abstract class ViewModelBase
 {
     [DataMember(Name = "key")]
     public required Guid Key { get; init; }

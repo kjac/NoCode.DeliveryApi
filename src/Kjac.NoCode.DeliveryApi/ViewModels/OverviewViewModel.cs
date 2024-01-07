@@ -3,7 +3,7 @@
 namespace Kjac.NoCode.DeliveryApi.ViewModels;
 
 [DataContract]
-internal class OverviewViewModel
+internal sealed class OverviewViewModel
 {
     [DataMember(Name = "filters")]
     public required IEnumerable<FilterViewModel> Filters { get; init; }

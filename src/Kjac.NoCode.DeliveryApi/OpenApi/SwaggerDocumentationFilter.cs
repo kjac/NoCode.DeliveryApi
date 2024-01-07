@@ -10,7 +10,7 @@ using Umbraco.Extensions;
 
 namespace Kjac.NoCode.DeliveryApi.OpenApi;
 
-public class SwaggerDocumentationFilter : IParameterFilter
+internal sealed class SwaggerDocumentationFilter : IParameterFilter
 {
     private const string QueryParamsDocsUrl = "https://docs.umbraco.com/umbraco-cms/reference/content-delivery-api#query-parameters";
 

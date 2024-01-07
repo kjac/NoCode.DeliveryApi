@@ -4,7 +4,7 @@ using Umbraco.Cms.Infrastructure.Migrations;
 
 namespace Kjac.NoCode.DeliveryApi.Migrations.V1_0;
 
-internal class AddInitialTablesMigration : MigrationBase
+internal sealed class AddInitialTablesMigration : MigrationBase
 {
     public AddInitialTablesMigration(IMigrationContext context)
         : base(context)

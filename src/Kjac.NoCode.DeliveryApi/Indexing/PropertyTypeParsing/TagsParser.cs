@@ -2,7 +2,8 @@
 using Umbraco.Extensions;
 
 namespace Kjac.NoCode.DeliveryApi.Indexing.PropertyTypeParsing;
-internal class TagsParser : JsonPropertyTypeParserBase
+
+internal sealed class TagsParser : JsonPropertyTypeParserBase
 
 {
     public TagsParser(IJsonSerializer jsonSerializer)

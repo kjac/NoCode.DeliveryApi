@@ -5,7 +5,7 @@ using Kjac.NoCode.DeliveryApi.Repositories;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
-internal class FilterService : QueryServiceBase<FilterModel>, IFilterService
+internal sealed class FilterService : QueryServiceBase<FilterModel>, IFilterService
 {
     public FilterService(
         IFilterRepository repository,

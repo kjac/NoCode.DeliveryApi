@@ -1,6 +1,6 @@
 ﻿namespace Kjac.NoCode.DeliveryApi.Indexing.PropertyTypeParsing;
 
-internal class IntegerParser : PropertyTypeParserBase
+internal sealed class IntegerParser : PropertyTypeParserBase
 {
     public override object[]? ParseIndexFieldValue(object propertyValue)
         => propertyValue is int intValue

@@ -13,7 +13,7 @@ using Umbraco.Extensions;
 
 namespace Kjac.NoCode.DeliveryApi.Handlers;
 
-internal class SendingContentNotificationHandler : INotificationAsyncHandler<SendingContentNotification>
+internal sealed class SendingContentNotificationHandler : INotificationAsyncHandler<SendingContentNotification>
 {
     private readonly IApiContentRouteBuilder _apiContentRouteBuilder;
     private readonly IHttpContextAccessor _httpContextAccessor;

@@ -7,7 +7,7 @@ namespace Kjac.NoCode.DeliveryApi.Models.Dtos;
 [TableName(TableNames.ClientTable)]
 [PrimaryKey("id")]
 [ExplicitColumns]
-internal class ClientDto : DtoBase
+internal sealed class ClientDto : DtoBase
 {
     [Column(Name = "origin")]
     [NullSetting(NullSetting = NullSettings.NotNull)]

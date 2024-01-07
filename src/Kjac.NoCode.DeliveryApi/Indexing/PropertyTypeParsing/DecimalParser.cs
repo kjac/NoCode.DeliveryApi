@@ -2,7 +2,7 @@
 
 namespace Kjac.NoCode.DeliveryApi.Indexing.PropertyTypeParsing;
 
-internal class DecimalParser : PropertyTypeParserBase
+internal sealed class DecimalParser : PropertyTypeParserBase
 {
     public override object[]? ParseIndexFieldValue(object propertyValue)
         => propertyValue is decimal decimalValue

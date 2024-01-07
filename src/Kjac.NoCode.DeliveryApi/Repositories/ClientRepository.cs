@@ -6,7 +6,7 @@ using Umbraco.Extensions;
 
 namespace Kjac.NoCode.DeliveryApi.Repositories;
 
-internal class ClientRepository : RepositoryBase<ClientDto, ClientModel>, IClientRepository
+internal sealed class ClientRepository : RepositoryBase<ClientDto, ClientModel>, IClientRepository
 {
     public ClientRepository(IScopeProvider scopeProvider, IRuntimeState runtimeState)
         : base(scopeProvider, runtimeState)

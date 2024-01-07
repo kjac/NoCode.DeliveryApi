@@ -3,7 +3,7 @@ using Kjac.NoCode.DeliveryApi.Models;
 
 namespace Kjac.NoCode.DeliveryApi.ViewModels;
 
-internal class FilterViewModel : QueryViewModelBase
+internal sealed class FilterViewModel : QueryViewModelBase
 {
     [DataMember(Name = "propertyAliases")]
     public required IEnumerable<string> PropertyAliases { get; init; }

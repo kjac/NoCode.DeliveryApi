@@ -1,6 +1,6 @@
 ﻿namespace Kjac.NoCode.DeliveryApi.Services;
 
-public interface ICorsPolicyService
+internal interface ICorsPolicyService
 {
     Task ApplyClientOriginsAsync();
 }

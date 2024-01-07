@@ -2,7 +2,7 @@
 
 namespace Kjac.NoCode.DeliveryApi.ViewModels;
 
-public class ClientViewModel : ViewModelBase
+internal sealed class ClientViewModel : ViewModelBase
 {
     [DataMember(Name = "origin")]
     public required string Origin { get; init; }

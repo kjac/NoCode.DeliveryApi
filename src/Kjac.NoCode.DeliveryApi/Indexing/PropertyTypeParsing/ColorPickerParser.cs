@@ -3,7 +3,7 @@ using Umbraco.Extensions;
 
 namespace Kjac.NoCode.DeliveryApi.Indexing.PropertyTypeParsing;
 
-internal class ColorPickerParser : PropertyTypeParserBase
+internal sealed class ColorPickerParser : PropertyTypeParserBase
 {
     private readonly IJsonSerializer _jsonSerializer;
 

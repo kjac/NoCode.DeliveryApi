@@ -1,6 +1,6 @@
 ﻿namespace Kjac.NoCode.DeliveryApi.Indexing.PropertyTypeParsing;
 
-internal class BooleanParser : PropertyTypeParserBase
+internal sealed class BooleanParser : PropertyTypeParserBase
 {
     public override object[]? ParseIndexFieldValue(object propertyValue)
         => propertyValue is bool boolValue

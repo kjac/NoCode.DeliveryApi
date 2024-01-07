@@ -2,7 +2,7 @@
 
 namespace Kjac.NoCode.DeliveryApi.Models;
 
-internal class BufferIndexFieldModel : IIndexFieldModel
+internal sealed class BufferIndexFieldModel : IIndexFieldModel
 {
     public required string IndexFieldName { get; init; }
 

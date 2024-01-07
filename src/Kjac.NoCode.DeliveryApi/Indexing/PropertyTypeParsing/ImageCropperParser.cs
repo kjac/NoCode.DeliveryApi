@@ -3,7 +3,7 @@ using Umbraco.Extensions;
 
 namespace Kjac.NoCode.DeliveryApi.Indexing.PropertyTypeParsing;
 
-internal class ImageCropperParser : PropertyTypeParserBase
+internal sealed class ImageCropperParser : PropertyTypeParserBase
 {
     private readonly IJsonSerializer _jsonSerializer;
 

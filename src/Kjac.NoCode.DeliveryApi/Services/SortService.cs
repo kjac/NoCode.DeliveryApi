@@ -5,7 +5,7 @@ using Kjac.NoCode.DeliveryApi.Repositories;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
-internal class SortService : QueryServiceBase<SortModel>, ISortService
+internal sealed class SortService : QueryServiceBase<SortModel>, ISortService
 {
     public SortService(
         ISortRepository repository,

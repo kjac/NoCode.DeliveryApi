@@ -7,7 +7,7 @@ namespace Kjac.NoCode.DeliveryApi.Models.Dtos;
 [TableName(TableNames.FilterTable)]
 [PrimaryKey("id")]
 [ExplicitColumns]
-internal class FilterDto : QueryDtoBase
+internal sealed class FilterDto : QueryDtoBase
 {
     [Column(Name = "properties")]
     [NullSetting(NullSetting = NullSettings.NotNull)]

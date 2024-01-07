@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
-internal class CorsPolicyService : ICorsPolicyService
+internal sealed class CorsPolicyService : ICorsPolicyService
 {
     private readonly CorsOptions _options;
     private readonly IClientService _clientService;

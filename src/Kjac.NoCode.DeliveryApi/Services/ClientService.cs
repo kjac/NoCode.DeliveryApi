@@ -4,7 +4,7 @@ using Kjac.NoCode.DeliveryApi.Repositories;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
-internal class ClientService : IClientService
+internal sealed class ClientService : IClientService
 {
     private readonly IClientRepository _repository;
     private readonly IDistributedCacheRefresher _distributedCacheRefresher;

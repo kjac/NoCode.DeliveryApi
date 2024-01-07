@@ -1,6 +1,6 @@
 ﻿namespace Kjac.NoCode.DeliveryApi.Services;
 
-public interface IModelAliasGenerator
+internal interface IModelAliasGenerator
 {
     string CreateAlias(string name);
 }

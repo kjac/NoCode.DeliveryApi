@@ -1,6 +1,6 @@
 ﻿namespace Kjac.NoCode.DeliveryApi.Indexing.PropertyTypeParsing;
 
-internal class FallbackParser : PropertyTypeParserBase
+internal sealed class FallbackParser : PropertyTypeParserBase
 {
     public override object[]? ParseIndexFieldValue(object propertyValue)
         => propertyValue switch

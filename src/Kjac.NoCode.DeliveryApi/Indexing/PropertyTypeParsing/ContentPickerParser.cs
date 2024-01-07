@@ -1,6 +1,6 @@
 ﻿namespace Kjac.NoCode.DeliveryApi.Indexing.PropertyTypeParsing;
 
-internal class ContentPickerParser : PropertyTypeParserBase
+internal sealed class ContentPickerParser : PropertyTypeParserBase
 {
     public override object[]? ParseIndexFieldValue(object propertyValue)
     {

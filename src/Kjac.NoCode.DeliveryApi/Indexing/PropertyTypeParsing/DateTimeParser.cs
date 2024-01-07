@@ -2,7 +2,7 @@
 
 namespace Kjac.NoCode.DeliveryApi.Indexing.PropertyTypeParsing;
 
-internal class DateTimeParser : PropertyTypeParserBase
+internal sealed class DateTimeParser : PropertyTypeParserBase
 {
     public override object[]? ParseIndexFieldValue(object propertyValue)
         => propertyValue is DateTime dateTimeValue

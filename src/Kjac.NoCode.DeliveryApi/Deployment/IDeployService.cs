@@ -1,6 +1,6 @@
 ﻿namespace Kjac.NoCode.DeliveryApi.Deployment;
 
-public interface IDeployService
+internal interface IDeployService
 {
     Task ExportAsync();
 

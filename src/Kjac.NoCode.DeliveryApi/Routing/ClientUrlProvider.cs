@@ -12,7 +12,7 @@ using Umbraco.Extensions;
 
 namespace Kjac.NoCode.DeliveryApi.Routing;
 
-public class ClientUrlProvider : IUrlProvider
+internal sealed class ClientUrlProvider : IUrlProvider
 {
     private readonly IClientService _clientService;
     private readonly IApiContentRouteBuilder _apiContentRouteBuilder;

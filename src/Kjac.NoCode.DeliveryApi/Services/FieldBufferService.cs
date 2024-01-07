@@ -3,7 +3,7 @@ using Umbraco.Cms.Core.DeliveryApi;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
-internal class FieldBufferService : IFieldBufferService
+internal sealed class FieldBufferService : IFieldBufferService
 {
     private readonly FieldType[] _allFieldTypes = new[]
     {

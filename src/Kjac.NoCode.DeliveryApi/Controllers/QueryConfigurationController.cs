@@ -13,7 +13,7 @@ public sealed class QueryConfigurationController : UmbracoAuthorizedJsonControll
     private readonly IFilterService _filterService;
     private readonly ISortService _sortService;
 
-    public QueryConfigurationController(IFilterService filterService, ISortService sortService)
+    public QueryConfigurationController(IFilterServiceWithExport filterService, ISortServiceWithExport sortService)
     {
         _filterService = filterService;
         _sortService = sortService;

@@ -1,10 +1,10 @@
 ﻿using Kjac.NoCode.DeliveryApi.Caching;
-using Kjac.NoCode.DeliveryApi.Deployment;
 using Kjac.NoCode.DeliveryApi.Handlers;
 using Kjac.NoCode.DeliveryApi.OpenApi;
 using Kjac.NoCode.DeliveryApi.Repositories;
 using Kjac.NoCode.DeliveryApi.Routing;
 using Kjac.NoCode.DeliveryApi.Services;
+using Kjac.NoCode.DeliveryApi.Services.Deploy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Umbraco.Cms.Core.Composing;
@@ -23,12 +23,15 @@ public sealed class Composer : IComposer
         builder.Services.AddSingleton<IFieldBufferService, FieldBufferService>();
         builder.Services.AddSingleton<IClientService, ClientService>();
         builder.Services.AddSingleton<ICorsPolicyService, CorsPolicyService>();
-        builder.Services.AddSingleton<IDeployService, DeployService>();
         builder.Services.AddSingleton<IModelAliasGenerator, ModelAliasGenerator>();
         builder.Services.AddSingleton<IFilterRepository, FilterRepository>();
         builder.Services.AddSingleton<ISortRepository, SortRepository>();
         builder.Services.AddSingleton<IClientRepository, ClientRepository>();
         builder.Services.AddSingleton<IDistributedCacheRefresher, DistributedCacheRefresher>();
+        builder.Services.AddSingleton<IExportService, ExportService>();
+        builder.Services.AddSingleton<IImportService, ImportService>();
+        builder.Services.AddSingleton<IFilterServiceWithExport, FilterServiceWithExport>();
+        builder.Services.AddSingleton<ISortServiceWithExport, SortServiceWithExport>();
 
         builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
 

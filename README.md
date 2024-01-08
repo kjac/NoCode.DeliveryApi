@@ -114,9 +114,9 @@ Usage examples:
 
 ## Deployment
 
-The package maintains a configuration file with all filters and sorters at `/umbraco/NoCodeDeliveryApi/configuration.json`. When Umbraco starts up, this file is read and any changes are synchronized to the Umbraco database.
+The package maintains a few configuration files with all filters and sorters at `/umbraco/NoCodeDeliveryApi/`. When Umbraco starts up, these files are read and any changes are synchronized to the Umbraco database.
 
-If you have multiple Umbraco environments, you can deploy filters and sorters automatically between environments by including the file in your Umbraco deployment.
+If you have multiple Umbraco environments, you can deploy filters and sorters automatically between environments by including these files in your Umbraco deployment.
 
 > [!NOTE]
 > In load-balanced setups, the file is only ever handled by the "Publisher" instance.

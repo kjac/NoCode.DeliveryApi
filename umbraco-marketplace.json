@@ -20,5 +20,11 @@
     }
   ],
   "Tags": [ "Headless", "Delivery API", "CORS", "Preview" ],
-  "Title": "No-Code Delivery API"
+  "Title": "No-Code Delivery API",
+  "RelatedPackages": [
+    {
+      "Description": "No-code headless mode for Umbraco. Tailors the editor experience to a headless setup, e.g. by removing noise and irrelevant editor options.",
+      "PackageId": "Kjac.NoCode.HeadlessMode"
+    }
+  ]
 }

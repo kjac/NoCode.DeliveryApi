@@ -119,7 +119,7 @@ The package maintains a few configuration files with all filters and sorters at 
 If you have multiple Umbraco environments, you can deploy filters and sorters automatically between environments by including these files in your Umbraco deployment.
 
 > [!NOTE]
-> In load-balanced setups, the file is only ever handled by the "Publisher" instance.
+> In load-balanced setups, these files are only ever handled by the "Publisher" instance.
 
 > [!IMPORTANT]
 > Clients are omitted from the deployment because they are expected to vary between environments. In other words, any changes to clients must be deployed manually.

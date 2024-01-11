@@ -123,3 +123,7 @@ If you have multiple Umbraco environments, you can deploy filters and sorters au
 
 > [!IMPORTANT]
 > Clients are omitted from the deployment because they are expected to vary between environments. In other words, any changes to clients must be deployed manually.
+
+## No-Code Headless Mode
+
+You should consider the installing [No-Code Headless Mode](https://github.com/kjac/NoCode.HeadlessMode) package also :smile:

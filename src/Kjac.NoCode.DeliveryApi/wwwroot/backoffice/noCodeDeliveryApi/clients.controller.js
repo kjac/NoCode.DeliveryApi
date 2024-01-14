@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  function NoCodeDeliveryApiClientsController($scope, $timeout, $routeParams, umbRequestHelper, overlayService, notificationsService, editorService, navigationService, languageResource, noCodeDeliveryApiResource) {
+  function NoCodeDeliveryApiClientsController($scope, overlayService, notificationsService, editorService, languageResource, noCodeDeliveryApiResource) {
     const vm = this;
 
     vm.add = add;
@@ -32,13 +32,13 @@
     }
 
     function open(client = {}) {
-      const addOrEdit = !client.key ? "Add" : "Edit";
+      const addOrEdit = !client.key ? 'Add' : 'Edit';
       const dialog = {
         title: `${addOrEdit} client`,
         client: Utilities.copy(client),
         languages: vm.languages,
         view: '/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/client.html',
-        size: "small",
+        size: 'small',
         submit: function () {
           editorService.close();
           reload();
@@ -53,8 +53,8 @@
 
     function remove(client, event) {
       overlayService.open({
-        title: `Confirm delete client`,
-        content: `Are you sure you want to delete the client?`,
+        title: 'Confirm delete client',
+        content: 'Are you sure you want to delete the client?',
         submitButtonLabel: 'Yes, delete',
         submitButtonStyle: 'danger',
         closeButtonLabel: 'Cancel',
@@ -64,10 +64,10 @@
             .delete(client.key)
             .then(() => {
               reload();
-              notificationsService.success(`The client was deleted.`);
+              notificationsService.success('The client was deleted.');
               overlayService.close();
             }, () => {
-              notificationsService.error(`Could not delete the client. Please consult the logs for more information.`);
+              notificationsService.error('Could not delete the client. Please consult the logs for more information.');
             });
         },
         close: () => {
@@ -80,5 +80,5 @@
     }
   }
 
-  angular.module("umbraco").controller("NoCodeDeliveryApi.ClientsController", NoCodeDeliveryApiClientsController);
+  angular.module('umbraco').controller('NoCodeDeliveryApi.ClientsController', NoCodeDeliveryApiClientsController);
 })();

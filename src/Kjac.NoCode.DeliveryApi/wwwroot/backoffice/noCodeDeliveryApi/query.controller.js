@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  function NoCodeDeliveryApiQueryController($scope, umbRequestHelper, overlayService, notificationsService, editorService, noCodeDeliveryApiResource) {
+  function NoCodeDeliveryApiQueryController($scope, overlayService, notificationsService, editorService, noCodeDeliveryApiResource) {
     const vm = this;
 
     vm.addFilter = addFilter;
@@ -71,7 +71,7 @@
       if (vm.canAdd === false) {
         overlayService.open({
           title: `Cannot add ${itemType}`,
-          view: `/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/restart.message.html`,
+          view: '/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/restart.message.html',
           closeButtonLabel: 'Close',
           close: () => {
             overlayService.close();
@@ -88,7 +88,7 @@
     }
 
     function openItem(itemType, viewName, filter = {}, sort = {}) {
-      const addOrEdit = !filter.key && !sort.key ? "Add" : "Edit";
+      const addOrEdit = !filter.key && !sort.key ? 'Add' : 'Edit';
       const dialog = {
         title: `${addOrEdit} ${itemType}`,
         filter: Utilities.copy(filter),
@@ -96,7 +96,7 @@
         allFilters: vm.filters,
         allSorts: vm.sorts,
         view: `/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/${viewName}.html`,
-        size: "small",
+        size: 'small',
         submit: function () {
           editorService.close();
           reload();
@@ -135,5 +135,5 @@
     }
   }
 
-  angular.module("umbraco").controller("NoCodeDeliveryApi.QueryController", NoCodeDeliveryApiQueryController);
+  angular.module('umbraco').controller('NoCodeDeliveryApi.QueryController', NoCodeDeliveryApiQueryController);
 })();

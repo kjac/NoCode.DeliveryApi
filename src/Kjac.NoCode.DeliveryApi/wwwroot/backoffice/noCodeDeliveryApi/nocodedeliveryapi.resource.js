@@ -1,4 +1,4 @@
-function NoCodedeliveryapiResource($q, $http, umbRequestHelper) {
+function NoCodeDeliveryApiResource($q, $http, umbRequestHelper) {
   function apiUrl(action) {
     return `/umbraco/backoffice/nocodedeliveryapi/${action}`;
   }
@@ -22,25 +22,25 @@ function NoCodedeliveryapiResource($q, $http, umbRequestHelper) {
       addFilter(filter) {
         return umbRequestHelper.resourcePromise(
           $http.post(queryApiUrl('addfilter'), filter),
-          `Failed to add filter`
+          'Failed to add filter'
         );
       },
       updateFilter(filter) {
         return umbRequestHelper.resourcePromise(
           $http.put(queryApiUrl('updatefilter'), filter),
-          `Failed to update filter`
+          'Failed to update filter'
         );
       },
       addSort(sort) {
         return umbRequestHelper.resourcePromise(
           $http.post(queryApiUrl('addsort'), sort),
-          `Failed to add sorter`
+          'Failed to add sorter'
         );
       },
       updateSort(sort) {
         return umbRequestHelper.resourcePromise(
           $http.put(queryApiUrl('updatesort'), sort),
-          `Failed to update sorter`
+          'Failed to update sorter'
         );
       },
       deleteFilter(key) {
@@ -69,13 +69,13 @@ function NoCodedeliveryapiResource($q, $http, umbRequestHelper) {
       add(client) {
         return umbRequestHelper.resourcePromise(
           $http.post(clientApiUrl('add'), client),
-          `Failed to add client`
+          'Failed to add client'
         );
       },
       update(client) {
         return umbRequestHelper.resourcePromise(
           $http.put(clientApiUrl('update'), client),
-          `Failed to update client`
+          'Failed to update client'
         );
       },
       delete(key) {
@@ -88,4 +88,4 @@ function NoCodedeliveryapiResource($q, $http, umbRequestHelper) {
   };
 }
 
-angular.module('umbraco.resources').factory('noCodeDeliveryApiResource', NoCodedeliveryapiResource);
+angular.module('umbraco.resources').factory('noCodeDeliveryApiResource', NoCodeDeliveryApiResource);

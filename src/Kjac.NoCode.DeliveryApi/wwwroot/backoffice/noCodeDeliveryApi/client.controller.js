@@ -37,5 +37,5 @@
     }
   }
 
-  angular.module("umbraco").controller("NoCodeDeliveryApi.ClientController", NoCodeDeliveryApiClientController);
+  angular.module('umbraco').controller('NoCodeDeliveryApi.ClientController', NoCodeDeliveryApiClientController);
 })();

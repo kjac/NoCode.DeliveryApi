@@ -12,17 +12,17 @@
     vm.page.navigation = [
       {
         name: 'Querying',
-        icon: "icon-filter-arrows",
-        view: "/App_Plugins/noCodeDeliveryApi/backoffice/noCodeDeliveryApi/query.html",
+        icon: 'icon-filter-arrows',
+        view: '/App_Plugins/noCodeDeliveryApi/backoffice/noCodeDeliveryApi/query.html',
         active: requestMethod === 'overview',
-        alias: "noCodeDeliveryApiOverview"
+        alias: 'noCodeDeliveryApiOverview'
       },
       {
         name: 'Clients',
-        icon: "icon-sitemap",
-        view: "/App_Plugins/noCodeDeliveryApi/backoffice/noCodeDeliveryApi/clients.html",
+        icon: 'icon-sitemap',
+        view: '/App_Plugins/noCodeDeliveryApi/backoffice/noCodeDeliveryApi/clients.html',
         active: requestMethod === 'client',
-        alias: "noCodeDeliveryApiClient"
+        alias: 'noCodeDeliveryApiClient'
       }
     ];
 
@@ -33,5 +33,5 @@
     });
   }
 
-  angular.module("umbraco").controller("NoCodeDeliveryApi.OverviewController", NoCodeDeliveryApiOverviewController);
+  angular.module('umbraco').controller('NoCodeDeliveryApi.OverviewController', NoCodeDeliveryApiOverviewController);
 })();

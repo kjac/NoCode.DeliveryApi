@@ -40,10 +40,10 @@
     function validateSortName() {
       if ($scope.sortForm) {
         const valid = vm.sort.name !== '' && !$scope.model.allSorts.find(f => f.key !== vm.sort.key && f.name.toLowerCase() === vm.sort.name.toLowerCase())
-        $scope.sortForm.sortName.$setValidity("required", valid)
+        $scope.sortForm.sortName.$setValidity('required', valid)
       }
     }
   }
 
-  angular.module("umbraco").controller("NoCodeDeliveryApi.SortController", NoCodeDeliveryApiSortController);
+  angular.module('umbraco').controller('NoCodeDeliveryApi.SortController', NoCodeDeliveryApiSortController);
 })();

@@ -65,10 +65,10 @@
     function validateFilterName() {
       if ($scope.filterForm) {
         const valid = vm.filter.name !== '' && !$scope.model.allFilters.find(f => f.key !== vm.filter.key && f.name.toLowerCase() === vm.filter.name.toLowerCase())
-        $scope.filterForm.filterName.$setValidity("required", valid)
+        $scope.filterForm.filterName.$setValidity('required', valid)
       }
     }
   }
 
-  angular.module("umbraco").controller("NoCodeDeliveryApi.FilterController", NoCodeDeliveryApiFilterController);
+  angular.module('umbraco').controller('NoCodeDeliveryApi.FilterController', NoCodeDeliveryApiFilterController);
 })();

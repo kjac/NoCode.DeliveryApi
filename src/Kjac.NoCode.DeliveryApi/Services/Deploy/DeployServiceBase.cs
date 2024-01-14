@@ -14,7 +14,7 @@ internal abstract class DeployServiceBase
     private readonly IHostEnvironment _hostEnvironment;
     private readonly ILogger _logger;
 
-    private const string DirectoryName = "NoCodeDeliveryApi";
+    private const string DirectoryName = "NoCode\\DeliveryApi";
     private const string FiltersFileName = "filters.json";
     private const string SortsFileName = "sorters.json";
 
@@ -85,8 +85,7 @@ internal abstract class DeployServiceBase
     };
 
     private string GetDirectoryPath()
-        => Path.Combine(_hostEnvironment.MapPathContentRoot(Umbraco.Cms.Core.Constants.SystemDirectories.Umbraco),
-            DirectoryName);
+        => _hostEnvironment.MapPathContentRoot(DirectoryName);
 
     private string GetFilePath(string fileName)
         => Path.Combine(GetDirectoryPath(), fileName);

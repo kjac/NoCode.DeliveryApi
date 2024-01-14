@@ -114,7 +114,7 @@ Usage examples:
 
 ## Deployment
 
-The package maintains a few configuration files with all filters and sorters at `/umbraco/NoCodeDeliveryApi/`. When Umbraco starts up, these files are read and any changes are synchronized to the Umbraco database.
+The package maintains a few configuration files with all filters and sorters in the folder `/NoCode/DeliveryApi/`. When Umbraco starts up, these files are read and any changes are synchronized to the Umbraco database.
 
 If you have multiple Umbraco environments, you can deploy filters and sorters automatically between environments by including these files in your Umbraco deployment.
 

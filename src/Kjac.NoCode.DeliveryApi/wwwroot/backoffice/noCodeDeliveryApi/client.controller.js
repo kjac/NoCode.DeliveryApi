@@ -15,14 +15,14 @@
         if (vm.client.key) {
           noCodeDeliveryApiResource
             .client
-            .update(vm.client)
+            .updateClient(vm.client)
             .then(data => {
               $scope.model.submit();
             });
         } else {
           noCodeDeliveryApiResource
             .client
-            .add(vm.client)
+            .addClient(vm.client)
             .then(data => {
               $scope.model.submit();
             });

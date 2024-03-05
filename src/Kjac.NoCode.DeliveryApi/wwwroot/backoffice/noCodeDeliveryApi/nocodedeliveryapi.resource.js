@@ -66,19 +66,19 @@ function NoCodeDeliveryApiResource($q, $http, umbRequestHelper) {
           'Failed to get all clients'
         );
       },
-      add(client) {
+      addClient(client) {
         return umbRequestHelper.resourcePromise(
           $http.post(clientApiUrl('add'), client),
           'Failed to add client'
         );
       },
-      update(client) {
+      updateClient(client) {
         return umbRequestHelper.resourcePromise(
           $http.put(clientApiUrl('update'), client),
           'Failed to update client'
         );
       },
-      delete(key) {
+      deleteClient(key) {
         return umbRequestHelper.resourcePromise(
           $http.delete(clientApiUrl(`delete?key=${key}`)),
           `Failed to delete client with id: ${key}`

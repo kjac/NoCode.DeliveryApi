@@ -61,7 +61,7 @@
         submit: () => {
           noCodeDeliveryApiResource
             .client
-            .delete(client.key)
+            .deleteClient(client.key)
             .then(() => {
               reload();
               notificationsService.success('The client was deleted.');

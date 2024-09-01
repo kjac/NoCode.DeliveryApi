@@ -1,10 +1,14 @@
 ﻿using Kjac.NoCode.DeliveryApi.Indexing.PropertyTypeParsing;
 using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Umbraco.Cms.Core.DeliveryApi;
+using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Serialization;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Extensions;
 
 namespace Kjac.NoCode.DeliveryApi.Indexing;
 
@@ -16,18 +20,32 @@ public sealed class NoCodeContentIndexer : IContentIndexHandler
     private readonly ILogger<NoCodeContentIndexer> _logger;
     private readonly IDictionary<string, IPropertyTypeParser> _propertyTypeParsers;
     private readonly IPropertyTypeParser _fallbackPropertyTypeParser;
+    private readonly IContentTypeService _contentTypeService;
 
+    [Obsolete("Use the constructor that accepts IContentTypeService. Will be removed in V2.")]
     public NoCodeContentIndexer(
         IFilterService filterService,
         ISortService sortService,
         IFieldBufferService fieldBufferService,
         ILogger<NoCodeContentIndexer> logger,
         IJsonSerializer jsonSerializer)
+        : this(filterService, sortService, fieldBufferService, logger, jsonSerializer, StaticServiceProvider.Instance.GetRequiredService<IContentTypeService>())
+    {
+    }
+
+    public NoCodeContentIndexer(
+        IFilterService filterService,
+        ISortService sortService,
+        IFieldBufferService fieldBufferService,
+        ILogger<NoCodeContentIndexer> logger,
+        IJsonSerializer jsonSerializer,
+        IContentTypeService contentTypeService)
     {
         _filterService = filterService;
         _sortService = sortService;
         _fieldBufferService = fieldBufferService;
         _logger = logger;
+        _contentTypeService = contentTypeService;
 
         // content index handlers are singletons, so this is OK
         _propertyTypeParsers = new Dictionary<string, IPropertyTypeParser>
@@ -81,6 +99,10 @@ public sealed class NoCodeContentIndexer : IContentIndexHandler
     {
         var indexFieldValues = new List<IndexFieldValue>();
         IEnumerable<FilterModel> filters = _filterService.GetAllAsync().GetAwaiter().GetResult();
+        IContentType contentType = _contentTypeService.Get(content.ContentTypeId)
+                                   ?? throw new InvalidOperationException($"The content type with ID {content.ContentTypeId} ({content.ContentType.Alias}) could not be found.");
+        IPropertyType[] propertyTypes = contentType.CompositionPropertyTypes.ToArray();
+
         foreach (FilterModel filter in filters)
         {
             // filters can have multiple values per content item
@@ -90,6 +112,14 @@ public sealed class NoCodeContentIndexer : IContentIndexHandler
                 if (content.HasProperty(fieldAlias) is false)
                 {
                     continue;
+                }
+
+                // invariant property value on a variant content item? [#11]
+                if (contentType.VariesByCulture()
+                    && culture is not null
+                    && propertyTypes.FirstOrDefault(p => p.Alias.InvariantEquals(fieldAlias))?.VariesByCulture() is false)
+                {
+                    culture = null;
                 }
 
                 var propertyValue = content.GetValue(fieldAlias, culture);

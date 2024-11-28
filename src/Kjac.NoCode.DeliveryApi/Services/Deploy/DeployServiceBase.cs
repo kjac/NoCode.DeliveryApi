@@ -14,7 +14,7 @@ internal abstract class DeployServiceBase
     private readonly IHostEnvironment _hostEnvironment;
     private readonly ILogger _logger;
 
-    private const string DirectoryName = "NoCode\\DeliveryApi";
+    private readonly string _directoryName = "NoCode" + Path.DirectorySeparatorChar + "DeliveryApi";
     private const string FiltersFileName = "filters.json";
     private const string SortsFileName = "sorters.json";
 

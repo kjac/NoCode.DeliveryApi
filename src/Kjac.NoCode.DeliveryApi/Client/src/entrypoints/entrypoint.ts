@@ -27,3 +27,6 @@ export const onInit: UmbEntryPointOnInit = (_host, _extensionRegistry) => {
     });
   });
 };
+
+export const onUnload: UmbEntryPointOnUnload = (_host, _extensionRegistry) => {
+};

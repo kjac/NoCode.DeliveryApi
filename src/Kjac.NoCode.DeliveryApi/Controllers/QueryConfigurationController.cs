@@ -1,14 +1,15 @@
-﻿using Kjac.NoCode.DeliveryApi.Models;
+﻿using Asp.Versioning;
+using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Services;
 using Kjac.NoCode.DeliveryApi.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Umbraco.Cms.Web.BackOffice.Controllers;
-using Umbraco.Cms.Web.Common.Attributes;
 
 namespace Kjac.NoCode.DeliveryApi.Controllers;
 
-[PluginController(Constants.BackOfficeArea)]
-public sealed class QueryConfigurationController : UmbracoAuthorizedJsonController
+[ApiVersion("1.0")]
+[ApiExplorerSettings(GroupName = "Querying")]
+public sealed class QueryConfigurationController : NoCodeDeliveryApiControllerBase
 {
     private readonly IFilterService _filterService;
     private readonly ISortService _sortService;
@@ -19,7 +20,8 @@ public sealed class QueryConfigurationController : UmbracoAuthorizedJsonControll
         _sortService = sortService;
     }
 
-    [HttpGet]
+    [HttpGet("query")]
+    [ProducesResponseType<OverviewViewModel>(StatusCodes.Status200OK)]
     public async Task<IActionResult> All()
     {
         IEnumerable<FilterModel> filters = await _filterService.GetAllAsync();
@@ -29,7 +31,7 @@ public sealed class QueryConfigurationController : UmbracoAuthorizedJsonControll
         {
             Filters = filters.Select(filter => new FilterViewModel
             {
-                Key = filter.Key,
+                Id = filter.Key,
                 Name = filter.Name,
                 Alias = filter.Alias,
                 FieldName = filter.IndexFieldName,
@@ -39,7 +41,7 @@ public sealed class QueryConfigurationController : UmbracoAuthorizedJsonControll
             }),
             Sorts = sorts.Select(sort => new SortViewModel
             {
-                Key = sort.Key,
+                Id = sort.Key,
                 Name = sort.Name,
                 Alias = sort.Alias,
                 FieldName = sort.IndexFieldName,
@@ -51,7 +53,9 @@ public sealed class QueryConfigurationController : UmbracoAuthorizedJsonControll
         });
     }
 
-    [HttpPost]
+    [HttpPost("query/filter")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddFilter(AddFilterRequestModel requestModel)
         => await _filterService.AddAsync(
             requestModel.Name,
@@ -61,16 +65,20 @@ public sealed class QueryConfigurationController : UmbracoAuthorizedJsonControll
             ? Ok()
             : BadRequest();
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateFilter(UpdateFilterRequestModel requestModel)
+    [HttpPut("query/filter/{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpdateFilter(Guid id, UpdateFilterRequestModel requestModel)
         => await _filterService.UpdateAsync(
-            requestModel.Key,
+            id,
             requestModel.Name,
             requestModel.PropertyAliases)
             ? Ok()
             : BadRequest();
 
-    [HttpPost]
+    [HttpPost("query/sort")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddSort(AddSortRequestModel requestModel)
         => await _sortService.AddAsync(
             requestModel.Name,
@@ -79,24 +87,30 @@ public sealed class QueryConfigurationController : UmbracoAuthorizedJsonControll
             ? Ok()
             : BadRequest();
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateSort(UpdateSortRequestModel requestModel)
+    [HttpPut("query/sort/{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpdateSort(Guid id, UpdateSortRequestModel requestModel)
         => await _sortService.UpdateAsync(
-            requestModel.Key,
+            id,
             requestModel.Name,
             requestModel.PropertyAlias)
             ? Ok()
             : BadRequest();
 
-    [HttpDelete]
-    public async Task<IActionResult> DeleteFilter(Guid key)
-        => await _filterService.DeleteAsync(key)
+    [HttpDelete("query/filter/{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> DeleteFilter(Guid id)
+        => await _filterService.DeleteAsync(id)
         ? Ok()
         : BadRequest();
 
-    [HttpDelete]
-    public async Task<IActionResult> DeleteSort(Guid key)
-        => await _sortService.DeleteAsync(key)
+    [HttpDelete("query/sort/{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> DeleteSort(Guid id)
+        => await _sortService.DeleteAsync(id)
             ? Ok()
             : BadRequest();
 }

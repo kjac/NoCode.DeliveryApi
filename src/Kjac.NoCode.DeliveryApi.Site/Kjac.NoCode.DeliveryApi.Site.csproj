@@ -20,6 +20,10 @@
     <Folder Include="umbraco\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Kjac.NoCode.DeliveryApi\Kjac.NoCode.DeliveryApi.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <!-- Razor files are needed for the backoffice to work correctly -->
     <CopyRazorGenerateFilesToPublishDirectory>true</CopyRazorGenerateFilesToPublishDirectory>

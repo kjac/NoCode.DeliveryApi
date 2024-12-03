@@ -7,6 +7,10 @@ using Kjac.NoCode.DeliveryApi.Services;
 using Kjac.NoCode.DeliveryApi.Services.Deploy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Umbraco.Cms.Api.Management.OpenApi;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Notifications;
@@ -47,9 +51,10 @@ public sealed class Composer : IComposer
 
         builder.AddNotificationAsyncHandler<UmbracoApplicationStartingNotification, StartingNotificationHandler>();
         builder.AddNotificationAsyncHandler<UmbracoApplicationStartedNotification, StartedNotificationHandler>();
-        builder.AddNotificationAsyncHandler<SendingContentNotification, SendingContentNotificationHandler>();
 
         builder.UrlProviders().Insert<ClientUrlProvider>();
+
+        builder.Services.ConfigureOptions<NoCodeDeliveryApiSwaggerGenOptions>();
     }
 
     private class DeliveryApiCorsPipelineFilter : UmbracoPipelineFilter
@@ -57,5 +62,23 @@ public sealed class Composer : IComposer
         public DeliveryApiCorsPipelineFilter()
             : base(nameof(DeliveryApiCorsPipelineFilter)) =>
             PostRouting = app => app.UseCors(Constants.CorsPolicyName);
+    }
+
+    private class NoCodeDeliveryApiSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
+    {
+        public void Configure(SwaggerGenOptions options)
+        {
+            options.SwaggerDoc(
+                "no-code-delivery-api",
+                new OpenApiInfo { Title = "No-Code Delivery API", Version = "1.0" }
+            );
+
+            options.OperationFilter<NoCodeDeliveryApiOperationSecurityFilter>();
+        }
+    }
+
+    private class NoCodeDeliveryApiOperationSecurityFilter : BackOfficeSecurityRequirementsOperationFilterBase
+    {
+        protected override string ApiName => "no-code-delivery-api";
     }
 }

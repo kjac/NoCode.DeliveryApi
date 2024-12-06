@@ -101,6 +101,27 @@ export const EventMessageTypeModelSchema = {
     type: 'string'
 } as const;
 
+export const FilterListViewModelSchema = {
+    required: ['canAddFilter', 'filters'],
+    type: 'object',
+    properties: {
+        filters: {
+            type: 'array',
+            items: {
+                oneOf: [
+                    {
+                        '$ref': '#/components/schemas/FilterViewModel'
+                    }
+                ]
+            }
+        },
+        canAddFilter: {
+            type: 'boolean'
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const FilterMatchTypeSchema = {
     enum: ['Exact', 'Partial'],
     type: 'string'
@@ -156,20 +177,15 @@ export const NotificationHeaderModelSchema = {
     additionalProperties: false
 } as const;
 
-export const OverviewViewModelSchema = {
-    required: ['canAddFilter', 'canAddSort', 'filters', 'sorts'],
+export const PrimitiveFieldTypeSchema = {
+    enum: ['String', 'Number', 'Date'],
+    type: 'string'
+} as const;
+
+export const SortListViewModelSchema = {
+    required: ['canAddSort', 'sorts'],
     type: 'object',
     properties: {
-        filters: {
-            type: 'array',
-            items: {
-                oneOf: [
-                    {
-                        '$ref': '#/components/schemas/FilterViewModel'
-                    }
-                ]
-            }
-        },
         sorts: {
             type: 'array',
             items: {
@@ -180,19 +196,11 @@ export const OverviewViewModelSchema = {
                 ]
             }
         },
-        canAddFilter: {
-            type: 'boolean'
-        },
         canAddSort: {
             type: 'boolean'
         }
     },
     additionalProperties: false
-} as const;
-
-export const PrimitiveFieldTypeSchema = {
-    enum: ['String', 'Number', 'Date'],
-    type: 'string'
 } as const;
 
 export const SortViewModelSchema = {

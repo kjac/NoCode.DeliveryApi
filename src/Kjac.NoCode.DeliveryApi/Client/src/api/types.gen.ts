@@ -32,6 +32,11 @@ export type ClientViewModel = {
 
 export type EventMessageTypeModel = 'Default' | 'Info' | 'Error' | 'Success' | 'Warning';
 
+export type FilterListViewModel = {
+    filters: Array<(FilterViewModel)>;
+    canAddFilter: boolean;
+};
+
 export type FilterMatchType = 'Exact' | 'Partial';
 
 export type FilterViewModel = {
@@ -50,14 +55,12 @@ export type NotificationHeaderModel = {
     type: EventMessageTypeModel;
 };
 
-export type OverviewViewModel = {
-    filters: Array<(FilterViewModel)>;
+export type PrimitiveFieldType = 'String' | 'Number' | 'Date';
+
+export type SortListViewModel = {
     sorts: Array<(SortViewModel)>;
-    canAddFilter: boolean;
     canAddSort: boolean;
 };
-
-export type PrimitiveFieldType = 'String' | 'Number' | 'Date';
 
 export type SortViewModel = {
     id: string;
@@ -119,64 +122,68 @@ export type PutUmbracoManagementApiV1NoCodeDeliveryApiClientByIdResponse = (stri
 
 export type PutUmbracoManagementApiV1NoCodeDeliveryApiClientByIdError = (string | unknown);
 
-export type GetUmbracoManagementApiV1NoCodeDeliveryApiQueryResponse = ((OverviewViewModel));
-
-export type GetUmbracoManagementApiV1NoCodeDeliveryApiQueryError = (unknown);
-
-export type PostUmbracoManagementApiV1NoCodeDeliveryApiQueryFilterData = {
+export type PostUmbracoManagementApiV1NoCodeDeliveryApiFilterData = {
     body?: (AddFilterRequestModel);
 };
 
-export type PostUmbracoManagementApiV1NoCodeDeliveryApiQueryFilterResponse = (string);
+export type PostUmbracoManagementApiV1NoCodeDeliveryApiFilterResponse = (string);
 
-export type PostUmbracoManagementApiV1NoCodeDeliveryApiQueryFilterError = (string | unknown);
+export type PostUmbracoManagementApiV1NoCodeDeliveryApiFilterError = (string | unknown);
 
-export type DeleteUmbracoManagementApiV1NoCodeDeliveryApiQueryFilterByIdData = {
+export type GetUmbracoManagementApiV1NoCodeDeliveryApiFilterResponse = ((FilterListViewModel));
+
+export type GetUmbracoManagementApiV1NoCodeDeliveryApiFilterError = (unknown);
+
+export type DeleteUmbracoManagementApiV1NoCodeDeliveryApiFilterByIdData = {
     path: {
         id: string;
     };
 };
 
-export type DeleteUmbracoManagementApiV1NoCodeDeliveryApiQueryFilterByIdResponse = (string);
+export type DeleteUmbracoManagementApiV1NoCodeDeliveryApiFilterByIdResponse = (string);
 
-export type DeleteUmbracoManagementApiV1NoCodeDeliveryApiQueryFilterByIdError = (string | unknown);
+export type DeleteUmbracoManagementApiV1NoCodeDeliveryApiFilterByIdError = (string | unknown);
 
-export type PutUmbracoManagementApiV1NoCodeDeliveryApiQueryFilterByIdData = {
+export type PutUmbracoManagementApiV1NoCodeDeliveryApiFilterByIdData = {
     body?: (UpdateFilterRequestModel);
     path: {
         id: string;
     };
 };
 
-export type PutUmbracoManagementApiV1NoCodeDeliveryApiQueryFilterByIdResponse = (string);
+export type PutUmbracoManagementApiV1NoCodeDeliveryApiFilterByIdResponse = (string);
 
-export type PutUmbracoManagementApiV1NoCodeDeliveryApiQueryFilterByIdError = (string | unknown);
+export type PutUmbracoManagementApiV1NoCodeDeliveryApiFilterByIdError = (string | unknown);
 
-export type PostUmbracoManagementApiV1NoCodeDeliveryApiQuerySortData = {
+export type PostUmbracoManagementApiV1NoCodeDeliveryApiSortData = {
     body?: (AddSortRequestModel);
 };
 
-export type PostUmbracoManagementApiV1NoCodeDeliveryApiQuerySortResponse = (string);
+export type PostUmbracoManagementApiV1NoCodeDeliveryApiSortResponse = (string);
 
-export type PostUmbracoManagementApiV1NoCodeDeliveryApiQuerySortError = (string | unknown);
+export type PostUmbracoManagementApiV1NoCodeDeliveryApiSortError = (string | unknown);
 
-export type DeleteUmbracoManagementApiV1NoCodeDeliveryApiQuerySortByIdData = {
+export type GetUmbracoManagementApiV1NoCodeDeliveryApiSortResponse = ((SortListViewModel));
+
+export type GetUmbracoManagementApiV1NoCodeDeliveryApiSortError = (unknown);
+
+export type DeleteUmbracoManagementApiV1NoCodeDeliveryApiSortByIdData = {
     path: {
         id: string;
     };
 };
 
-export type DeleteUmbracoManagementApiV1NoCodeDeliveryApiQuerySortByIdResponse = (string);
+export type DeleteUmbracoManagementApiV1NoCodeDeliveryApiSortByIdResponse = (string);
 
-export type DeleteUmbracoManagementApiV1NoCodeDeliveryApiQuerySortByIdError = (string | unknown);
+export type DeleteUmbracoManagementApiV1NoCodeDeliveryApiSortByIdError = (string | unknown);
 
-export type PutUmbracoManagementApiV1NoCodeDeliveryApiQuerySortByIdData = {
+export type PutUmbracoManagementApiV1NoCodeDeliveryApiSortByIdData = {
     body?: (UpdateSortRequestModel);
     path: {
         id: string;
     };
 };
 
-export type PutUmbracoManagementApiV1NoCodeDeliveryApiQuerySortByIdResponse = (string);
+export type PutUmbracoManagementApiV1NoCodeDeliveryApiSortByIdResponse = (string);
 
-export type PutUmbracoManagementApiV1NoCodeDeliveryApiQuerySortByIdError = (string | unknown);
+export type PutUmbracoManagementApiV1NoCodeDeliveryApiSortByIdError = (string | unknown);

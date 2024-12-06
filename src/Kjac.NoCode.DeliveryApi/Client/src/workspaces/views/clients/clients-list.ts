@@ -1,13 +1,12 @@
 import { LitElement, html, customElement, css, state } from "@umbraco-cms/backoffice/external/lit";
 import { UmbElementMixin } from "@umbraco-cms/backoffice/element-api";
 import { ClientsService, ClientViewModel } from "../../../api";
-import { PACKAGE_NAME } from "../../../constants.ts";
 
 @customElement('no-code-delivery-api-clients-workspace-view')
 export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElement) {
 
   @state()
-  private _serverData: Array<ClientViewModel> | undefined = undefined;
+  private _clients: Array<ClientViewModel> | undefined = undefined;
 
   async connectedCallback() {
     super.connectedCallback()
@@ -18,23 +17,21 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
       return;
     }
 
-    if (data !== undefined) {
-      this._serverData = data;
-    }
+    this._clients = data;
   }
 
   render() {
-    if (!this._serverData) {
+    if (!this._clients) {
       return html`
-        <uui-box headline="${PACKAGE_NAME}">
+        <uui-box>
           <uui-loader></uui-loader>
         </uui-box>
       `;
     }
     return html`
-     <uui-box headline="${PACKAGE_NAME}">
+     <uui-box>
        <ul>
-         ${this._serverData.map(filter => html`<li>${filter.name}</li>`)}
+         ${this._clients.map(filter => html`<li>${filter.name}</li>`)}
        </ul>
       </uui-box>
     `;

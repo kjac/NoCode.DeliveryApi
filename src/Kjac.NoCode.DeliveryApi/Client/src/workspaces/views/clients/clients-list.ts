@@ -1,9 +1,9 @@
-import { LitElement, html, customElement, css, state, when, repeat } from '@umbraco-cms/backoffice/external/lit';
-import { UmbElementMixin } from '@umbraco-cms/backoffice/element-api';
-import { ClientsService, ClientModel } from '../../../api';
-import { UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT } from '@umbraco-cms/backoffice/modal';
-import { CLIENT_MODAL_TOKEN } from './edit-client.ts';
-import { LanguageResponseModel, LanguageService } from '@umbraco-cms/backoffice/external/backend-api';
+import {LitElement, html, customElement, css, state, when, repeat} from '@umbraco-cms/backoffice/external/lit';
+import {UmbElementMixin} from '@umbraco-cms/backoffice/element-api';
+import {ClientsService, ClientModel} from '../../../api';
+import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
+import {CLIENT_MODAL_TOKEN} from './edit-client.ts';
+import {LanguageResponseModel, LanguageService} from '@umbraco-cms/backoffice/external/backend-api';
 
 @customElement('no-code-delivery-api-clients-workspace-view')
 export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElement) {
@@ -49,25 +49,27 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
                   <uui-table-head-cell></uui-table-head-cell>
                 </uui-table-head>
                 ${repeat(
-              this._clients!,
-              (client) => client.id,
-              (client) => html`
-               <uui-table-row>
-                 <uui-table-cell><uui-icon name="icon-unplug" aria-hidden="true"></uui-icon></uui-table-cell>
-                 <uui-table-cell>${client.name}</uui-table-cell>
-                 <uui-table-cell>${client.origin}</uui-table-cell>
-                 <uui-table-cell style="text-align: right;">
-                   <uui-action-bar>
-                     <uui-button label="Edit client" look="secondary" @click=${() => this._editClient(client)}>
-                       <uui-icon name="edit"></uui-icon>
-                     </uui-button>
-                     <uui-button label="Delete client" look="secondary" @click=${() => this._deleteClient(client)}>
-                       <uui-icon name="delete"></uui-icon>
-                     </uui-button>
-                   </uui-action-bar>
-                 </uui-table-cell>
-               </uui-table-row>
-             `)}
+                  this._clients!,
+                  (client) => client.id,
+                  (client) => html`
+                    <uui-table-row>
+                      <uui-table-cell>
+                        <uui-icon name="icon-unplug" aria-hidden="true"></uui-icon>
+                      </uui-table-cell>
+                      <uui-table-cell>${client.name}</uui-table-cell>
+                      <uui-table-cell>${client.origin}</uui-table-cell>
+                      <uui-table-cell style="text-align: right;">
+                        <uui-action-bar>
+                          <uui-button label="Edit client" look="secondary" @click=${() => this._editClient(client)}>
+                            <uui-icon name="edit"></uui-icon>
+                          </uui-button>
+                          <uui-button label="Delete client" look="secondary" @click=${() => this._deleteClient(client)}>
+                            <uui-icon name="delete"></uui-icon>
+                          </uui-button>
+                        </uui-action-bar>
+                      </uui-table-cell>
+                    </uui-table-row>
+                  `)}
               </uui-table>
             `,
             () => html`<p>No clients have been added yet.</p>`
@@ -78,7 +80,7 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
   }
 
   private async _loadData() {
-    const { data, error } = await ClientsService.getNoCodeDeliveryApiClient();
+    const {data, error} = await ClientsService.getNoCodeDeliveryApiClient();
     if (error) {
       console.error(error);
       return;
@@ -94,7 +96,7 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
       this._languages = (await LanguageService.getLanguage({take: 100})).items;
     }
 
-    const headline = client ? 'Edit client': 'Add client';
+    const headline = client ? 'Edit client' : 'Add client';
     const modalContext = this.#modalManagerContext?.open(
       this,
       CLIENT_MODAL_TOKEN,
@@ -122,7 +124,7 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
               publishedUrlPath: value.client.publishedUrlPath
             }
           })
-          : await ClientsService.postNoCodeDeliveryApiClient( { body: value.client });
+          : await ClientsService.postNoCodeDeliveryApiClient({body: value.client});
 
         if (!result.response.ok) {
           console.error('Unable to edit client - response code was: ', result.response.status);

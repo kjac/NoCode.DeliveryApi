@@ -1,8 +1,8 @@
-import { LitElement, html, customElement, state, nothing, when, repeat, css } from '@umbraco-cms/backoffice/external/lit';
-import { UmbElementMixin } from '@umbraco-cms/backoffice/element-api';
-import { SortersService, SortModel} from '../../../api';
-import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT } from '@umbraco-cms/backoffice/modal';
-import { SORTER_MODAL_TOKEN } from './edit-sorter.ts';
+import {LitElement, html, customElement, state, nothing, when, repeat, css} from '@umbraco-cms/backoffice/external/lit';
+import {UmbElementMixin} from '@umbraco-cms/backoffice/element-api';
+import {SortersService, SortModel} from '../../../api';
+import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
+import {SORTER_MODAL_TOKEN} from './edit-sorter.ts';
 
 @customElement('no-code-delivery-api-sorters-workspace-view')
 export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElement) {
@@ -35,7 +35,8 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
     }
     return html`
       <umb-body-layout header-transparent>
-        <uui-button look="outline" label="Add a new sorter" @click=${this._addSorter} disabled=${this._canAddSorter ? nothing : "true"} slot="header"></uui-button>
+        <uui-button look="outline" label="Add a new sorter" @click=${this._addSorter}
+                    disabled=${this._canAddSorter ? nothing : "true"} slot="header"></uui-button>
         <uui-box>
           ${when(
             this._sorters.length > 0,
@@ -51,28 +52,30 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
                   <uui-table-head-cell></uui-table-head-cell>
                 </uui-table-head>
                 ${repeat(
-              this._sorters!,
-              (sorter) => sorter.id,
-              (sorter) => html`
-               <uui-table-row>
-                 <uui-table-cell><uui-icon name="icon-filter" aria-hidden="true"></uui-icon></uui-table-cell>
-                 <uui-table-cell>${sorter.name}</uui-table-cell>
-                 <uui-table-cell>${sorter.alias}</uui-table-cell>
-                 <uui-table-cell>${sorter.propertyAlias}</uui-table-cell>
-                 <uui-table-cell>${sorter.primitiveFieldType}</uui-table-cell>
-                 <uui-table-cell class="muted">${sorter.fieldName}</uui-table-cell>
-                 <uui-table-cell>
-                   <uui-action-bar>
-                     <uui-button label="Edit filter" look="secondary" @click=${() => this._editSorter(sorter)}>
-                       <uui-icon name="edit"></uui-icon>
-                     </uui-button>
-                     <uui-button label="Delete filter" look="secondary" @click=${() => this._deleteSorter(sorter)}>
-                       <uui-icon name="delete"></uui-icon>
-                     </uui-button>
-                   </uui-action-bar>
-                 </uui-table-cell>
-               </uui-table-row>
-             `)}
+                  this._sorters!,
+                  (sorter) => sorter.id,
+                  (sorter) => html`
+                    <uui-table-row>
+                      <uui-table-cell>
+                        <uui-icon name="icon-filter" aria-hidden="true"></uui-icon>
+                      </uui-table-cell>
+                      <uui-table-cell>${sorter.name}</uui-table-cell>
+                      <uui-table-cell>${sorter.alias}</uui-table-cell>
+                      <uui-table-cell>${sorter.propertyAlias}</uui-table-cell>
+                      <uui-table-cell>${sorter.primitiveFieldType}</uui-table-cell>
+                      <uui-table-cell class="muted">${sorter.fieldName}</uui-table-cell>
+                      <uui-table-cell>
+                        <uui-action-bar>
+                          <uui-button label="Edit filter" look="secondary" @click=${() => this._editSorter(sorter)}>
+                            <uui-icon name="edit"></uui-icon>
+                          </uui-button>
+                          <uui-button label="Delete filter" look="secondary" @click=${() => this._deleteSorter(sorter)}>
+                            <uui-icon name="delete"></uui-icon>
+                          </uui-button>
+                        </uui-action-bar>
+                      </uui-table-cell>
+                    </uui-table-row>
+                  `)}
               </uui-table>
             `,
             () => html`<p>No filters have been added yet.</p>`
@@ -83,7 +86,7 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
   }
 
   private async _loadData() {
-    const { data, error } = await SortersService.getNoCodeDeliveryApiSort();
+    const {data, error} = await SortersService.getNoCodeDeliveryApiSort();
     if (error) {
       console.error(error);
       return;
@@ -95,11 +98,10 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
     }
   }
 
-
   private _addSorter = () => this._editSorter();
 
   private _editSorter(sorter?: SortModel) {
-    const headline = sorter ? 'Edit sorter': 'Add sorter';
+    const headline = sorter ? 'Edit sorter' : 'Add sorter';
     const modalContext = this.#modalManagerContext?.open(
       this,
       SORTER_MODAL_TOKEN,
@@ -124,7 +126,7 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
               propertyAlias: value.sorter.propertyAlias
             }
           })
-          : await SortersService.postNoCodeDeliveryApiSort( { body: value.sorter });
+          : await SortersService.postNoCodeDeliveryApiSort({body: value.sorter});
 
         if (!result.response.ok) {
           console.error('Unable to edit sorter - response code was: ', result.response.status);
@@ -138,7 +140,7 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
       });
   }
 
-  private _deleteSorter(sorter: SortModel){
+  private _deleteSorter(sorter: SortModel) {
     const modalContext = this.#modalManagerContext?.open(
       this,
       UMB_CONFIRM_MODAL,

@@ -1,8 +1,8 @@
-import { LitElement, html, customElement, css, repeat, when, nothing, state } from '@umbraco-cms/backoffice/external/lit';
-import { UmbElementMixin } from '@umbraco-cms/backoffice/element-api';
-import { FiltersService, FilterModel } from '../../../api';
-import { UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT } from '@umbraco-cms/backoffice/modal';
-import { FILTER_MODAL_TOKEN } from './edit-filter.ts';
+import {LitElement, html, customElement, css, repeat, when, nothing, state} from '@umbraco-cms/backoffice/external/lit';
+import {UmbElementMixin} from '@umbraco-cms/backoffice/element-api';
+import {FiltersService, FilterModel} from '../../../api';
+import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
+import {FILTER_MODAL_TOKEN} from './edit-filter.ts';
 
 @customElement('no-code-delivery-api-querying-workspace-view')
 export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitElement) {
@@ -36,7 +36,8 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
 
     return html`
       <umb-body-layout header-transparent>
-        <uui-button look="outline" label="Add a new filter" @click=${this._addFilter} disabled=${this._canAddFilter ? nothing : "true"} slot="header"></uui-button>
+        <uui-button look="outline" label="Add a new filter" @click=${this._addFilter}
+                    disabled=${this._canAddFilter ? nothing : "true"} slot="header"></uui-button>
         <uui-box>
           ${when(
             this._filters.length > 0,
@@ -56,26 +57,28 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
                   this._filters!,
                   (filter) => filter.id,
                   (filter) => html`
-               <uui-table-row>
-                 <uui-table-cell><uui-icon name="icon-filter" aria-hidden="true"></uui-icon></uui-table-cell>
-                 <uui-table-cell>${filter.name}</uui-table-cell>
-                 <uui-table-cell>${filter.alias}</uui-table-cell>
-                 <uui-table-cell>${filter.propertyAliases.join(', ')}</uui-table-cell>
-                 <uui-table-cell>${filter.filterMatchType}</uui-table-cell>
-                 <uui-table-cell>${filter.primitiveFieldType}</uui-table-cell>
-                 <uui-table-cell class="muted">${filter.fieldName}</uui-table-cell>
-                 <uui-table-cell>
-                   <uui-action-bar>
-                     <uui-button label="Edit filter" look="secondary" @click=${() => this._editFilter(filter)}>
-                       <uui-icon name="edit"></uui-icon>
-                     </uui-button>
-                     <uui-button label="Delete filter" look="secondary" @click=${() => this._deleteFilter(filter)}>
-                       <uui-icon name="delete"></uui-icon>
-                     </uui-button>
-                   </uui-action-bar>
-                 </uui-table-cell>
-               </uui-table-row>
-             `)}
+                    <uui-table-row>
+                      <uui-table-cell>
+                        <uui-icon name="icon-filter" aria-hidden="true"></uui-icon>
+                      </uui-table-cell>
+                      <uui-table-cell>${filter.name}</uui-table-cell>
+                      <uui-table-cell>${filter.alias}</uui-table-cell>
+                      <uui-table-cell>${filter.propertyAliases.join(', ')}</uui-table-cell>
+                      <uui-table-cell>${filter.filterMatchType}</uui-table-cell>
+                      <uui-table-cell>${filter.primitiveFieldType}</uui-table-cell>
+                      <uui-table-cell class="muted">${filter.fieldName}</uui-table-cell>
+                      <uui-table-cell>
+                        <uui-action-bar>
+                          <uui-button label="Edit filter" look="secondary" @click=${() => this._editFilter(filter)}>
+                            <uui-icon name="edit"></uui-icon>
+                          </uui-button>
+                          <uui-button label="Delete filter" look="secondary" @click=${() => this._deleteFilter(filter)}>
+                            <uui-icon name="delete"></uui-icon>
+                          </uui-button>
+                        </uui-action-bar>
+                      </uui-table-cell>
+                    </uui-table-row>
+                  `)}
               </uui-table>
             `,
             () => html`<p>No filters have been added yet.</p>`
@@ -86,7 +89,7 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
   }
 
   private async _loadData() {
-    const { data, error } = await FiltersService.getNoCodeDeliveryApiFilter();
+    const {data, error} = await FiltersService.getNoCodeDeliveryApiFilter();
     if (error) {
       console.error(error);
       return;
@@ -101,7 +104,7 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
   private _addFilter = () => this._editFilter();
 
   private _editFilter(filter?: FilterModel) {
-    const headline = filter ? 'Edit filter': 'Add filter';
+    const headline = filter ? 'Edit filter' : 'Add filter';
     const modalContext = this.#modalManagerContext?.open(
       this,
       FILTER_MODAL_TOKEN,
@@ -126,7 +129,7 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
               propertyAliases: value.filter.propertyAliases
             }
           })
-          : await FiltersService.postNoCodeDeliveryApiFilter( { body: value.filter });
+          : await FiltersService.postNoCodeDeliveryApiFilter({body: value.filter});
 
         if (!result.response.ok) {
           console.error('Unable to edit filter - response code was: ', result.response.status);
@@ -140,7 +143,7 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
       });
   }
 
-  private _deleteFilter(filter: FilterModel){
+  private _deleteFilter(filter: FilterModel) {
     const modalContext = this.#modalManagerContext?.open(
       this,
       UMB_CONFIRM_MODAL,

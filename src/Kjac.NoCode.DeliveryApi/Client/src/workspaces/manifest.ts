@@ -76,5 +76,11 @@ export const manifests: Array<UmbExtensionManifest> = [
     alias: `${PACKAGE_ALIAS}.Modal.EditSorter`,
     name: `${PACKAGE_NAME} Edit Sorter Modal View`,
     element: () => import('./views/sorters/edit-sorter.ts')
+  },
+  {
+    type: 'modal',
+    alias: `${PACKAGE_ALIAS}.Modal.EditClient`,
+    name: `${PACKAGE_NAME} Edit Client Modal View`,
+    element: () => import('./views/clients/edit-client.ts')
   }
 ];

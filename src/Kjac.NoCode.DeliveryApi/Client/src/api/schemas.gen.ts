@@ -40,10 +40,10 @@ export const AddFilterRequestModelSchema = {
             }
         },
         filterMatchType: {
-            '$ref': '#/components/schemas/FilterMatchType'
+            '$ref': '#/components/schemas/FilterMatchTypeModel'
         },
         primitiveFieldType: {
-            '$ref': '#/components/schemas/PrimitiveFieldType'
+            '$ref': '#/components/schemas/PrimitiveFieldTypeModel'
         }
     },
     additionalProperties: false
@@ -60,13 +60,13 @@ export const AddSortRequestModelSchema = {
             type: 'string'
         },
         primitiveFieldType: {
-            '$ref': '#/components/schemas/PrimitiveFieldType'
+            '$ref': '#/components/schemas/PrimitiveFieldTypeModel'
         }
     },
     additionalProperties: false
 } as const;
 
-export const ClientViewModelSchema = {
+export const ClientModelSchema = {
     required: ['id', 'name', 'origin'],
     type: 'object',
     properties: {
@@ -101,7 +101,7 @@ export const EventMessageTypeModelSchema = {
     type: 'string'
 } as const;
 
-export const FilterListViewModelSchema = {
+export const FilterListModelSchema = {
     required: ['canAddFilter', 'filters'],
     type: 'object',
     properties: {
@@ -110,7 +110,7 @@ export const FilterListViewModelSchema = {
             items: {
                 oneOf: [
                     {
-                        '$ref': '#/components/schemas/FilterViewModel'
+                        '$ref': '#/components/schemas/FilterModel'
                     }
                 ]
             }
@@ -122,12 +122,12 @@ export const FilterListViewModelSchema = {
     additionalProperties: false
 } as const;
 
-export const FilterMatchTypeSchema = {
+export const FilterMatchTypeModelSchema = {
     enum: ['Exact', 'Partial'],
     type: 'string'
 } as const;
 
-export const FilterViewModelSchema = {
+export const FilterModelSchema = {
     required: ['alias', 'fieldName', 'filterMatchType', 'id', 'name', 'primitiveFieldType', 'propertyAliases'],
     type: 'object',
     properties: {
@@ -145,7 +145,7 @@ export const FilterViewModelSchema = {
             type: 'string'
         },
         primitiveFieldType: {
-            '$ref': '#/components/schemas/PrimitiveFieldType'
+            '$ref': '#/components/schemas/PrimitiveFieldTypeModel'
         },
         propertyAliases: {
             type: 'array',
@@ -154,7 +154,7 @@ export const FilterViewModelSchema = {
             }
         },
         filterMatchType: {
-            '$ref': '#/components/schemas/FilterMatchType'
+            '$ref': '#/components/schemas/FilterMatchTypeModel'
         }
     },
     additionalProperties: false
@@ -177,12 +177,12 @@ export const NotificationHeaderModelSchema = {
     additionalProperties: false
 } as const;
 
-export const PrimitiveFieldTypeSchema = {
+export const PrimitiveFieldTypeModelSchema = {
     enum: ['String', 'Number', 'Date'],
     type: 'string'
 } as const;
 
-export const SortListViewModelSchema = {
+export const SortListModelSchema = {
     required: ['canAddSort', 'sorts'],
     type: 'object',
     properties: {
@@ -191,7 +191,7 @@ export const SortListViewModelSchema = {
             items: {
                 oneOf: [
                     {
-                        '$ref': '#/components/schemas/SortViewModel'
+                        '$ref': '#/components/schemas/SortModel'
                     }
                 ]
             }
@@ -203,7 +203,7 @@ export const SortListViewModelSchema = {
     additionalProperties: false
 } as const;
 
-export const SortViewModelSchema = {
+export const SortModelSchema = {
     required: ['alias', 'fieldName', 'id', 'name', 'primitiveFieldType', 'propertyAlias'],
     type: 'object',
     properties: {
@@ -221,7 +221,7 @@ export const SortViewModelSchema = {
             type: 'string'
         },
         primitiveFieldType: {
-            '$ref': '#/components/schemas/PrimitiveFieldType'
+            '$ref': '#/components/schemas/PrimitiveFieldTypeModel'
         },
         propertyAlias: {
             type: 'string'

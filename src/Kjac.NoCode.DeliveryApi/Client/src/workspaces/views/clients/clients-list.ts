@@ -1,6 +1,6 @@
 import { LitElement, html, customElement, css, state, when, repeat } from '@umbraco-cms/backoffice/external/lit';
 import { UmbElementMixin } from '@umbraco-cms/backoffice/element-api';
-import { ClientsService, ClientViewModel } from '../../../api';
+import { ClientsService, ClientModel } from '../../../api';
 import { UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT } from '@umbraco-cms/backoffice/modal';
 import { CLIENT_MODAL_TOKEN } from './edit-client.ts';
 import { LanguageResponseModel, LanguageService } from '@umbraco-cms/backoffice/external/backend-api';
@@ -10,7 +10,7 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
   #modalManagerContext?: typeof UMB_MODAL_MANAGER_CONTEXT.TYPE;
 
   @state()
-  private _clients?: Array<ClientViewModel>;
+  private _clients?: Array<ClientModel>;
 
   private _languages?: Array<LanguageResponseModel>
 
@@ -78,7 +78,7 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
   }
 
   private async _loadData() {
-    const { data, error } = await ClientsService.getUmbracoManagementApiV1NoCodeDeliveryApiClient();
+    const { data, error } = await ClientsService.getNoCodeDeliveryApiClient();
     if (error) {
       console.error(error);
       return;
@@ -89,7 +89,7 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
 
   private _addClient = () => this._editClient();
 
-  private async _editClient(client?: ClientViewModel) {
+  private async _editClient(client?: ClientModel) {
     if (!this._languages) {
       this._languages = (await LanguageService.getLanguage({take: 100})).items;
     }
@@ -110,7 +110,7 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
       ?.onSubmit()
       .then(async value => {
         const result = client
-          ? await ClientsService.putUmbracoManagementApiV1NoCodeDeliveryApiClientById({
+          ? await ClientsService.putNoCodeDeliveryApiClientById({
             path: {
               id: client.id
             },
@@ -122,7 +122,7 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
               publishedUrlPath: value.client.publishedUrlPath
             }
           })
-          : await ClientsService.postUmbracoManagementApiV1NoCodeDeliveryApiClient( { body: value.client });
+          : await ClientsService.postNoCodeDeliveryApiClient( { body: value.client });
 
         if (!result.response.ok) {
           console.error('Unable to edit client - response code was: ', result.response.status);
@@ -136,7 +136,7 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
       });
   }
 
-  private _deleteClient(client: ClientViewModel) {
+  private _deleteClient(client: ClientModel) {
     const modalContext = this.#modalManagerContext?.open(
       this,
       UMB_CONFIRM_MODAL,
@@ -153,7 +153,7 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
       ?.onSubmit()
       .then(() => {
         ClientsService
-          .deleteUmbracoManagementApiV1NoCodeDeliveryApiClientById({
+          .deleteNoCodeDeliveryApiClientById({
             path: {
               id: client.id
             }

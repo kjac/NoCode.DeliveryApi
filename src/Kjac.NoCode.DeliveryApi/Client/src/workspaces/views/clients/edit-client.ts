@@ -3,14 +3,14 @@ import { html, LitElement, property, customElement, css, nothing, query, repeat,
 import { umbFocus } from '@umbraco-cms/backoffice/lit-element';
 import { UmbElementMixin } from '@umbraco-cms/backoffice/element-api';
 import type { UmbModalContext, UmbModalExtensionElement } from '@umbraco-cms/backoffice/modal';
-import { AddClientRequestModel, ClientViewModel } from '../../../api';
+import { AddClientRequestModel, ClientModel } from '../../../api';
 import { PACKAGE_ALIAS } from '../../../constants.ts';
 import { LanguageResponseModel } from '@umbraco-cms/backoffice/external/backend-api';
 import { UUIInputElement } from '@umbraco-cms/backoffice/external/uui';
 
 export type ClientModalData = {
   headline: string;
-  client?: ClientViewModel;
+  client?: ClientModel;
   languages: Array<LanguageResponseModel>
 }
 

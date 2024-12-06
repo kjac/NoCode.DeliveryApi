@@ -4,12 +4,12 @@ import { umbFocus } from '@umbraco-cms/backoffice/lit-element';
 import { UmbElementMixin } from '@umbraco-cms/backoffice/element-api';
 import type { UmbModalContext, UmbModalExtensionElement } from '@umbraco-cms/backoffice/modal';
 import { UUIInputElement } from '@umbraco-cms/backoffice/external/uui';
-import { AddSortRequestModel, SortViewModel, PrimitiveFieldType} from '../../../api';
+import { AddSortRequestModel, SortModel, PrimitiveFieldTypeModel} from '../../../api';
 import { PACKAGE_ALIAS } from '../../../constants.ts';
 
 export type SorterModalData = {
   headline: string;
-  sorter?: SortViewModel;
+  sorter?: SortModel;
   currentSorterNames: Array<string>
 }
 
@@ -132,7 +132,7 @@ export default class EditSorterModalElement
                   <uui-combobox id="fieldType"
                                 required
                                 readonly=${this._isEditing() ? "true" : nothing}
-                                @change=${(e: { target: { value: PrimitiveFieldType; }; }) => this._sorter.primitiveFieldType = e.target.value}
+                                @change=${(e: { target: { value: PrimitiveFieldTypeModel; }; }) => this._sorter.primitiveFieldType = e.target.value}
                                 value="${this._sorter.primitiveFieldType}">
                     <uui-combobox-list>
                       <uui-combobox-list-option value="String">String</uui-combobox-list-option>

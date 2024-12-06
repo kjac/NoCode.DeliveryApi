@@ -1,6 +1,6 @@
 import { LitElement, html, customElement, state, nothing, when, repeat, css } from '@umbraco-cms/backoffice/external/lit';
 import { UmbElementMixin } from '@umbraco-cms/backoffice/element-api';
-import { SortersService, SortViewModel} from '../../../api';
+import { SortersService, SortModel} from '../../../api';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT } from '@umbraco-cms/backoffice/modal';
 import { SORTER_MODAL_TOKEN } from './edit-sorter.ts';
 
@@ -9,7 +9,7 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
   #modalManagerContext?: typeof UMB_MODAL_MANAGER_CONTEXT.TYPE;
 
   @state()
-  private _sorters?: Array<SortViewModel>;
+  private _sorters?: Array<SortModel>;
 
   private _canAddSorter: boolean = false;
 
@@ -83,7 +83,7 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
   }
 
   private async _loadData() {
-    const { data, error } = await SortersService.getUmbracoManagementApiV1NoCodeDeliveryApiSort();
+    const { data, error } = await SortersService.getNoCodeDeliveryApiSort();
     if (error) {
       console.error(error);
       return;
@@ -98,7 +98,7 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
 
   private _addSorter = () => this._editSorter();
 
-  private _editSorter(sorter?: SortViewModel) {
+  private _editSorter(sorter?: SortModel) {
     const headline = sorter ? 'Edit sorter': 'Add sorter';
     const modalContext = this.#modalManagerContext?.open(
       this,
@@ -115,7 +115,7 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
       ?.onSubmit()
       .then(async value => {
         const result = sorter
-          ? await SortersService.putUmbracoManagementApiV1NoCodeDeliveryApiSortById({
+          ? await SortersService.putNoCodeDeliveryApiSortById({
             path: {
               id: sorter.id
             },
@@ -124,7 +124,7 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
               propertyAlias: value.sorter.propertyAlias
             }
           })
-          : await SortersService.postUmbracoManagementApiV1NoCodeDeliveryApiSort( { body: value.sorter });
+          : await SortersService.postNoCodeDeliveryApiSort( { body: value.sorter });
 
         if (!result.response.ok) {
           console.error('Unable to edit sorter - response code was: ', result.response.status);
@@ -138,7 +138,7 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
       });
   }
 
-  private _deleteSorter(sorter: SortViewModel){
+  private _deleteSorter(sorter: SortModel){
     const modalContext = this.#modalManagerContext?.open(
       this,
       UMB_CONFIRM_MODAL,
@@ -155,7 +155,7 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
       ?.onSubmit()
       .then(() => {
         SortersService
-          .deleteUmbracoManagementApiV1NoCodeDeliveryApiSortById({
+          .deleteNoCodeDeliveryApiSortById({
             path: {
               id: sorter.id
             }

@@ -4,12 +4,12 @@ import { umbFocus } from '@umbraco-cms/backoffice/lit-element';
 import { UmbElementMixin } from '@umbraco-cms/backoffice/element-api';
 import type { UmbModalContext, UmbModalExtensionElement } from '@umbraco-cms/backoffice/modal';
 import { UUIInputElement } from '@umbraco-cms/backoffice/external/uui';
-import { AddFilterRequestModel, FilterMatchType, FilterViewModel, PrimitiveFieldType } from '../../../api';
+import { AddFilterRequestModel, FilterMatchTypeModel, FilterModel, PrimitiveFieldTypeModel } from '../../../api';
 import { PACKAGE_ALIAS } from '../../../constants.ts';
 
 export type FilterModalData = {
   headline: string;
-  filter?: FilterViewModel;
+  filter?: FilterModel;
   currentFilterNames: Array<string>
 }
 
@@ -149,7 +149,7 @@ export default class EditFilterModalElement
                   <uui-combobox id="fieldType"
                                 required
                                 readonly=${this._isEditing() ? "true" : nothing}
-                                @change=${(e: { target: { value: PrimitiveFieldType; }; }) => this._filter.primitiveFieldType = e.target.value}
+                                @change=${(e: { target: { value: PrimitiveFieldTypeModel; }; }) => this._filter.primitiveFieldType = e.target.value}
                                 value="${this._filter.primitiveFieldType}">
                     <uui-combobox-list>
                       <uui-combobox-list-option value="String">String</uui-combobox-list-option>
@@ -165,7 +165,7 @@ export default class EditFilterModalElement
                   <uui-combobox id
                                 required
                                 readonly=${this._isEditing() ? "true" : nothing}
-                                @change=${(e: { target: { value: FilterMatchType; }; }) => this._filter.filterMatchType = e.target.value}
+                                @change=${(e: { target: { value: FilterMatchTypeModel; }; }) => this._filter.filterMatchType = e.target.value}
                                 value="${this._filter.filterMatchType}">
                     <uui-combobox-list>
                       <uui-combobox-list-option value="Exact">Exact match</uui-combobox-list-option>

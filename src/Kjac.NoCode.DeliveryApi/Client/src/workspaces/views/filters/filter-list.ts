@@ -1,6 +1,6 @@
 import { LitElement, html, customElement, css, repeat, when, nothing, state } from '@umbraco-cms/backoffice/external/lit';
 import { UmbElementMixin } from '@umbraco-cms/backoffice/element-api';
-import { FiltersService, FilterViewModel} from '../../../api';
+import { FiltersService, FilterModel } from '../../../api';
 import { UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT } from '@umbraco-cms/backoffice/modal';
 import { FILTER_MODAL_TOKEN } from './edit-filter.ts';
 
@@ -9,7 +9,7 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
   #modalManagerContext?: typeof UMB_MODAL_MANAGER_CONTEXT.TYPE;
 
   @state()
-  private _filters?: Array<FilterViewModel>;
+  private _filters?: Array<FilterModel>;
 
   private _canAddFilter: boolean = false;
 
@@ -86,7 +86,7 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
   }
 
   private async _loadData() {
-    const { data, error } = await FiltersService.getUmbracoManagementApiV1NoCodeDeliveryApiFilter();
+    const { data, error } = await FiltersService.getNoCodeDeliveryApiFilter();
     if (error) {
       console.error(error);
       return;
@@ -100,7 +100,7 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
 
   private _addFilter = () => this._editFilter();
 
-  private _editFilter(filter?: FilterViewModel) {
+  private _editFilter(filter?: FilterModel) {
     const headline = filter ? 'Edit filter': 'Add filter';
     const modalContext = this.#modalManagerContext?.open(
       this,
@@ -117,7 +117,7 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
       ?.onSubmit()
       .then(async value => {
         const result = filter
-          ? await FiltersService.putUmbracoManagementApiV1NoCodeDeliveryApiFilterById({
+          ? await FiltersService.putNoCodeDeliveryApiFilterById({
             path: {
               id: filter.id
             },
@@ -126,7 +126,7 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
               propertyAliases: value.filter.propertyAliases
             }
           })
-          : await FiltersService.postUmbracoManagementApiV1NoCodeDeliveryApiFilter( { body: value.filter });
+          : await FiltersService.postNoCodeDeliveryApiFilter( { body: value.filter });
 
         if (!result.response.ok) {
           console.error('Unable to edit filter - response code was: ', result.response.status);
@@ -140,7 +140,7 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
       });
   }
 
-  private _deleteFilter(filter: FilterViewModel){
+  private _deleteFilter(filter: FilterModel){
     const modalContext = this.#modalManagerContext?.open(
       this,
       UMB_CONFIRM_MODAL,
@@ -157,7 +157,7 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
       ?.onSubmit()
       .then(() => {
         FiltersService
-          .deleteUmbracoManagementApiV1NoCodeDeliveryApiFilterById({
+          .deleteNoCodeDeliveryApiFilterById({
             path: {
               id: filter.id
             }

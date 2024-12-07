@@ -1,14 +1,17 @@
 ﻿using Kjac.NoCode.DeliveryApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Api.Common.Attributes;
 using Umbraco.Cms.Api.Management.Controllers;
 using Umbraco.Cms.Api.Management.Routing;
+using Umbraco.Cms.Web.Common.Authorization;
 
 namespace Kjac.NoCode.DeliveryApi.Controllers;
 
 [VersionedApiBackOfficeRoute("no-code-delivery-api")]
 [MapToApi("no-code-delivery-api")]
+[Authorize(Policy = AuthorizationPolicies.SectionAccessSettings)]
 public abstract class NoCodeDeliveryApiControllerBase : ManagementApiControllerBase
 {
     protected IActionResult OperationStatusResult(OperationStatus operationStatus)

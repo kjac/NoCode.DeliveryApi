@@ -1,4 +1,5 @@
 ﻿using Kjac.NoCode.DeliveryApi.Models;
+using Umbraco.Cms.Core;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
@@ -10,16 +11,16 @@ public interface ISortService
 
     Task<bool> ExistsAsync(string alias);
 
-    Task<bool> AddAsync(
+    Task<Attempt<OperationStatus>> AddAsync(
         string name,
         string propertyAlias,
         PrimitiveFieldType primitiveFieldType,
         Guid? key = null,
         string? indexFieldName = null);
 
-    Task<bool> UpdateAsync(Guid key, string name, string propertyAlias);
+    Task<Attempt<OperationStatus>> UpdateAsync(Guid key, string name, string propertyAlias);
 
-    Task<bool> DeleteAsync(Guid key);
+    Task<Attempt<OperationStatus>> DeleteAsync(Guid key);
 
     bool CanAdd();
 }

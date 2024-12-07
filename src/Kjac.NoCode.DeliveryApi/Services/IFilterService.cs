@@ -1,4 +1,5 @@
 ﻿using Kjac.NoCode.DeliveryApi.Models;
+using Umbraco.Cms.Core;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
@@ -10,7 +11,7 @@ public interface IFilterService
 
     Task<bool> ExistsAsync(string alias);
 
-    Task<bool> AddAsync(
+    Task<Attempt<OperationStatus>> AddAsync(
         string name,
         string[] propertyAliases,
         FilterMatchType filterMatchType,
@@ -18,9 +19,9 @@ public interface IFilterService
         Guid? key = null,
         string? indexFieldName = null);
 
-    Task<bool> UpdateAsync(Guid key, string name, string[] propertyAliases);
+    Task<Attempt<OperationStatus>> UpdateAsync(Guid key, string name, string[] propertyAliases);
 
-    Task<bool> DeleteAsync(Guid key);
+    Task<Attempt<OperationStatus>> DeleteAsync(Guid key);
 
     bool CanAdd();
 }

@@ -4,6 +4,7 @@ using Kjac.NoCode.DeliveryApi.Services;
 using Kjac.NoCode.DeliveryApi.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Umbraco.Cms.Core;
 
 namespace Kjac.NoCode.DeliveryApi.Controllers;
 
@@ -36,34 +37,40 @@ public sealed class ClientConfigurationController : NoCodeDeliveryApiControllerB
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add(AddClientRequestModel requestModel)
-        => await _clientService.AddAsync(
+    {
+        Attempt<OperationStatus> result = await _clientService.AddAsync(
             requestModel.Name,
             requestModel.Origin,
             requestModel.PreviewUrlPath,
             requestModel.PublishedUrlPath,
-            requestModel.Culture)
-        ? Ok()
-        : BadRequest();
+            requestModel.Culture);
+
+        return OperationStatusResult(result.Result);
+    }
 
     [HttpPut("client/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Update(Guid id, UpdateClientRequestModel requestModel)
-        => await _clientService.UpdateAsync(
+    {
+        Attempt<OperationStatus> result = await _clientService.UpdateAsync(
             id,
             requestModel.Name,
             requestModel.Origin,
             requestModel.PreviewUrlPath,
             requestModel.PublishedUrlPath,
-            requestModel.Culture)
-        ? Ok()
-        : BadRequest();
+            requestModel.Culture);
+
+        return OperationStatusResult(result.Result);
+    }
 
     [HttpDelete("client/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(Guid id)
-        => await _clientService.DeleteAsync(id)
-        ? Ok()
-        : BadRequest();
+    {
+        Attempt<OperationStatus> result = await _clientService.DeleteAsync(id);
+
+        return OperationStatusResult(result.Result);
+    }
 }

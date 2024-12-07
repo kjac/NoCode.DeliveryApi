@@ -4,6 +4,7 @@ using Kjac.NoCode.DeliveryApi.Services;
 using Kjac.NoCode.DeliveryApi.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Umbraco.Cms.Core;
 
 namespace Kjac.NoCode.DeliveryApi.Controllers;
 
@@ -40,32 +41,38 @@ public class FilterConfigurationController : NoCodeDeliveryApiControllerBase
 
     [HttpPost("filter")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add(AddFilterRequestModel requestModel)
-        => await _filterService.AddAsync(
+    {
+        Attempt<OperationStatus> result = await _filterService.AddAsync(
             requestModel.Name,
             requestModel.PropertyAliases,
             requestModel.FilterMatchType,
-            requestModel.PrimitiveFieldType)
-            ? Ok()
-            : BadRequest();
+            requestModel.PrimitiveFieldType);
+
+        return OperationStatusResult(result.Result);
+    }
 
     [HttpPut("filter/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Update(Guid id, UpdateFilterRequestModel requestModel)
-        => await _filterService.UpdateAsync(
+    {
+        Attempt<OperationStatus> result = await _filterService.UpdateAsync(
             id,
             requestModel.Name,
-            requestModel.PropertyAliases)
-            ? Ok()
-            : BadRequest();
+            requestModel.PropertyAliases);
+
+        return OperationStatusResult(result.Result);
+    }
 
     [HttpDelete("filter/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(Guid id)
-        => await _filterService.DeleteAsync(id)
-            ? Ok()
-            : BadRequest();
+    {
+        Attempt<OperationStatus> result = await _filterService.DeleteAsync(id);
+
+        return OperationStatusResult(result.Result);
+    }
 }

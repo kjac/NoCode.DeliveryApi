@@ -4,6 +4,7 @@ using Kjac.NoCode.DeliveryApi.Services;
 using Kjac.NoCode.DeliveryApi.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Umbraco.Cms.Core;
 
 namespace Kjac.NoCode.DeliveryApi.Controllers;
 
@@ -39,31 +40,37 @@ public class SortConfigurationController : NoCodeDeliveryApiControllerBase
 
     [HttpPost("sort")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add(AddSortRequestModel requestModel)
-        => await _sortService.AddAsync(
+    {
+        Attempt<OperationStatus> result = await _sortService.AddAsync(
             requestModel.Name,
             requestModel.PropertyAlias,
-            requestModel.PrimitiveFieldType)
-            ? Ok()
-            : BadRequest();
+            requestModel.PrimitiveFieldType);
+
+        return OperationStatusResult(result.Result);
+    }
 
     [HttpPut("sort/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Update(Guid id, UpdateSortRequestModel requestModel)
-        => await _sortService.UpdateAsync(
+    {
+        Attempt<OperationStatus> result = await _sortService.UpdateAsync(
             id,
             requestModel.Name,
-            requestModel.PropertyAlias)
-            ? Ok()
-            : BadRequest();
+            requestModel.PropertyAlias);
+
+        return OperationStatusResult(result.Result);
+    }
 
     [HttpDelete("sort/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(Guid id)
-        => await _sortService.DeleteAsync(id)
-            ? Ok()
-            : BadRequest();
+    {
+        Attempt<OperationStatus> result = await _sortService.DeleteAsync(id);
+
+        return OperationStatusResult(result.Result);
+    }
 }

@@ -1,12 +1,13 @@
-import {LitElement, html, customElement, css, state, when, repeat} from '@umbraco-cms/backoffice/external/lit';
-import {UmbElementMixin} from '@umbraco-cms/backoffice/element-api';
+import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
+import {html, customElement, css, state, when, repeat} from '@umbraco-cms/backoffice/external/lit';
 import {ClientsService, ClientModel} from '../../../api';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
 import {CLIENT_MODAL_TOKEN} from './edit-client.ts';
 import {LanguageResponseModel, LanguageService} from '@umbraco-cms/backoffice/external/backend-api';
+import {tryExecuteAndNotify} from '@umbraco-cms/backoffice/resources';
 
 @customElement('no-code-delivery-api-clients-workspace-view')
-export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElement) {
+export default class ClientsWorkspaceViewElement extends UmbLitElement {
   #modalManagerContext?: typeof UMB_MODAL_MANAGER_CONTEXT.TYPE;
 
   @state()
@@ -80,20 +81,21 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
   }
 
   private async _loadData() {
-    const {data, error} = await ClientsService.getNoCodeDeliveryApiClient();
-    if (error) {
-      console.error(error);
-      return;
+    const {data} = await tryExecuteAndNotify(this, ClientsService.getNoCodeDeliveryApiClient());
+    if (data) {
+      this._clients = data;
     }
-
-    this._clients = data;
   }
 
   private _addClient = () => this._editClient();
 
   private async _editClient(client?: ClientModel) {
     if (!this._languages) {
-      this._languages = (await LanguageService.getLanguage({take: 100})).items;
+      const {data, error} = await tryExecuteAndNotify(this, LanguageService.getLanguage({take: 100}));
+      if(error) {
+        return;
+      }
+      this._languages = data!.items;
     }
 
     const headline = client ? 'Edit client' : 'Add client';
@@ -111,27 +113,25 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
     modalContext
       ?.onSubmit()
       .then(async value => {
-        const result = client
-          ? await ClientsService.putNoCodeDeliveryApiClientById({
-            path: {
-              id: client.id
-            },
-            body: {
-              name: value.client.name,
-              origin: value.client.origin,
-              culture: value.client.culture,
-              previewUrlPath: value.client.previewUrlPath,
-              publishedUrlPath: value.client.publishedUrlPath
-            }
-          })
-          : await ClientsService.postNoCodeDeliveryApiClient({body: value.client});
+        const {error} = await tryExecuteAndNotify(
+          this,
+          client
+            ? ClientsService.putNoCodeDeliveryApiClientById({
+              id: client.id,
+              requestBody: {
+                name: value.client.name,
+                origin: value.client.origin,
+                culture: value.client.culture,
+                previewUrlPath: value.client.previewUrlPath,
+                publishedUrlPath: value.client.publishedUrlPath
+              }
+            })
+            : ClientsService.postNoCodeDeliveryApiClient({requestBody: value.client})
+        )
 
-        if (!result.response.ok) {
-          console.error('Unable to edit client - response code was: ', result.response.status);
-          return;
+        if (!error) {
+          await this._loadData();
         }
-
-        await this._loadData();
       })
       .catch(() => {
         // the modal was cancelled, do nothing
@@ -153,15 +153,15 @@ export default class ClientsWorkspaceViewElement extends UmbElementMixin(LitElem
     );
     modalContext
       ?.onSubmit()
-      .then(() => {
-        ClientsService
-          .deleteNoCodeDeliveryApiClientById({
-            path: {
-              id: client.id
-            }
-          })
-          .then(async () => await this._loadData())
-          .catch((reason) => console.error('Could not delete the client - reason: ', reason))
+      .then(async () => {
+        const {error} = await tryExecuteAndNotify(
+          this,
+          ClientsService.deleteNoCodeDeliveryApiClientById({id: client.id})
+        );
+
+        if (!error) {
+          await this._loadData();
+        }
       })
       .catch(() => {
         // confirm dialog was cancelled

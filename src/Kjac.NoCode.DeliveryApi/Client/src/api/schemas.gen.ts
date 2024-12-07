@@ -182,6 +182,34 @@ export const PrimitiveFieldTypeModelSchema = {
     type: 'string'
 } as const;
 
+export const ProblemDetailsSchema = {
+    type: 'object',
+    properties: {
+        type: {
+            type: 'string',
+            nullable: true
+        },
+        title: {
+            type: 'string',
+            nullable: true
+        },
+        status: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        detail: {
+            type: 'string',
+            nullable: true
+        },
+        instance: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: {}
+} as const;
+
 export const SortListModelSchema = {
     required: ['canAddSort', 'sorts'],
     type: 'object',

@@ -32,9 +32,14 @@ fetch(swaggerUrl).then(response => {
   console.log(`Calling ${chalk.yellow('hey-api')} to generate TypeScript client`);
 
   createClient({
-    client: '@hey-api/client-fetch',
+    client: 'legacy/fetch',
     input: swaggerUrl,
-    output: 'src/api',
+    debug: true,
+    output: {
+      path: 'src/api',
+      format: 'prettier',
+      lint: 'eslint',
+    },
     services: {
       asClass: true,
     }

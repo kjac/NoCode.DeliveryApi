@@ -57,6 +57,15 @@ export type NotificationHeaderModel = {
 
 export type PrimitiveFieldTypeModel = 'String' | 'Number' | 'Date';
 
+export type ProblemDetails = {
+    type?: (string) | null;
+    title?: (string) | null;
+    status?: (number) | null;
+    detail?: (string) | null;
+    instance?: (string) | null;
+    [key: string]: (unknown | string | number) | undefined;
+};
+
 export type SortListModel = {
     sorts: Array<(SortModel)>;
     canAddSort: boolean;
@@ -90,100 +99,64 @@ export type UpdateSortRequestModel = {
 };
 
 export type PostNoCodeDeliveryApiClientData = {
-    body?: (AddClientRequestModel);
+    requestBody?: (AddClientRequestModel);
 };
 
 export type PostNoCodeDeliveryApiClientResponse = (string);
 
-export type PostNoCodeDeliveryApiClientError = (string | unknown);
-
 export type GetNoCodeDeliveryApiClientResponse = (Array<(ClientModel)>);
 
-export type GetNoCodeDeliveryApiClientError = (unknown);
-
 export type DeleteNoCodeDeliveryApiClientByIdData = {
-    path: {
-        id: string;
-    };
+    id: string;
 };
 
 export type DeleteNoCodeDeliveryApiClientByIdResponse = (string);
 
-export type DeleteNoCodeDeliveryApiClientByIdError = (string | unknown);
-
 export type PutNoCodeDeliveryApiClientByIdData = {
-    body?: (UpdateClientRequestModel);
-    path: {
-        id: string;
-    };
+    id: string;
+    requestBody?: (UpdateClientRequestModel);
 };
 
 export type PutNoCodeDeliveryApiClientByIdResponse = (string);
 
-export type PutNoCodeDeliveryApiClientByIdError = (string | unknown);
-
 export type PostNoCodeDeliveryApiFilterData = {
-    body?: (AddFilterRequestModel);
+    requestBody?: (AddFilterRequestModel);
 };
 
 export type PostNoCodeDeliveryApiFilterResponse = (string);
 
-export type PostNoCodeDeliveryApiFilterError = (string | unknown);
-
 export type GetNoCodeDeliveryApiFilterResponse = ((FilterListModel));
 
-export type GetNoCodeDeliveryApiFilterError = (unknown);
-
 export type DeleteNoCodeDeliveryApiFilterByIdData = {
-    path: {
-        id: string;
-    };
+    id: string;
 };
 
 export type DeleteNoCodeDeliveryApiFilterByIdResponse = (string);
 
-export type DeleteNoCodeDeliveryApiFilterByIdError = (string | unknown);
-
 export type PutNoCodeDeliveryApiFilterByIdData = {
-    body?: (UpdateFilterRequestModel);
-    path: {
-        id: string;
-    };
+    id: string;
+    requestBody?: (UpdateFilterRequestModel);
 };
 
 export type PutNoCodeDeliveryApiFilterByIdResponse = (string);
 
-export type PutNoCodeDeliveryApiFilterByIdError = (string | unknown);
-
 export type PostNoCodeDeliveryApiSortData = {
-    body?: (AddSortRequestModel);
+    requestBody?: (AddSortRequestModel);
 };
 
 export type PostNoCodeDeliveryApiSortResponse = (string);
 
-export type PostNoCodeDeliveryApiSortError = (string | unknown);
-
 export type GetNoCodeDeliveryApiSortResponse = ((SortListModel));
 
-export type GetNoCodeDeliveryApiSortError = (unknown);
-
 export type DeleteNoCodeDeliveryApiSortByIdData = {
-    path: {
-        id: string;
-    };
+    id: string;
 };
 
 export type DeleteNoCodeDeliveryApiSortByIdResponse = (string);
 
-export type DeleteNoCodeDeliveryApiSortByIdError = (string | unknown);
-
 export type PutNoCodeDeliveryApiSortByIdData = {
-    body?: (UpdateSortRequestModel);
-    path: {
-        id: string;
-    };
+    id: string;
+    requestBody?: (UpdateSortRequestModel);
 };
 
 export type PutNoCodeDeliveryApiSortByIdResponse = (string);
-
-export type PutNoCodeDeliveryApiSortByIdError = (string | unknown);

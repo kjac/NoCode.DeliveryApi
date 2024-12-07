@@ -1,11 +1,12 @@
-import {LitElement, html, customElement, css, repeat, when, nothing, state} from '@umbraco-cms/backoffice/external/lit';
-import {UmbElementMixin} from '@umbraco-cms/backoffice/element-api';
+import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
+import {html, customElement, css, repeat, when, nothing, state} from '@umbraco-cms/backoffice/external/lit';
 import {FiltersService, FilterModel} from '../../../api';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
 import {FILTER_MODAL_TOKEN} from './edit-filter.ts';
+import {tryExecuteAndNotify} from '@umbraco-cms/backoffice/resources';
 
 @customElement('no-code-delivery-api-querying-workspace-view')
-export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitElement) {
+export default class QueryingWorkspaceViewElement extends UmbLitElement {
   #modalManagerContext?: typeof UMB_MODAL_MANAGER_CONTEXT.TYPE;
 
   @state()
@@ -89,12 +90,7 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
   }
 
   private async _loadData() {
-    const {data, error} = await FiltersService.getNoCodeDeliveryApiFilter();
-    if (error) {
-      console.error(error);
-      return;
-    }
-
+    const {data} = await tryExecuteAndNotify(this, FiltersService.getNoCodeDeliveryApiFilter());
     if (data) {
       this._filters = data.filters;
       this._canAddFilter = data.canAddFilter;
@@ -119,24 +115,22 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
     modalContext
       ?.onSubmit()
       .then(async value => {
-        const result = filter
-          ? await FiltersService.putNoCodeDeliveryApiFilterById({
-            path: {
-              id: filter.id
-            },
-            body: {
-              name: value.filter.name,
-              propertyAliases: value.filter.propertyAliases
-            }
-          })
-          : await FiltersService.postNoCodeDeliveryApiFilter({body: value.filter});
+        const {error} = await tryExecuteAndNotify(
+          this,
+          filter
+            ? FiltersService.putNoCodeDeliveryApiFilterById({
+              id: filter.id,
+              requestBody: {
+                name: value.filter.name,
+                propertyAliases: value.filter.propertyAliases
+              }
+            })
+            : FiltersService.postNoCodeDeliveryApiFilter({requestBody: value.filter})
+        );
 
-        if (!result.response.ok) {
-          console.error('Unable to edit filter - response code was: ', result.response.status);
-          return;
+        if (!error) {
+          await this._loadData();
         }
-
-        await this._loadData();
       })
       .catch(() => {
         // the modal was cancelled, do nothing
@@ -158,15 +152,15 @@ export default class QueryingWorkspaceViewElement extends UmbElementMixin(LitEle
     );
     modalContext
       ?.onSubmit()
-      .then(() => {
-        FiltersService
-          .deleteNoCodeDeliveryApiFilterById({
-            path: {
-              id: filter.id
-            }
-          })
-          .then(async () => await this._loadData())
-          .catch((reason) => console.error('Could not delete the filter - reason: ', reason))
+      .then(async () => {
+        const {error} = await tryExecuteAndNotify(
+          this,
+          FiltersService.deleteNoCodeDeliveryApiFilterById({id: filter.id})
+        );
+
+        if (!error) {
+          await this._loadData();
+        }
       })
       .catch(() => {
         // confirm dialog was cancelled

@@ -1,11 +1,12 @@
-import {LitElement, html, customElement, state, nothing, when, repeat, css} from '@umbraco-cms/backoffice/external/lit';
-import {UmbElementMixin} from '@umbraco-cms/backoffice/element-api';
+import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
+import {html, customElement, state, nothing, when, repeat, css} from '@umbraco-cms/backoffice/external/lit';
 import {SortersService, SortModel} from '../../../api';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
 import {SORTER_MODAL_TOKEN} from './edit-sorter.ts';
+import {tryExecuteAndNotify} from '@umbraco-cms/backoffice/resources';
 
 @customElement('no-code-delivery-api-sorters-workspace-view')
-export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElement) {
+export default class SortersWorkspaceViewElement extends UmbLitElement {
   #modalManagerContext?: typeof UMB_MODAL_MANAGER_CONTEXT.TYPE;
 
   @state()
@@ -86,12 +87,7 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
   }
 
   private async _loadData() {
-    const {data, error} = await SortersService.getNoCodeDeliveryApiSort();
-    if (error) {
-      console.error(error);
-      return;
-    }
-
+    const {data} = await tryExecuteAndNotify(this, SortersService.getNoCodeDeliveryApiSort());
     if (data) {
       this._sorters = data.sorts;
       this._canAddSorter = data.canAddSort;
@@ -116,24 +112,22 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
     modalContext
       ?.onSubmit()
       .then(async value => {
-        const result = sorter
-          ? await SortersService.putNoCodeDeliveryApiSortById({
-            path: {
-              id: sorter.id
-            },
-            body: {
-              name: value.sorter.name,
-              propertyAlias: value.sorter.propertyAlias
-            }
-          })
-          : await SortersService.postNoCodeDeliveryApiSort({body: value.sorter});
+        const {error} = await tryExecuteAndNotify(
+          this,
+          sorter
+            ? SortersService.putNoCodeDeliveryApiSortById({
+              id: sorter.id,
+              requestBody: {
+                name: value.sorter.name,
+                propertyAlias: value.sorter.propertyAlias
+              }
+            })
+            : SortersService.postNoCodeDeliveryApiSort({requestBody: value.sorter})
+        );
 
-        if (!result.response.ok) {
-          console.error('Unable to edit sorter - response code was: ', result.response.status);
-          return;
+        if (!error) {
+          await this._loadData();
         }
-
-        await this._loadData();
       })
       .catch(() => {
         // the modal was cancelled, do nothing
@@ -155,15 +149,15 @@ export default class SortersWorkspaceViewElement extends UmbElementMixin(LitElem
     );
     modalContext
       ?.onSubmit()
-      .then(() => {
-        SortersService
-          .deleteNoCodeDeliveryApiSortById({
-            path: {
-              id: sorter.id
-            }
-          })
-          .then(async () => await this._loadData())
-          .catch((reason) => console.error('Could not delete the sorter - reason: ', reason))
+      .then(async () => {
+        const {error} = await tryExecuteAndNotify(
+          this,
+          SortersService.deleteNoCodeDeliveryApiSortById({id: sorter.id})
+        );
+
+        if (!error) {
+          await this._loadData();
+        }
       })
       .catch(() => {
         // confirm dialog was cancelled

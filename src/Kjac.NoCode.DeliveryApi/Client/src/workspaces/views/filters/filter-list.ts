@@ -5,8 +5,8 @@ import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoff
 import {FILTER_MODAL_TOKEN} from './edit-filter.ts';
 import {tryExecuteAndNotify} from '@umbraco-cms/backoffice/resources';
 
-@customElement('no-code-delivery-api-querying-workspace-view')
-export default class QueryingWorkspaceViewElement extends UmbLitElement {
+@customElement('no-code-delivery-api-filters-workspace-view')
+export default class FiltersWorkspaceViewElement extends UmbLitElement {
   #modalManagerContext?: typeof UMB_MODAL_MANAGER_CONTEXT.TYPE;
 
   @state()
@@ -176,6 +176,6 @@ export default class QueryingWorkspaceViewElement extends UmbLitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'no-code-delivery-api-querying-workspace-view': QueryingWorkspaceViewElement
+    'no-code-delivery-api-filters-workspace-view': FiltersWorkspaceViewElement
   }
 }

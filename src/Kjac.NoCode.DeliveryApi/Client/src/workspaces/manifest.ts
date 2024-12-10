@@ -5,10 +5,10 @@ export const manifests: Array<UmbExtensionManifest> = [
   {
     type: 'workspace',
     kind: 'default',
-    alias: WORKSPACE_ROOT_ALIAS,
-    name: `${PACKAGE_NAME} Root Workspace`,
+    alias: WORKSPACE_ALIAS,
+    name: `${PACKAGE_NAME} Workspace`,
     meta: {
-      entityType: ENTITY_ROOT_ALIAS,
+      entityType: ENTITY_ALIAS,
       // TODO: include workspace headline when the umbraco package supports it
       // headline: `${PACKAGE_NAME}`,
       // TODO VERIFY: figure out how to remove the workspace footer
@@ -26,8 +26,9 @@ export const manifests: Array<UmbExtensionManifest> = [
     },
     conditions: [
       {
+        // TODO: change this to UMB_WORKSPACE_CONDITION_ALIAS when the export is ready
         alias: 'Umb.Condition.WorkspaceAlias', //UMB_WORKSPACE_CONDITION_ALIAS,
-        match: WORKSPACE_ROOT_ALIAS,
+        match: WORKSPACE_ALIAS,
       },
     ],
   },
@@ -43,8 +44,9 @@ export const manifests: Array<UmbExtensionManifest> = [
     },
     conditions: [
       {
+        // TODO: change this to UMB_WORKSPACE_CONDITION_ALIAS when the export is ready
         alias: 'Umb.Condition.WorkspaceAlias', //UMB_WORKSPACE_CONDITION_ALIAS,
-        match: WORKSPACE_ROOT_ALIAS,
+        match: WORKSPACE_ALIAS,
       },
     ],
   },
@@ -60,8 +62,9 @@ export const manifests: Array<UmbExtensionManifest> = [
     },
     conditions: [
       {
+        // TODO: change this to UMB_WORKSPACE_CONDITION_ALIAS when the export is ready
         alias: 'Umb.Condition.WorkspaceAlias', //UMB_WORKSPACE_CONDITION_ALIAS,
-        match: WORKSPACE_ROOT_ALIAS,
+        match: WORKSPACE_ALIAS,
       },
     ],
   },

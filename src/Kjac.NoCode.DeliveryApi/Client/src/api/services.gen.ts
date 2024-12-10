@@ -21,7 +21,8 @@ export class ClientsService {
             responseHeader: 'Umb-Notifications',
             errors: {
                 400: 'Bad Request',
-                401: 'The resource is protected and requires an authentication token'
+                401: 'The resource is protected and requires an authentication token',
+                403: 'The authenticated user do not have access to this resource'
             }
         });
     }
@@ -35,7 +36,8 @@ export class ClientsService {
             method: 'GET',
             url: '/umbraco/management/api/v1/no-code-delivery-api/client',
             errors: {
-                401: 'The resource is protected and requires an authentication token'
+                401: 'The resource is protected and requires an authentication token',
+                403: 'The authenticated user do not have access to this resource'
             }
         });
     }
@@ -56,7 +58,8 @@ export class ClientsService {
             responseHeader: 'Umb-Notifications',
             errors: {
                 400: 'Bad Request',
-                401: 'The resource is protected and requires an authentication token'
+                401: 'The resource is protected and requires an authentication token',
+                403: 'The authenticated user do not have access to this resource'
             }
         });
     }
@@ -80,7 +83,8 @@ export class ClientsService {
             responseHeader: 'Umb-Notifications',
             errors: {
                 400: 'Bad Request',
-                401: 'The resource is protected and requires an authentication token'
+                401: 'The resource is protected and requires an authentication token',
+                403: 'The authenticated user do not have access to this resource'
             }
         });
     }
@@ -103,7 +107,8 @@ export class FiltersService {
             responseHeader: 'Umb-Notifications',
             errors: {
                 400: 'Bad Request',
-                401: 'The resource is protected and requires an authentication token'
+                401: 'The resource is protected and requires an authentication token',
+                403: 'The authenticated user do not have access to this resource'
             }
         });
     }
@@ -117,7 +122,8 @@ export class FiltersService {
             method: 'GET',
             url: '/umbraco/management/api/v1/no-code-delivery-api/filter',
             errors: {
-                401: 'The resource is protected and requires an authentication token'
+                401: 'The resource is protected and requires an authentication token',
+                403: 'The authenticated user do not have access to this resource'
             }
         });
     }
@@ -138,7 +144,8 @@ export class FiltersService {
             responseHeader: 'Umb-Notifications',
             errors: {
                 400: 'Bad Request',
-                401: 'The resource is protected and requires an authentication token'
+                401: 'The resource is protected and requires an authentication token',
+                403: 'The authenticated user do not have access to this resource'
             }
         });
     }
@@ -162,7 +169,8 @@ export class FiltersService {
             responseHeader: 'Umb-Notifications',
             errors: {
                 400: 'Bad Request',
-                401: 'The resource is protected and requires an authentication token'
+                401: 'The resource is protected and requires an authentication token',
+                403: 'The authenticated user do not have access to this resource'
             }
         });
     }
@@ -185,7 +193,8 @@ export class SortersService {
             responseHeader: 'Umb-Notifications',
             errors: {
                 400: 'Bad Request',
-                401: 'The resource is protected and requires an authentication token'
+                401: 'The resource is protected and requires an authentication token',
+                403: 'The authenticated user do not have access to this resource'
             }
         });
     }
@@ -199,7 +208,8 @@ export class SortersService {
             method: 'GET',
             url: '/umbraco/management/api/v1/no-code-delivery-api/sort',
             errors: {
-                401: 'The resource is protected and requires an authentication token'
+                401: 'The resource is protected and requires an authentication token',
+                403: 'The authenticated user do not have access to this resource'
             }
         });
     }
@@ -220,7 +230,8 @@ export class SortersService {
             responseHeader: 'Umb-Notifications',
             errors: {
                 400: 'Bad Request',
-                401: 'The resource is protected and requires an authentication token'
+                401: 'The resource is protected and requires an authentication token',
+                403: 'The authenticated user do not have access to this resource'
             }
         });
     }
@@ -244,7 +255,8 @@ export class SortersService {
             responseHeader: 'Umb-Notifications',
             errors: {
                 400: 'Bad Request',
-                401: 'The resource is protected and requires an authentication token'
+                401: 'The resource is protected and requires an authentication token',
+                403: 'The authenticated user do not have access to this resource'
             }
         });
     }

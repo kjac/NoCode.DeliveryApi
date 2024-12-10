@@ -1,13 +1,14 @@
 import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import {html, customElement, css, repeat, when, nothing, state} from '@umbraco-cms/backoffice/external/lit';
-import {FiltersService, FilterModel} from '../../../api';
+import {FilterModel} from '../../../api';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
 import {FILTER_MODAL_TOKEN} from './edit-filter.ts';
-import {tryExecuteAndNotify} from '@umbraco-cms/backoffice/resources';
+import {NO_CODE_DELIVERY_API_CONTEXT} from "../../workspace.context.ts";
 
 @customElement('no-code-delivery-api-filters-workspace-view')
 export default class FiltersWorkspaceViewElement extends UmbLitElement {
   #modalManagerContext?: typeof UMB_MODAL_MANAGER_CONTEXT.TYPE;
+  #workspaceContext?: typeof NO_CODE_DELIVERY_API_CONTEXT.TYPE;
 
   @state()
   private _filters?: Array<FilterModel>;
@@ -18,6 +19,9 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
     super();
     this.consumeContext(UMB_MODAL_MANAGER_CONTEXT, (instance) => {
       this.#modalManagerContext = instance;
+    });
+    this.consumeContext(NO_CODE_DELIVERY_API_CONTEXT, (instance) => {
+      this.#workspaceContext = instance;
     });
   }
 
@@ -90,7 +94,8 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
   }
 
   private async _loadData() {
-    const {data} = await tryExecuteAndNotify(this, FiltersService.getNoCodeDeliveryApiFilter());
+    const data = await this.#workspaceContext?.getFilters();
+
     if (data) {
       this._filters = data.filters;
       this._canAddFilter = data.canAddFilter;
@@ -115,20 +120,17 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
     modalContext
       ?.onSubmit()
       .then(async value => {
-        const {error} = await tryExecuteAndNotify(
-          this,
-          filter
-            ? FiltersService.putNoCodeDeliveryApiFilterById({
-              id: filter.id,
-              requestBody: {
-                name: value.filter.name,
-                propertyAliases: value.filter.propertyAliases
-              }
-            })
-            : FiltersService.postNoCodeDeliveryApiFilter({requestBody: value.filter})
-        );
+        const success = filter
+          ? await this.#workspaceContext!.updateFilter(
+            filter.id,
+            {
+              name: value.filter.name,
+              propertyAliases: value.filter.propertyAliases
+            }
+          )
+          : await this.#workspaceContext!.addFilter(value.filter);
 
-        if (!error) {
+        if (success) {
           await this._loadData();
         }
       })
@@ -153,12 +155,9 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
     modalContext
       ?.onSubmit()
       .then(async () => {
-        const {error} = await tryExecuteAndNotify(
-          this,
-          FiltersService.deleteNoCodeDeliveryApiFilterById({id: filter.id})
-        );
+        const success = await this.#workspaceContext!.deleteFilter(filter.id);
 
-        if (!error) {
+        if (success) {
           await this._loadData();
         }
       })

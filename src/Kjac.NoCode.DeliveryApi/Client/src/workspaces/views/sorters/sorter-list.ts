@@ -1,13 +1,14 @@
 import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import {html, customElement, state, nothing, when, repeat, css} from '@umbraco-cms/backoffice/external/lit';
-import {SortersService, SortModel} from '../../../api';
+import {SortModel} from '../../../api';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
 import {SORTER_MODAL_TOKEN} from './edit-sorter.ts';
-import {tryExecuteAndNotify} from '@umbraco-cms/backoffice/resources';
+import {NO_CODE_DELIVERY_API_CONTEXT} from "../../workspace.context.ts";
 
 @customElement('no-code-delivery-api-sorters-workspace-view')
 export default class SortersWorkspaceViewElement extends UmbLitElement {
   #modalManagerContext?: typeof UMB_MODAL_MANAGER_CONTEXT.TYPE;
+  #workspaceContext?: typeof NO_CODE_DELIVERY_API_CONTEXT.TYPE;
 
   @state()
   private _sorters?: Array<SortModel>;
@@ -18,6 +19,9 @@ export default class SortersWorkspaceViewElement extends UmbLitElement {
     super();
     this.consumeContext(UMB_MODAL_MANAGER_CONTEXT, (instance) => {
       this.#modalManagerContext = instance;
+    });
+    this.consumeContext(NO_CODE_DELIVERY_API_CONTEXT, (instance) => {
+      this.#workspaceContext = instance;
     });
   }
 
@@ -87,7 +91,8 @@ export default class SortersWorkspaceViewElement extends UmbLitElement {
   }
 
   private async _loadData() {
-    const {data} = await tryExecuteAndNotify(this, SortersService.getNoCodeDeliveryApiSort());
+    const data = await this.#workspaceContext?.getSorters();
+
     if (data) {
       this._sorters = data.sorts;
       this._canAddSorter = data.canAddSort;
@@ -112,20 +117,17 @@ export default class SortersWorkspaceViewElement extends UmbLitElement {
     modalContext
       ?.onSubmit()
       .then(async value => {
-        const {error} = await tryExecuteAndNotify(
-          this,
-          sorter
-            ? SortersService.putNoCodeDeliveryApiSortById({
-              id: sorter.id,
-              requestBody: {
-                name: value.sorter.name,
-                propertyAlias: value.sorter.propertyAlias
-              }
-            })
-            : SortersService.postNoCodeDeliveryApiSort({requestBody: value.sorter})
-        );
+        const success = sorter
+          ? await this.#workspaceContext!.updateSorter(
+            sorter.id,
+            {
+              name: value.sorter.name,
+              propertyAlias: value.sorter.propertyAlias
+            }
+          )
+          : await this.#workspaceContext!.addSorter(value.sorter);
 
-        if (!error) {
+        if (success) {
           await this._loadData();
         }
       })
@@ -150,12 +152,9 @@ export default class SortersWorkspaceViewElement extends UmbLitElement {
     modalContext
       ?.onSubmit()
       .then(async () => {
-        const {error} = await tryExecuteAndNotify(
-          this,
-          SortersService.deleteNoCodeDeliveryApiSortById({id: sorter.id})
-        );
+        const success = await this.#workspaceContext!.deleteSorter(sorter.id);
 
-        if (!error) {
+        if (success) {
           await this._loadData();
         }
       })

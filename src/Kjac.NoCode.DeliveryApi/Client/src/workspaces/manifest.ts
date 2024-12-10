@@ -1,4 +1,4 @@
-import {ENTITY_ROOT_ALIAS, PACKAGE_ALIAS, PACKAGE_NAME, WORKSPACE_ROOT_ALIAS} from "../constants.ts";
+import {ENTITY_ALIAS, PACKAGE_ALIAS, PACKAGE_NAME, WORKSPACE_ALIAS} from "../constants.ts";
 //import { UMB_WORKSPACE_CONDITION_ALIAS } from "@umbraco-cms/backoffice/workspace";
 
 export const manifests: Array<UmbExtensionManifest> = [
@@ -13,6 +13,21 @@ export const manifests: Array<UmbExtensionManifest> = [
       // headline: `${PACKAGE_NAME}`,
       // TODO VERIFY: figure out how to remove the workspace footer
     },
+  },
+  {
+    // TODO: change this to 'workspaceContext' when that works with custom root workspaces
+    type: 'globalContext',
+    alias: `${PACKAGE_ALIAS}.Workspace.Context`,
+    name: `${PACKAGE_NAME} Workspace Context`,
+    api: () => import('./workspace.context.ts'),
+    // TODO: include conditions when 'workspaceContext' when works with custom root workspaces
+    // conditions: [
+    //   {
+    //     // TODO: change this to UMB_WORKSPACE_CONDITION_ALIAS when the export is ready
+    //     alias: 'Umb.Condition.WorkspaceAlias', //UMB_WORKSPACE_CONDITION_ALIAS,
+    //     match: WORKSPACE_ROOT_ALIAS,
+    //   },
+    // ]
   },
   {
     type: 'workspaceView',

@@ -1,14 +1,15 @@
 import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import {html, customElement, css, state, when, repeat} from '@umbraco-cms/backoffice/external/lit';
-import {ClientsService, ClientModel} from '../../../api';
+import {ClientModel} from '../../../api';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
 import {CLIENT_MODAL_TOKEN} from './edit-client.ts';
-import {LanguageResponseModel, LanguageService} from '@umbraco-cms/backoffice/external/backend-api';
-import {tryExecuteAndNotify} from '@umbraco-cms/backoffice/resources';
+import {LanguageResponseModel} from '@umbraco-cms/backoffice/external/backend-api';
+import {NO_CODE_DELIVERY_API_CONTEXT} from "../../workspace.context.ts";
 
 @customElement('no-code-delivery-api-clients-workspace-view')
 export default class ClientsWorkspaceViewElement extends UmbLitElement {
   #modalManagerContext?: typeof UMB_MODAL_MANAGER_CONTEXT.TYPE;
+  #workspaceContext?: typeof NO_CODE_DELIVERY_API_CONTEXT.TYPE;
 
   @state()
   private _clients?: Array<ClientModel>;
@@ -19,6 +20,9 @@ export default class ClientsWorkspaceViewElement extends UmbLitElement {
     super();
     this.consumeContext(UMB_MODAL_MANAGER_CONTEXT, (instance) => {
       this.#modalManagerContext = instance;
+    });
+    this.consumeContext(NO_CODE_DELIVERY_API_CONTEXT, (instance) => {
+      this.#workspaceContext = instance;
     });
   }
 
@@ -81,7 +85,8 @@ export default class ClientsWorkspaceViewElement extends UmbLitElement {
   }
 
   private async _loadData() {
-    const {data} = await tryExecuteAndNotify(this, ClientsService.getNoCodeDeliveryApiClient());
+    const data = await this.#workspaceContext?.getClients();
+
     if (data) {
       this._clients = data;
     }
@@ -90,13 +95,7 @@ export default class ClientsWorkspaceViewElement extends UmbLitElement {
   private _addClient = () => this._editClient();
 
   private async _editClient(client?: ClientModel) {
-    if (!this._languages) {
-      const {data, error} = await tryExecuteAndNotify(this, LanguageService.getLanguage({take: 100}));
-      if(error) {
-        return;
-      }
-      this._languages = data!.items;
-    }
+    this._languages ??= await this.#workspaceContext!.getLanguages() ?? [];
 
     const headline = client ? 'Edit client' : 'Add client';
     const modalContext = this.#modalManagerContext?.open(
@@ -113,23 +112,20 @@ export default class ClientsWorkspaceViewElement extends UmbLitElement {
     modalContext
       ?.onSubmit()
       .then(async value => {
-        const {error} = await tryExecuteAndNotify(
-          this,
-          client
-            ? ClientsService.putNoCodeDeliveryApiClientById({
-              id: client.id,
-              requestBody: {
-                name: value.client.name,
-                origin: value.client.origin,
-                culture: value.client.culture,
-                previewUrlPath: value.client.previewUrlPath,
-                publishedUrlPath: value.client.publishedUrlPath
-              }
-            })
-            : ClientsService.postNoCodeDeliveryApiClient({requestBody: value.client})
-        )
+        const success = client
+          ? await this.#workspaceContext!.updateClient(
+            client.id,
+            {
+              name: value.client.name,
+              origin: value.client.origin,
+              culture: value.client.culture,
+              previewUrlPath: value.client.previewUrlPath,
+              publishedUrlPath: value.client.publishedUrlPath
+            }
+          )
+          : await this.#workspaceContext!.addClient(value.client);
 
-        if (!error) {
+        if (success) {
           await this._loadData();
         }
       })
@@ -154,12 +150,9 @@ export default class ClientsWorkspaceViewElement extends UmbLitElement {
     modalContext
       ?.onSubmit()
       .then(async () => {
-        const {error} = await tryExecuteAndNotify(
-          this,
-          ClientsService.deleteNoCodeDeliveryApiClientById({id: client.id})
-        );
+        const success = await this.#workspaceContext!.deleteClient(client.id);
 
-        if (!error) {
+        if (success) {
           await this._loadData();
         }
       })

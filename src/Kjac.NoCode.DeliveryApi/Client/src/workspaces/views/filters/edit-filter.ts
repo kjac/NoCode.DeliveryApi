@@ -1,7 +1,6 @@
 import {UmbModalToken} from '@umbraco-cms/backoffice/modal';
-import {html, LitElement, property, customElement, css, nothing, query, repeat} from '@umbraco-cms/backoffice/external/lit';
-import {umbFocus} from '@umbraco-cms/backoffice/lit-element';
-import {UmbElementMixin} from '@umbraco-cms/backoffice/element-api';
+import {html, property, customElement, css, nothing, query, repeat} from '@umbraco-cms/backoffice/external/lit';
+import {umbFocus, UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import type {UmbModalContext, UmbModalExtensionElement} from '@umbraco-cms/backoffice/modal';
 import {UUIInputElement} from '@umbraco-cms/backoffice/external/uui';
 import {AddFilterRequestModel, FilterMatchTypeModel, FilterModel, PrimitiveFieldTypeModel} from '../../../api';
@@ -29,7 +28,7 @@ export const FILTER_MODAL_TOKEN = new UmbModalToken<FilterModalData, FilterModal
 
 @customElement('no-code-delivery-api-edit-filter-modal-view')
 export default class EditFilterModalElement
-  extends UmbElementMixin(LitElement)
+  extends UmbLitElement
   implements UmbModalExtensionElement<FilterModalData, FilterModalValue> {
 
   @property({attribute: false})

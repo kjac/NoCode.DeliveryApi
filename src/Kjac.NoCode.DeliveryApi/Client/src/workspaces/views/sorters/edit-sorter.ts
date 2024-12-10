@@ -1,7 +1,6 @@
 import {UmbModalToken} from '@umbraco-cms/backoffice/modal';
-import {html, LitElement, property, customElement, css, nothing, query} from '@umbraco-cms/backoffice/external/lit';
-import {umbFocus} from '@umbraco-cms/backoffice/lit-element';
-import {UmbElementMixin} from '@umbraco-cms/backoffice/element-api';
+import {html, property, customElement, css, nothing, query} from '@umbraco-cms/backoffice/external/lit';
+import {umbFocus, UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import type {UmbModalContext, UmbModalExtensionElement} from '@umbraco-cms/backoffice/modal';
 import {UUIInputElement} from '@umbraco-cms/backoffice/external/uui';
 import {AddSortRequestModel, SortModel, PrimitiveFieldTypeModel} from '../../../api';
@@ -29,7 +28,7 @@ export const SORTER_MODAL_TOKEN = new UmbModalToken<SorterModalData, SorterModal
 
 @customElement('no-code-delivery-api-edit-sorter-modal-view')
 export default class EditSorterModalElement
-  extends UmbElementMixin(LitElement)
+  extends UmbLitElement
   implements UmbModalExtensionElement<SorterModalData, SorterModalValue> {
 
   @property({attribute: false})

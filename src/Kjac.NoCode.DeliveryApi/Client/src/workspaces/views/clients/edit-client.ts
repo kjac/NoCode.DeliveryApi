@@ -1,7 +1,6 @@
 import {UmbModalToken} from '@umbraco-cms/backoffice/modal';
-import {html, LitElement, property, customElement, css, nothing, query, repeat, when} from '@umbraco-cms/backoffice/external/lit';
-import {umbFocus} from '@umbraco-cms/backoffice/lit-element';
-import {UmbElementMixin} from '@umbraco-cms/backoffice/element-api';
+import {html, property, customElement, css, nothing, query, repeat, when} from '@umbraco-cms/backoffice/external/lit';
+import {umbFocus, UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import type {UmbModalContext, UmbModalExtensionElement} from '@umbraco-cms/backoffice/modal';
 import {AddClientRequestModel, ClientModel} from '../../../api';
 import {PACKAGE_ALIAS} from '../../../constants.ts';
@@ -30,7 +29,7 @@ export const CLIENT_MODAL_TOKEN = new UmbModalToken<ClientModalData, ClientModal
 
 @customElement('no-code-delivery-api-edit-client-modal-view')
 export default class EditClientModalElement
-  extends UmbElementMixin(LitElement)
+  extends UmbLitElement
   implements UmbModalExtensionElement<ClientModalData, ClientModalValue> {
 
   @property({attribute: false})

@@ -4,12 +4,12 @@ import {ClientModel} from '../../../api';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
 import {CLIENT_MODAL_TOKEN} from './edit-client.ts';
 import {LanguageResponseModel} from '@umbraco-cms/backoffice/external/backend-api';
-import {NO_CODE_DELIVERY_API_CONTEXT} from "../../workspace.context.ts";
+import {NO_CODE_DELIVERY_API_CONTEXT_TOKEN} from "../../workspace.context.ts";
 
 @customElement('no-code-delivery-api-clients-workspace-view')
 export default class ClientsWorkspaceViewElement extends UmbLitElement {
   #modalManagerContext?: typeof UMB_MODAL_MANAGER_CONTEXT.TYPE;
-  #workspaceContext?: typeof NO_CODE_DELIVERY_API_CONTEXT.TYPE;
+  #workspaceContext?: typeof NO_CODE_DELIVERY_API_CONTEXT_TOKEN.TYPE;
 
   @state()
   private _clients?: Array<ClientModel>;
@@ -21,7 +21,7 @@ export default class ClientsWorkspaceViewElement extends UmbLitElement {
     this.consumeContext(UMB_MODAL_MANAGER_CONTEXT, (instance) => {
       this.#modalManagerContext = instance;
     });
-    this.consumeContext(NO_CODE_DELIVERY_API_CONTEXT, (instance) => {
+    this.consumeContext(NO_CODE_DELIVERY_API_CONTEXT_TOKEN, (instance) => {
       this.#workspaceContext = instance;
     });
   }

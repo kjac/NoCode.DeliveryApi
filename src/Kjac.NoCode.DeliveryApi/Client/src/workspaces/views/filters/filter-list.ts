@@ -3,12 +3,12 @@ import {html, customElement, css, repeat, when, nothing, state} from '@umbraco-c
 import {FilterModel} from '../../../api';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
 import {FILTER_MODAL_TOKEN} from './edit-filter.ts';
-import {NO_CODE_DELIVERY_API_CONTEXT} from "../../workspace.context.ts";
+import {NO_CODE_DELIVERY_API_CONTEXT_TOKEN} from "../../workspace.context.ts";
 
 @customElement('no-code-delivery-api-filters-workspace-view')
 export default class FiltersWorkspaceViewElement extends UmbLitElement {
   #modalManagerContext?: typeof UMB_MODAL_MANAGER_CONTEXT.TYPE;
-  #workspaceContext?: typeof NO_CODE_DELIVERY_API_CONTEXT.TYPE;
+  #workspaceContext?: typeof NO_CODE_DELIVERY_API_CONTEXT_TOKEN.TYPE;
 
   @state()
   private _filters?: Array<FilterModel>;
@@ -20,7 +20,7 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
     this.consumeContext(UMB_MODAL_MANAGER_CONTEXT, (instance) => {
       this.#modalManagerContext = instance;
     });
-    this.consumeContext(NO_CODE_DELIVERY_API_CONTEXT, (instance) => {
+    this.consumeContext(NO_CODE_DELIVERY_API_CONTEXT_TOKEN, (instance) => {
       this.#workspaceContext = instance;
     });
   }
@@ -113,7 +113,9 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
         data: {
           headline: headline,
           filter: filter,
-          currentFilterNames: this._filters?.map(filter => filter.name) ?? []
+          currentFilterNames: this._filters
+            ?.filter(f => f.id !== filter?.id)
+            .map(f => f.name) ?? []
         }
       }
     );

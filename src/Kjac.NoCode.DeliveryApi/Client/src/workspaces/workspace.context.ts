@@ -17,7 +17,7 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
   private _clients?: Array<ClientModel>;
 
   constructor(host: UmbControllerHost) {
-    super(host, NO_CODE_DELIVERY_API_CONTEXT);
+    super(host, NO_CODE_DELIVERY_API_CONTEXT_TOKEN);
   }
 
   async getFilters() {
@@ -172,6 +172,6 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
 
 export const api = WorkspaceContext;
 
-export const NO_CODE_DELIVERY_API_CONTEXT = new UmbContextToken<WorkspaceContext>(
+export const NO_CODE_DELIVERY_API_CONTEXT_TOKEN = new UmbContextToken<WorkspaceContext>(
   `${PACKAGE_ALIAS}.Workspace.Context`
 );

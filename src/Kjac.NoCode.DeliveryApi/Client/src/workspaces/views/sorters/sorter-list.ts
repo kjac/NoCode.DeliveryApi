@@ -3,12 +3,12 @@ import {html, customElement, state, nothing, when, repeat, css} from '@umbraco-c
 import {SortModel} from '../../../api';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
 import {SORTER_MODAL_TOKEN} from './edit-sorter.ts';
-import {NO_CODE_DELIVERY_API_CONTEXT} from "../../workspace.context.ts";
+import {NO_CODE_DELIVERY_API_CONTEXT_TOKEN} from "../../workspace.context.ts";
 
 @customElement('no-code-delivery-api-sorters-workspace-view')
 export default class SortersWorkspaceViewElement extends UmbLitElement {
   #modalManagerContext?: typeof UMB_MODAL_MANAGER_CONTEXT.TYPE;
-  #workspaceContext?: typeof NO_CODE_DELIVERY_API_CONTEXT.TYPE;
+  #workspaceContext?: typeof NO_CODE_DELIVERY_API_CONTEXT_TOKEN.TYPE;
 
   @state()
   private _sorters?: Array<SortModel>;
@@ -20,7 +20,7 @@ export default class SortersWorkspaceViewElement extends UmbLitElement {
     this.consumeContext(UMB_MODAL_MANAGER_CONTEXT, (instance) => {
       this.#modalManagerContext = instance;
     });
-    this.consumeContext(NO_CODE_DELIVERY_API_CONTEXT, (instance) => {
+    this.consumeContext(NO_CODE_DELIVERY_API_CONTEXT_TOKEN, (instance) => {
       this.#workspaceContext = instance;
     });
   }
@@ -110,7 +110,9 @@ export default class SortersWorkspaceViewElement extends UmbLitElement {
         data: {
           headline: headline,
           sorter: sorter,
-          currentSorterNames: this._sorters?.map(sorter => sorter.name) ?? []
+          currentSorterNames: this._sorters
+            ?.filter(s => s.id !== sorter?.id)
+            .map(s => s.name) ?? []
         }
       }
     );

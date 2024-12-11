@@ -17,7 +17,7 @@ export type SorterModalValue = {
   sorter: SorterBase;
 }
 
-export const SORTER_MODAL_TOKEN = new UmbModalToken<SorterModalData, SorterModalValue>(
+export const NO_CODE_DELIVERY_API_SORTER_MODAL_TOKEN = new UmbModalToken<SorterModalData, SorterModalValue>(
   `${PACKAGE_ALIAS}.Modal.EditSorter`,
   {
     modal: {

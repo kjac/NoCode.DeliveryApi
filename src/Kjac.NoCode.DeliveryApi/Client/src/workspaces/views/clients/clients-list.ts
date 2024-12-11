@@ -1,7 +1,7 @@
 import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import {html, customElement, css, state, when, repeat} from '@umbraco-cms/backoffice/external/lit';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
-import {CLIENT_MODAL_TOKEN} from './edit-client.ts';
+import {NO_CODE_DELIVERY_API_CLIENT_MODAL_TOKEN} from './edit-client.ts';
 import {LanguageResponseModel} from '@umbraco-cms/backoffice/external/backend-api';
 import {NO_CODE_DELIVERY_API_CONTEXT_TOKEN} from '../../workspace.context.ts';
 import {ClientDetails} from '../../models/client.ts';
@@ -100,7 +100,7 @@ export default class ClientsWorkspaceViewElement extends UmbLitElement {
     const headline = client ? 'Edit client' : 'Add client';
     const modalContext = this.#modalManagerContext?.open(
       this,
-      CLIENT_MODAL_TOKEN,
+      NO_CODE_DELIVERY_API_CLIENT_MODAL_TOKEN,
       {
         data: {
           headline: headline,

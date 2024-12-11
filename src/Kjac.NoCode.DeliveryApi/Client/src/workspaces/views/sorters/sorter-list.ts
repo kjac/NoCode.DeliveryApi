@@ -1,7 +1,7 @@
 import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import {html, customElement, state, nothing, when, repeat, css} from '@umbraco-cms/backoffice/external/lit';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
-import {SORTER_MODAL_TOKEN} from './edit-sorter.ts';
+import {NO_CODE_DELIVERY_API_SORTER_MODAL_TOKEN} from './edit-sorter.ts';
 import {NO_CODE_DELIVERY_API_CONTEXT_TOKEN} from '../../workspace.context.ts';
 import {SorterDetails} from '../../models/sorter.ts';
 
@@ -102,7 +102,7 @@ export default class SortersWorkspaceViewElement extends UmbLitElement {
     const headline = sorter ? 'Edit sorter' : 'Add sorter';
     const modalContext = this.#modalManagerContext?.open(
       this,
-      SORTER_MODAL_TOKEN,
+      NO_CODE_DELIVERY_API_SORTER_MODAL_TOKEN,
       {
         data: {
           headline: headline,

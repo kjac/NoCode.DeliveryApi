@@ -17,7 +17,7 @@ export type ClientModalValue = {
   client: ClientBase;
 }
 
-export const CLIENT_MODAL_TOKEN = new UmbModalToken<ClientModalData, ClientModalValue>(
+export const NO_CODE_DELIVERY_API_CLIENT_MODAL_TOKEN = new UmbModalToken<ClientModalData, ClientModalValue>(
   `${PACKAGE_ALIAS}.Modal.EditClient`,
   {
     modal: {

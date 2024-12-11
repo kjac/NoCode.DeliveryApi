@@ -1,7 +1,7 @@
 import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import {html, customElement, css, repeat, when, nothing, state} from '@umbraco-cms/backoffice/external/lit';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
-import {FILTER_MODAL_TOKEN} from './edit-filter.ts';
+import {NO_CODE_DELIVERY_API_FILTER_MODAL_TOKEN} from './edit-filter.ts';
 import {NO_CODE_DELIVERY_API_CONTEXT_TOKEN} from '../../workspace.context.ts';
 import {FilterDetails} from '../../models/filter.ts';
 
@@ -105,7 +105,7 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
     const headline = filter ? 'Edit filter' : 'Add filter';
     const modalContext = this.#modalManagerContext?.open(
       this,
-      FILTER_MODAL_TOKEN,
+      NO_CODE_DELIVERY_API_FILTER_MODAL_TOKEN,
       {
         data: {
           headline: headline,

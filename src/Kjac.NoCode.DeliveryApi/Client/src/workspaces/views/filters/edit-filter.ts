@@ -17,7 +17,7 @@ export type FilterModalValue = {
   filter: FilterBase;
 }
 
-export const FILTER_MODAL_TOKEN = new UmbModalToken<FilterModalData, FilterModalValue>(
+export const NO_CODE_DELIVERY_API_FILTER_MODAL_TOKEN = new UmbModalToken<FilterModalData, FilterModalValue>(
   `${PACKAGE_ALIAS}.Modal.EditFilter`,
   {
     modal: {

@@ -1,9 +1,9 @@
 import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import {html, customElement, state, nothing, when, repeat, css} from '@umbraco-cms/backoffice/external/lit';
-import {SortModel} from '../../../api';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
 import {SORTER_MODAL_TOKEN} from './edit-sorter.ts';
-import {NO_CODE_DELIVERY_API_CONTEXT_TOKEN} from "../../workspace.context.ts";
+import {NO_CODE_DELIVERY_API_CONTEXT_TOKEN} from '../../workspace.context.ts';
+import {SorterDetails} from '../../models/sorter.ts';
 
 @customElement('no-code-delivery-api-sorters-workspace-view')
 export default class SortersWorkspaceViewElement extends UmbLitElement {
@@ -11,8 +11,9 @@ export default class SortersWorkspaceViewElement extends UmbLitElement {
   #workspaceContext?: typeof NO_CODE_DELIVERY_API_CONTEXT_TOKEN.TYPE;
 
   @state()
-  private _sorters?: Array<SortModel>;
+  private _sorters?: Array<SorterDetails>;
 
+  @state()
   private _canAddSorter: boolean = false;
 
   constructor() {
@@ -67,7 +68,7 @@ export default class SortersWorkspaceViewElement extends UmbLitElement {
                       <uui-table-cell>${sorter.name}</uui-table-cell>
                       <uui-table-cell>${sorter.alias}</uui-table-cell>
                       <uui-table-cell>${sorter.propertyAlias}</uui-table-cell>
-                      <uui-table-cell>${sorter.primitiveFieldType}</uui-table-cell>
+                      <uui-table-cell>${sorter.fieldType}</uui-table-cell>
                       <uui-table-cell class="muted">${sorter.fieldName}</uui-table-cell>
                       <uui-table-cell>
                         <uui-action-bar>
@@ -91,17 +92,13 @@ export default class SortersWorkspaceViewElement extends UmbLitElement {
   }
 
   private async _loadData() {
-    const data = await this.#workspaceContext?.getSorters();
-
-    if (data) {
-      this._sorters = data.sorts;
-      this._canAddSorter = data.canAddSort;
-    }
+    this._sorters = await this.#workspaceContext?.getSorters();
+    this._canAddSorter = await this.#workspaceContext?.canAddSorter() ?? false;
   }
 
   private _addSorter = () => this._editSorter();
 
-  private _editSorter(sorter?: SortModel) {
+  private _editSorter(sorter?: SorterDetails) {
     const headline = sorter ? 'Edit sorter' : 'Add sorter';
     const modalContext = this.#modalManagerContext?.open(
       this,
@@ -119,14 +116,8 @@ export default class SortersWorkspaceViewElement extends UmbLitElement {
     modalContext
       ?.onSubmit()
       .then(async value => {
-        const success = sorter
-          ? await this.#workspaceContext!.updateSorter(
-            sorter.id,
-            {
-              name: value.sorter.name,
-              propertyAlias: value.sorter.propertyAlias
-            }
-          )
+        const success = sorter?.id
+          ? await this.#workspaceContext!.updateSorter(sorter.id, value.sorter)
           : await this.#workspaceContext!.addSorter(value.sorter);
 
         if (success) {
@@ -138,7 +129,7 @@ export default class SortersWorkspaceViewElement extends UmbLitElement {
       });
   }
 
-  private _deleteSorter(sorter: SortModel) {
+  private _deleteSorter(sorter: SorterDetails) {
     const modalContext = this.#modalManagerContext?.open(
       this,
       UMB_CONFIRM_MODAL,
@@ -154,7 +145,7 @@ export default class SortersWorkspaceViewElement extends UmbLitElement {
     modalContext
       ?.onSubmit()
       .then(async () => {
-        const success = await this.#workspaceContext!.deleteSorter(sorter.id);
+        const success = await this.#workspaceContext!.deleteSorter(sorter);
 
         if (success) {
           await this._loadData();

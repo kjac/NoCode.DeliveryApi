@@ -1,9 +1,9 @@
 import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import {html, customElement, css, repeat, when, nothing, state} from '@umbraco-cms/backoffice/external/lit';
-import {FilterModel} from '../../../api';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
 import {FILTER_MODAL_TOKEN} from './edit-filter.ts';
-import {NO_CODE_DELIVERY_API_CONTEXT_TOKEN} from "../../workspace.context.ts";
+import {NO_CODE_DELIVERY_API_CONTEXT_TOKEN} from '../../workspace.context.ts';
+import {FilterDetails} from '../../models/filter.ts';
 
 @customElement('no-code-delivery-api-filters-workspace-view')
 export default class FiltersWorkspaceViewElement extends UmbLitElement {
@@ -11,8 +11,9 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
   #workspaceContext?: typeof NO_CODE_DELIVERY_API_CONTEXT_TOKEN.TYPE;
 
   @state()
-  private _filters?: Array<FilterModel>;
+  private _filters?: Array<FilterDetails>;
 
+  @state()
   private _canAddFilter: boolean = false;
 
   constructor() {
@@ -69,8 +70,8 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
                       <uui-table-cell>${filter.name}</uui-table-cell>
                       <uui-table-cell>${filter.alias}</uui-table-cell>
                       <uui-table-cell>${filter.propertyAliases.join(', ')}</uui-table-cell>
-                      <uui-table-cell>${filter.filterMatchType}</uui-table-cell>
-                      <uui-table-cell>${filter.primitiveFieldType}</uui-table-cell>
+                      <uui-table-cell>${filter.matchType}</uui-table-cell>
+                      <uui-table-cell>${filter.fieldType}</uui-table-cell>
                       <uui-table-cell class="muted">${filter.fieldName}</uui-table-cell>
                       <uui-table-cell>
                         <uui-action-bar>
@@ -94,17 +95,13 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
   }
 
   private async _loadData() {
-    const data = await this.#workspaceContext?.getFilters();
-
-    if (data) {
-      this._filters = data.filters;
-      this._canAddFilter = data.canAddFilter;
-    }
+    this._filters = await this.#workspaceContext?.getFilters() ?? [];
+    this._canAddFilter = await this.#workspaceContext?.canAddFilter() ?? false;
   }
 
   private _addFilter = () => this._editFilter();
 
-  private _editFilter(filter?: FilterModel) {
+  private _editFilter(filter?: FilterDetails) {
     const headline = filter ? 'Edit filter' : 'Add filter';
     const modalContext = this.#modalManagerContext?.open(
       this,
@@ -122,14 +119,8 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
     modalContext
       ?.onSubmit()
       .then(async value => {
-        const success = filter
-          ? await this.#workspaceContext!.updateFilter(
-            filter.id,
-            {
-              name: value.filter.name,
-              propertyAliases: value.filter.propertyAliases
-            }
-          )
+        const success = filter?.id
+          ? await this.#workspaceContext!.updateFilter(filter.id, value.filter)
           : await this.#workspaceContext!.addFilter(value.filter);
 
         if (success) {
@@ -141,7 +132,7 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
       });
   }
 
-  private _deleteFilter(filter: FilterModel) {
+  private _deleteFilter(filter: FilterDetails) {
     const modalContext = this.#modalManagerContext?.open(
       this,
       UMB_CONFIRM_MODAL,
@@ -157,7 +148,7 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
     modalContext
       ?.onSubmit()
       .then(async () => {
-        const success = await this.#workspaceContext!.deleteFilter(filter.id);
+        const success = await this.#workspaceContext!.deleteFilter(filter);
 
         if (success) {
           await this._loadData();

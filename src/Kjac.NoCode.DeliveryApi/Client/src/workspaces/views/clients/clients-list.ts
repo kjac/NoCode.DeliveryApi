@@ -1,10 +1,10 @@
 import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import {html, customElement, css, state, when, repeat} from '@umbraco-cms/backoffice/external/lit';
-import {ClientModel} from '../../../api';
 import {UMB_CONFIRM_MODAL, UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
 import {CLIENT_MODAL_TOKEN} from './edit-client.ts';
 import {LanguageResponseModel} from '@umbraco-cms/backoffice/external/backend-api';
-import {NO_CODE_DELIVERY_API_CONTEXT_TOKEN} from "../../workspace.context.ts";
+import {NO_CODE_DELIVERY_API_CONTEXT_TOKEN} from '../../workspace.context.ts';
+import {ClientDetails} from '../../models/client.ts';
 
 @customElement('no-code-delivery-api-clients-workspace-view')
 export default class ClientsWorkspaceViewElement extends UmbLitElement {
@@ -12,7 +12,7 @@ export default class ClientsWorkspaceViewElement extends UmbLitElement {
   #workspaceContext?: typeof NO_CODE_DELIVERY_API_CONTEXT_TOKEN.TYPE;
 
   @state()
-  private _clients?: Array<ClientModel>;
+  private _clients?: Array<ClientDetails>;
 
   private _languages?: Array<LanguageResponseModel>
 
@@ -94,7 +94,7 @@ export default class ClientsWorkspaceViewElement extends UmbLitElement {
 
   private _addClient = () => this._editClient();
 
-  private async _editClient(client?: ClientModel) {
+  private async _editClient(client?: ClientDetails) {
     this._languages ??= await this.#workspaceContext!.getLanguages() ?? [];
 
     const headline = client ? 'Edit client' : 'Add client';
@@ -112,17 +112,8 @@ export default class ClientsWorkspaceViewElement extends UmbLitElement {
     modalContext
       ?.onSubmit()
       .then(async value => {
-        const success = client
-          ? await this.#workspaceContext!.updateClient(
-            client.id,
-            {
-              name: value.client.name,
-              origin: value.client.origin,
-              culture: value.client.culture,
-              previewUrlPath: value.client.previewUrlPath,
-              publishedUrlPath: value.client.publishedUrlPath
-            }
-          )
+        const success = client?.id
+          ? await this.#workspaceContext!.updateClient(client.id, value.client)
           : await this.#workspaceContext!.addClient(value.client);
 
         if (success) {
@@ -134,7 +125,7 @@ export default class ClientsWorkspaceViewElement extends UmbLitElement {
       });
   }
 
-  private _deleteClient(client: ClientModel) {
+  private _deleteClient(client: ClientDetails) {
     const modalContext = this.#modalManagerContext?.open(
       this,
       UMB_CONFIRM_MODAL,
@@ -150,7 +141,7 @@ export default class ClientsWorkspaceViewElement extends UmbLitElement {
     modalContext
       ?.onSubmit()
       .then(async () => {
-        const success = await this.#workspaceContext!.deleteClient(client.id);
+        const success = await this.#workspaceContext!.deleteClient(client);
 
         if (success) {
           await this._loadData();

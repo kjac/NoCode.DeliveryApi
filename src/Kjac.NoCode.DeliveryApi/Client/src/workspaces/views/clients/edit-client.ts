@@ -2,19 +2,19 @@ import {UmbModalToken} from '@umbraco-cms/backoffice/modal';
 import {html, property, customElement, css, nothing, query, repeat, when} from '@umbraco-cms/backoffice/external/lit';
 import {umbFocus, UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import type {UmbModalContext, UmbModalExtensionElement} from '@umbraco-cms/backoffice/modal';
-import {AddClientRequestModel, ClientModel} from '../../../api';
 import {PACKAGE_ALIAS} from '../../../constants.ts';
 import {LanguageResponseModel} from '@umbraco-cms/backoffice/external/backend-api';
 import {UUIInputElement} from '@umbraco-cms/backoffice/external/uui';
+import {ClientBase, ClientDetails} from '../../models/client.ts';
 
 export type ClientModalData = {
   headline: string;
-  client?: ClientModel;
+  client?: ClientDetails;
   languages: Array<LanguageResponseModel>
 }
 
 export type ClientModalValue = {
-  client: AddClientRequestModel;
+  client: ClientBase;
 }
 
 export const CLIENT_MODAL_TOKEN = new UmbModalToken<ClientModalData, ClientModalValue>(
@@ -47,17 +47,14 @@ export default class EditClientModalElement
   @query('#submitButton')
   private _submitButtonElement!: HTMLFormElement;
 
-  private _client!: AddClientRequestModel;
+  private _client!: ClientBase;
 
   connectedCallback() {
     super.connectedCallback();
-    this._client = {
-      name: this.data?.client?.name ?? '',
-      origin: this.data?.client?.origin ?? '',
-      culture: this.data?.client?.culture,
-      previewUrlPath: this.data?.client?.previewUrlPath,
-      publishedUrlPath: this.data?.client?.publishedUrlPath
-    }
+    this._client = this.data?.client ?? {
+      name: '',
+      origin: ''
+    };
   }
 
   #close() {

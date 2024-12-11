@@ -3,17 +3,18 @@ import {html, property, customElement, css, nothing, query, repeat} from '@umbra
 import {umbFocus, UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import type {UmbModalContext, UmbModalExtensionElement} from '@umbraco-cms/backoffice/modal';
 import {UUIInputElement} from '@umbraco-cms/backoffice/external/uui';
-import {AddFilterRequestModel, FilterMatchTypeModel, FilterModel, PrimitiveFieldTypeModel} from '../../../api';
+import {FilterMatchTypeModel, PrimitiveFieldTypeModel} from '../../../api';
 import {PACKAGE_ALIAS} from '../../../constants.ts';
+import {FilterDetails, FilterBase} from '../../models/filter.ts';
 
 export type FilterModalData = {
   headline: string;
-  filter?: FilterModel;
+  filter?: FilterDetails;
   currentFilterNames: Array<string>
 }
 
 export type FilterModalValue = {
-  filter: AddFilterRequestModel;
+  filter: FilterBase;
 }
 
 export const FILTER_MODAL_TOKEN = new UmbModalToken<FilterModalData, FilterModalValue>(
@@ -52,16 +53,18 @@ export default class EditFilterModalElement
   @query('#submitButton')
   private _submitButtonElement!: HTMLFormElement;
 
-  private _filter!: AddFilterRequestModel;
+  private _filter!: FilterBase;
 
   connectedCallback() {
     super.connectedCallback();
-    this._filter = {
-      name: this.data?.filter?.name ?? '',
-      primitiveFieldType: this.data?.filter?.primitiveFieldType ?? 'String',
-      filterMatchType: this.data?.filter?.filterMatchType ?? 'Exact',
-      propertyAliases: this.data?.filter?.propertyAliases ?? []
-    }
+    this._filter = this.data?.filter ?? {
+      name: '',
+      // alias: '',
+      // fieldName: '',
+      propertyAliases: [],
+      fieldType: 'String',
+      matchType: 'Exact'
+    };
   }
 
   #close() {
@@ -153,8 +156,8 @@ export default class EditFilterModalElement
                 <uui-combobox id="fieldType"
                               required
                               readonly=${this._isEditing() ? "true" : nothing}
-                              @change=${(e: { target: { value: PrimitiveFieldTypeModel; }; }) => this._filter.primitiveFieldType = e.target.value}
-                              value="${this._filter.primitiveFieldType}">
+                              @change=${(e: { target: { value: PrimitiveFieldTypeModel; }; }) => this._filter.fieldType = e.target.value}
+                              value="${this._filter.fieldType}">
                   <uui-combobox-list>
                     <uui-combobox-list-option value="String">String</uui-combobox-list-option>
                     <uui-combobox-list-option value="Number">Number</uui-combobox-list-option>
@@ -170,8 +173,8 @@ export default class EditFilterModalElement
                 <uui-combobox id
                               required
                               readonly=${this._isEditing() ? "true" : nothing}
-                              @change=${(e: { target: { value: FilterMatchTypeModel; }; }) => this._filter.filterMatchType = e.target.value}
-                              value="${this._filter.filterMatchType}">
+                              @change=${(e: { target: { value: FilterMatchTypeModel; }; }) => this._filter.matchType = e.target.value}
+                              value="${this._filter.matchType}">
                   <uui-combobox-list>
                     <uui-combobox-list-option value="Exact">Exact match</uui-combobox-list-option>
                     <uui-combobox-list-option value="Partial">Partial match</uui-combobox-list-option>

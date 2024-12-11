@@ -3,17 +3,18 @@ import {html, property, customElement, css, nothing, query} from '@umbraco-cms/b
 import {umbFocus, UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import type {UmbModalContext, UmbModalExtensionElement} from '@umbraco-cms/backoffice/modal';
 import {UUIInputElement} from '@umbraco-cms/backoffice/external/uui';
-import {AddSortRequestModel, SortModel, PrimitiveFieldTypeModel} from '../../../api';
+import {PrimitiveFieldTypeModel} from '../../../api';
 import {PACKAGE_ALIAS} from '../../../constants.ts';
+import {SorterBase, SorterDetails} from '../../models/sorter.ts';
 
 export type SorterModalData = {
   headline: string;
-  sorter?: SortModel;
+  sorter?: SorterDetails;
   currentSorterNames: Array<string>
 }
 
 export type SorterModalValue = {
-  sorter: AddSortRequestModel;
+  sorter: SorterBase;
 }
 
 export const SORTER_MODAL_TOKEN = new UmbModalToken<SorterModalData, SorterModalValue>(
@@ -49,15 +50,15 @@ export default class EditSorterModalElement
   @query('#submitButton')
   private _submitButtonElement!: HTMLFormElement;
 
-  private _sorter!: AddSortRequestModel;
+  private _sorter!: SorterBase;
 
   connectedCallback() {
     super.connectedCallback();
-    this._sorter = {
-      name: this.data?.sorter?.name ?? '',
-      primitiveFieldType: this.data?.sorter?.primitiveFieldType ?? 'String',
-      propertyAlias: this.data?.sorter?.propertyAlias ?? ''
-    }
+    this._sorter = this.data?.sorter ?? {
+      name: '',
+      fieldType: 'String',
+      propertyAlias: ''
+    };
   }
 
   #close() {
@@ -133,8 +134,8 @@ export default class EditSorterModalElement
                 <uui-combobox id="fieldType"
                               required
                               readonly=${this._isEditing() ? "true" : nothing}
-                              @change=${(e: { target: { value: PrimitiveFieldTypeModel; }; }) => this._sorter.primitiveFieldType = e.target.value}
-                              value="${this._sorter.primitiveFieldType}">
+                              @change=${(e: { target: { value: PrimitiveFieldTypeModel; }; }) => this._sorter.fieldType = e.target.value}
+                              value="${this._sorter.fieldType}">
                   <uui-combobox-list>
                     <uui-combobox-list-option value="String">String</uui-combobox-list-option>
                     <uui-combobox-list-option value="Number">Number</uui-combobox-list-option>

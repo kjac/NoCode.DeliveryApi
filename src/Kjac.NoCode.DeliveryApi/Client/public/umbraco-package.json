@@ -9,6 +9,16 @@
       "alias": "Kjac.NoCode.DeliveryApi.Bundle",
       "type": "bundle",
       "js": "/App_Plugins/NoCodeDeliveryApi/no-code-delivery-api-bundle.js"
+    },
+    {
+      "type": "workspace",
+      "kind": "default",
+      "alias": "Kjac.NoCode.Delivery.Api.Workspace",
+      "name": "No-Code Delivery API Workspace",
+      "meta": {
+        "entityType": "no-code-delivery-api",
+        "headline": "No-Code Delivery API"
+      }
     }
   ]
 }

@@ -1,19 +1,17 @@
-import {PACKAGE_ALIAS, PACKAGE_NAME, WORKSPACE_ALIAS} from '../constants.ts';
-import { UMB_WORKSPACE_CONDITION_ALIAS } from '@umbraco-cms/backoffice/workspace';
+import {ENTITY_ALIAS, PACKAGE_ALIAS, PACKAGE_NAME, WORKSPACE_ALIAS} from '../constants.ts';
+import {UMB_WORKSPACE_CONDITION_ALIAS} from '@umbraco-cms/backoffice/workspace';
 
 export const manifests: Array<UmbExtensionManifest> = [
-  // TODO: include workspace when headline is supported by the umbraco package supports
-  // TODO: delete workspace from umbraco-package.json when it's added here
-  // {
-  //   type: 'workspace',
-  //   kind: 'default',
-  //   alias: WORKSPACE_ALIAS,
-  //   name: `${PACKAGE_NAME} Workspace`,
-  //   meta: {
-  //     entityType: ENTITY_ALIAS,
-  //     headline: `${PACKAGE_NAME}`,
-  //   },
-  // },
+  {
+    type: 'workspace',
+    kind: 'default',
+    alias: WORKSPACE_ALIAS,
+    name: `${PACKAGE_NAME} Workspace`,
+    meta: {
+      entityType: ENTITY_ALIAS,
+      headline: `${PACKAGE_NAME}`
+    },
+  },
   {
     // TODO: change this to 'workspaceContext' when that works with custom root workspaces
     type: 'globalContext',

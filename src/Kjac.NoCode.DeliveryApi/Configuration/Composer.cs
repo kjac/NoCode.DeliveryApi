@@ -75,7 +75,7 @@ public sealed class Composer : IComposer
         public void Configure(SwaggerGenOptions options)
         {
             options.SwaggerDoc(
-                "no-code-delivery-api",
+                Constants.ApiName,
                 new OpenApiInfo { Title = "No-Code Delivery API", Version = "1.0" }
             );
 
@@ -85,7 +85,7 @@ public sealed class Composer : IComposer
 
     private class NoCodeDeliveryApiOperationSecurityFilter : BackOfficeSecurityRequirementsOperationFilterBase
     {
-        protected override string ApiName => "no-code-delivery-api";
+        protected override string ApiName => Constants.ApiName;
     }
 
     private class NoCodeDeliveryApiSchemaIdHandler : SchemaIdHandler

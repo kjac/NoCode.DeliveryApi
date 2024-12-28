@@ -9,8 +9,8 @@ using Umbraco.Cms.Web.Common.Authorization;
 
 namespace Kjac.NoCode.DeliveryApi.Controllers;
 
-[VersionedApiBackOfficeRoute("no-code-delivery-api")]
-[MapToApi("no-code-delivery-api")]
+[VersionedApiBackOfficeRoute(Constants.ApiName)]
+[MapToApi(Constants.ApiName)]
 [Authorize(Policy = AuthorizationPolicies.SectionAccessSettings)]
 public abstract class NoCodeDeliveryApiControllerBase : ManagementApiControllerBase
 {

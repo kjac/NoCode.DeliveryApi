@@ -85,7 +85,7 @@ internal abstract class DeployServiceBase
     };
 
     private string GetDirectoryPath()
-        => _hostEnvironment.MapPathContentRoot(DirectoryName);
+        => _hostEnvironment.MapPathContentRoot(_directoryName);
 
     private string GetFilePath(string fileName)
         => Path.Combine(GetDirectoryPath(), fileName);

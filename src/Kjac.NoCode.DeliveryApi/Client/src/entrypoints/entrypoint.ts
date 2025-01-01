@@ -1,6 +1,6 @@
-import { UmbEntryPointOnInit, UmbEntryPointOnUnload } from '@umbraco-cms/backoffice/extension-api';
-import { UMB_AUTH_CONTEXT } from '@umbraco-cms/backoffice/auth';
-import { OpenAPI } from '../api';
+import {UmbEntryPointOnInit, UmbEntryPointOnUnload} from '@umbraco-cms/backoffice/extension-api';
+import {UMB_AUTH_CONTEXT} from '@umbraco-cms/backoffice/auth';
+import {OpenAPI} from '../api';
 
 export const onInit: UmbEntryPointOnInit = (_host, _extensionRegistry) => {
 

@@ -22,9 +22,8 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
   async getFilters() {
     await this._ensureFilters();
 
-    return this._filterListModel?.filters.map(filterModel=>
-    {
-      const filterDetails : FilterDetails = {
+    return this._filterListModel?.filters.map(filterModel => {
+      const filterDetails: FilterDetails = {
         id: filterModel.id,
         name: filterModel.name,
         alias: filterModel.alias,
@@ -89,9 +88,8 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
 
   async getSorters() {
     await this._ensureSorters();
-    return this._sorterListModel?.sorts.map(sorterModel=>
-    {
-      const sorterDetails : SorterDetails = {
+    return this._sorterListModel?.sorts.map(sorterModel => {
+      const sorterDetails: SorterDetails = {
         id: sorterModel.id,
         name: sorterModel.name,
         alias: sorterModel.alias,
@@ -158,7 +156,7 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
       this._clients = data;
     }
     return this._clients?.map(clientModel => {
-      const clientDetails : ClientDetails = {
+      const clientDetails: ClientDetails = {
         id: clientModel.id,
         name: clientModel.name,
         culture: clientModel.culture,

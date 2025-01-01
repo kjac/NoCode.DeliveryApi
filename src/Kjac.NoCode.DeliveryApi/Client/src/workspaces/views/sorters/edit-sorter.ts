@@ -66,11 +66,10 @@ export default class EditSorterModalElement
   }
 
   #submit() {
-    // TODO VERIFY: this is wonky. can't we do this smarter, while still triggering all form validation?
     this._formElement.requestSubmit();
   }
 
-  // TODO VERIFY: prevent enter from submitting the modal --- how? it works for core modals such as add/edit property
+  // TODO: prevent enter from submitting the modal --- how? it works for core modals such as add/edit property
   #onFormSubmit(ev: Event) {
     ev.preventDefault();
 

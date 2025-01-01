@@ -13,14 +13,14 @@
       {
         name: 'Querying',
         icon: 'icon-filter-arrows',
-        view: '/App_Plugins/noCodeDeliveryApi/backoffice/noCodeDeliveryApi/query.html',
+        view: '/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/query.html',
         active: requestMethod === 'overview',
         alias: 'noCodeDeliveryApiOverview'
       },
       {
         name: 'Clients',
         icon: 'icon-sitemap',
-        view: '/App_Plugins/noCodeDeliveryApi/backoffice/noCodeDeliveryApi/clients.html',
+        view: '/App_Plugins/NoCodeDeliveryApi/backoffice/noCodeDeliveryApi/clients.html',
         active: requestMethod === 'client',
         alias: 'noCodeDeliveryApiClient'
       }

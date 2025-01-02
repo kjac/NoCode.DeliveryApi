@@ -93,7 +93,7 @@ All of these placeholder values should be directly idenfifiable in the Delivery 
 > Refer to the "Concepts" section of the [Umbraco Delivery API docs](https://docs.umbraco.com/umbraco-cms/reference/content-delivery-api#concepts) for more information on both the placeholder values and how to handle preview.
 
 > [!NOTE]
-> For the time being, Umbraco 15 does not support "additional preview URLs", so the preview trigger path configuration (item 3 in the list above) does not have any real effect at the moment.
+> Umbraco 15 does not yet support "additional preview URLs", so the preview trigger path configuration (item 3 in the list above) does not have any real effect at the moment.
 >
 > The feature has been retained from Umbraco 13 to avoid accidental data loss, and because support for "additional preview URLs" are expected to come around again eventually.
 

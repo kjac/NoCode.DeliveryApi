@@ -2,6 +2,7 @@
 using Kjac.NoCode.DeliveryApi.Extensions;
 using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Repositories;
+using Umbraco.Cms.Core;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
@@ -16,7 +17,7 @@ internal sealed class FilterService : QueryServiceBase<FilterModel>, IFilterServ
     {
     }
 
-    public async Task<bool> AddAsync(
+    public async Task<Attempt<OperationStatus>> AddAsync(
         string name,
         string[] propertyAliases,
         FilterMatchType filterMatchType,
@@ -35,6 +36,6 @@ internal sealed class FilterService : QueryServiceBase<FilterModel>, IFilterServ
                 filter.FilterMatchType = filterMatchType;
             });
 
-    public async Task<bool> UpdateAsync(Guid key, string name, string[] propertyAliases)
+    public async Task<Attempt<OperationStatus>> UpdateAsync(Guid key, string name, string[] propertyAliases)
         => await UpdateAsync(key, name, filter => filter.PropertyAliases = propertyAliases);
 }

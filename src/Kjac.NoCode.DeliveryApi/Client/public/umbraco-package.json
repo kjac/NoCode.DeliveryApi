@@ -1,0 +1,14 @@
+{
+  "id": "Kjac.NoCode.DeliveryApi",
+  "name": "No-Code Delivery API",
+  "version": "2.0.0",
+  "allowPackageTelemetry": true,
+  "extensions": [
+    {
+      "name": "No-Code Delivery API Bundle",
+      "alias": "Kjac.NoCode.DeliveryApi.Bundle",
+      "type": "bundle",
+      "js": "/App_Plugins/NoCodeDeliveryApi/no-code-delivery-api-bundle.js"
+    }
+  ]
+}

@@ -2,6 +2,7 @@
 using Kjac.NoCode.DeliveryApi.Extensions;
 using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Repositories;
+using Umbraco.Cms.Core;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
@@ -16,7 +17,7 @@ internal sealed class SortService : QueryServiceBase<SortModel>, ISortService
     {
     }
 
-    public async Task<bool> AddAsync(
+    public async Task<Attempt<OperationStatus>> AddAsync(
         string name,
         string propertyAlias,
         PrimitiveFieldType primitiveFieldType,
@@ -30,6 +31,6 @@ internal sealed class SortService : QueryServiceBase<SortModel>, ISortService
             indexFieldName,
             sort => sort.PropertyAlias = propertyAlias);
 
-    public async Task<bool> UpdateAsync(Guid key, string name, string propertyAlias)
+    public async Task<Attempt<OperationStatus>> UpdateAsync(Guid key, string name, string propertyAlias)
         => await UpdateAsync(key, name, sort => sort.PropertyAlias = propertyAlias);
 }

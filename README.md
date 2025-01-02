@@ -1,3 +1,6 @@
+> [!NOTE]
+> The main branch of this repo contains the source code for the Umbraco 15 version of the package. If you're looking for the source code for the Umbraco 13 version, go to the [V13 branch](https://github.com/kjac/NoCode.DeliveryApi/tree/v13). 
+
 # No-Code Delivery API
 
 The No-Code Delivery API package enables a no-code/configuration approach to the [Umbraco CMS](https://umbraco.com/) Delivery API, including:
@@ -16,7 +19,7 @@ The package is installed from [NuGet](https://www.nuget.org/packages/Kjac.NoCode
 dotnet add package Kjac.NoCode.DeliveryApi
 ```
 
-Once installed you'll find a "No-Code Delivery API" entry in the "Settings" section tree. Clicking this entry opens up the management UI, where you can configure querying and clients.
+Once installed you'll find a "No-Code Delivery API" entry in the "Advanced" part of the "Settings" section tree. Clicking this entry opens up the management UI, where you can configure querying and clients.
 
 ![The No-Code Delivery API overview](docs/overview.png)
 
@@ -24,7 +27,7 @@ Once installed you'll find a "No-Code Delivery API" entry in the "Settings" sect
 
 In the "Querying" section you can define custom filters and sorters for querying the Delivery API. Both are based on content property data
 
-The created filters and sorters are automatically documented in the built-in Swagger UI (`/umbraco/swagger/`). Here you'll find samples on their usage as well as details on the applicable syntax for the different types of filters and sorters. The Swagger UI is also an excellent playground for testing your filters and sorters.
+The created filters and sorters are automatically documented in the built-in Swagger UI (`/umbraco/swagger/`) for the Delivery API. Here you'll find samples on their usage as well as details on the applicable syntax for the different types of filters and sorters. The Swagger UI is also an excellent playground for testing your filters and sorters.
 
 ![Example of the Swagger UI displaying a No-Code filter](docs/swagger-ui-filter-example.png)
 
@@ -89,6 +92,11 @@ All of these placeholder values should be directly idenfifiable in the Delivery 
 > [!TIP]
 > Refer to the "Concepts" section of the [Umbraco Delivery API docs](https://docs.umbraco.com/umbraco-cms/reference/content-delivery-api#concepts) for more information on both the placeholder values and how to handle preview.
 
+> [!NOTE]
+> Umbraco 15 does not yet support "additional preview URLs", so the preview trigger path configuration (item 3 in the list above) does not have any real effect at the moment.
+>
+> The feature has been retained from Umbraco 13 to avoid accidental data loss, and because support for "additional preview URLs" are expected to come around again eventually.
+
 ## Built-in filters
 
 The package ships with a few useful filters. These are enabled by default and documented in the Swagger UI.
@@ -123,7 +131,3 @@ If you have multiple Umbraco environments, you can deploy filters and sorters au
 
 > [!IMPORTANT]
 > Clients are omitted from the deployment because they are expected to vary between environments. In other words, any changes to clients must be deployed manually.
-
-## No-Code Headless Mode
-
-You should consider the installing [No-Code Headless Mode](https://github.com/kjac/NoCode.HeadlessMode) package also :smile:

@@ -1,6 +1,7 @@
 ﻿using Kjac.NoCode.DeliveryApi.Caching;
 using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Repositories;
+using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.DeliveryApi;
 using Umbraco.Extensions;
 
@@ -34,7 +35,7 @@ internal abstract class QueryServiceBase<TModel> where TModel : QueryModelBase, 
     public async Task<bool> ExistsAsync(string alias)
         => await _repository.GetAsync(alias) is not null;
 
-    protected async Task<bool> AddAsync(
+    protected async Task<Attempt<OperationStatus>> AddAsync(
         FieldType fieldType,
         PrimitiveFieldType primitiveFieldType,
         string name,
@@ -45,14 +46,14 @@ internal abstract class QueryServiceBase<TModel> where TModel : QueryModelBase, 
         indexFieldName ??= _fieldBufferService.GetField(fieldType)?.IndexFieldName;
         if (indexFieldName is null)
         {
-            return false;
+            return Attempt.Fail(OperationStatus.UnknownIndexFieldName);
         }
 
         // alias must be unique
         var alias = _modelAliasGenerator.CreateAlias(name);
         if (await _repository.GetAsync(alias) is not null)
         {
-            return false;
+            return Attempt.Fail(OperationStatus.DuplicateAlias);
         }
 
         var model = new TModel
@@ -65,33 +66,44 @@ internal abstract class QueryServiceBase<TModel> where TModel : QueryModelBase, 
         };
         map(model);
 
-        return await RefreshCacheOnChange(async () => await _repository.CreateAsync(model));
+        var created = await RefreshCacheOnChange(async () => await _repository.CreateAsync(model));
+        return created
+            ? Attempt.Succeed(OperationStatus.Success)
+            : Attempt.Fail(OperationStatus.FailedCreate);
     }
 
-    protected async Task<bool> UpdateAsync(Guid key, string name, Action<TModel> map)
+    protected async Task<Attempt<OperationStatus>> UpdateAsync(Guid key, string name, Action<TModel> map)
     {
         TModel? model = await _repository.GetAsync(key);
         if (model is null)
         {
-            return false;
+            return Attempt.Fail(OperationStatus.NotFound);
         }
 
         // alias must be unique
         var alias = _modelAliasGenerator.CreateAlias(name);
         if (model.Alias.InvariantEquals(alias) is false && await _repository.GetAsync(alias) is not null)
         {
-            return false;
+            return Attempt.Fail(OperationStatus.DuplicateAlias);
         }
 
         model.Name = name;
         model.Alias = alias;
         map(model);
 
-        return await RefreshCacheOnChange(async () => await _repository.UpdateAsync(model));
+        var updated = await RefreshCacheOnChange(async () => await _repository.UpdateAsync(model));
+        return updated
+            ? Attempt.Succeed(OperationStatus.Success)
+            : Attempt.Fail(OperationStatus.FailedUpdate);
     }
 
-    public async Task<bool> DeleteAsync(Guid key)
-        => await RefreshCacheOnChange(async () => await _repository.DeleteAsync(key));
+    public async Task<Attempt<OperationStatus>> DeleteAsync(Guid key)
+    {
+        var deleted = await RefreshCacheOnChange(async () => await _repository.DeleteAsync(key));
+        return deleted
+            ? Attempt.Succeed(OperationStatus.Success)
+            : Attempt.Fail(OperationStatus.FailedDelete);
+    }
 
     public bool CanAdd()
         => _fieldBufferService.IsDepleted() is false;

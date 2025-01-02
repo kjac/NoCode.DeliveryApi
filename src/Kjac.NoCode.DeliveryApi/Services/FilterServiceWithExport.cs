@@ -1,5 +1,6 @@
 ﻿using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Services.Deploy;
+using Umbraco.Cms.Core;
 
 namespace Kjac.NoCode.DeliveryApi.Services;
 
@@ -23,7 +24,7 @@ internal sealed class FilterServiceWithExport : IFilterServiceWithExport
     public async Task<bool> ExistsAsync(string alias)
         => await _filterService.ExistsAsync(alias);
 
-    public async Task<bool> AddAsync(
+    public async Task<Attempt<OperationStatus>> AddAsync(
         string name,
         string[] propertyAliases,
         FilterMatchType filterMatchType,
@@ -38,19 +39,19 @@ internal sealed class FilterServiceWithExport : IFilterServiceWithExport
             key,
             indexFieldName));
 
-    public async Task<bool> UpdateAsync(Guid key, string name, string[] propertyAliases)
+    public async Task<Attempt<OperationStatus>> UpdateAsync(Guid key, string name, string[] propertyAliases)
         => await ExportOnSuccessAsync(async () => await _filterService.UpdateAsync(key, name, propertyAliases));
 
-    public async Task<bool> DeleteAsync(Guid key)
+    public async Task<Attempt<OperationStatus>> DeleteAsync(Guid key)
         => await ExportOnSuccessAsync(async () => await _filterService.DeleteAsync(key));
 
     public bool CanAdd()
         => _filterService.CanAdd();
 
-    private async Task<bool> ExportOnSuccessAsync(Func<Task<bool>> action)
+    private async Task<Attempt<OperationStatus>> ExportOnSuccessAsync(Func<Task<Attempt<OperationStatus>>> action)
     {
-        var result = await action();
-        if (result is true)
+        Attempt<OperationStatus> result = await action();
+        if (result.Success)
         {
             await _exportService.ExportAsync(await GetAllAsync());
         }

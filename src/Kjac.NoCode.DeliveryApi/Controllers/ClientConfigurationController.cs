@@ -1,27 +1,30 @@
-﻿using Kjac.NoCode.DeliveryApi.Models;
+﻿using Asp.Versioning;
+using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Services;
 using Kjac.NoCode.DeliveryApi.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Umbraco.Cms.Web.BackOffice.Controllers;
-using Umbraco.Cms.Web.Common.Attributes;
+using Umbraco.Cms.Core;
 
 namespace Kjac.NoCode.DeliveryApi.Controllers;
 
-[PluginController(Constants.BackOfficeArea)]
-public sealed class ClientConfigurationController : UmbracoAuthorizedJsonController
+[ApiVersion("1.0")]
+[ApiExplorerSettings(GroupName = "Clients")]
+public sealed class ClientConfigurationController : NoCodeDeliveryApiControllerBase
 {
     private readonly IClientService _clientService;
 
     public ClientConfigurationController(IClientService clientService)
         => _clientService = clientService;
 
-    [HttpGet]
+    [HttpGet("client")]
+    [ProducesResponseType<IEnumerable<ClientViewModel>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> All()
     {
         IEnumerable<ClientModel> clients = await _clientService.GetAllAsync();
         return Ok(clients.Select(client => new ClientViewModel
         {
-            Key = client.Key,
+            Id = client.Key,
             Name = client.Name,
             Origin = client.Origin,
             PreviewUrlPath = client.PreviewUrlPath,
@@ -30,32 +33,44 @@ public sealed class ClientConfigurationController : UmbracoAuthorizedJsonControl
         }));
     }
 
-    [HttpPost]
+    [HttpPost("client")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add(AddClientRequestModel requestModel)
-        => await _clientService.AddAsync(
+    {
+        Attempt<OperationStatus> result = await _clientService.AddAsync(
             requestModel.Name,
             requestModel.Origin,
             requestModel.PreviewUrlPath,
             requestModel.PublishedUrlPath,
-            requestModel.Culture)
-        ? Ok()
-        : BadRequest();
+            requestModel.Culture);
 
-    [HttpPut]
-    public async Task<IActionResult> Update(UpdateClientRequestModel requestModel)
-        => await _clientService.UpdateAsync(
-            requestModel.Key,
+        return OperationStatusResult(result.Result);
+    }
+
+    [HttpPut("client/{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Update(Guid id, UpdateClientRequestModel requestModel)
+    {
+        Attempt<OperationStatus> result = await _clientService.UpdateAsync(
+            id,
             requestModel.Name,
             requestModel.Origin,
             requestModel.PreviewUrlPath,
             requestModel.PublishedUrlPath,
-            requestModel.Culture)
-        ? Ok()
-        : BadRequest();
+            requestModel.Culture);
 
-    [HttpDelete]
-    public async Task<IActionResult> Delete(Guid key)
-        => await _clientService.DeleteAsync(key)
-        ? Ok()
-        : BadRequest();
+        return OperationStatusResult(result.Result);
+    }
+
+    [HttpDelete("client/{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        Attempt<OperationStatus> result = await _clientService.DeleteAsync(id);
+
+        return OperationStatusResult(result.Result);
+    }
 }

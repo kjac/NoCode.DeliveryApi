@@ -42,13 +42,10 @@ export default class EditFilterModalElement
   value?: FilterModalValue;
 
   @query('#filterName')
-  private _filterNameElement?: UUIInputElement;
+  private _filterNameElement!: UUIInputElement;
 
   @query('#newPropertyAlias')
-  private _newPropertyAliasElement?: UUIInputElement;
-
-  @query('#form')
-  private _formElement!: HTMLFormElement;
+  private _newPropertyAliasElement!: UUIInputElement;
 
   @query('#submitButton')
   private _submitButtonElement!: HTMLFormElement;
@@ -71,15 +68,10 @@ export default class EditFilterModalElement
     this.modalContext?.reject();
   }
 
-  #submit() {
-    this._formElement.requestSubmit();
-  }
-
-  // TODO: prevent enter from submitting the modal --- how? it works for core modals such as add/edit property
-  #onFormSubmit(ev: Event) {
+  #submit(ev: Event) {
     ev.preventDefault();
 
-    if (!this._formElement.checkValidity()) {
+    if (!this._filterNameElement.checkValidity() || !this._newPropertyAliasElement.checkValidity()) {
       this._submitButtonElement.state = 'failed';
       return;
     }
@@ -96,93 +88,90 @@ export default class EditFilterModalElement
     return html`
       <umb-body-layout headline="${this.data?.headline}">
         <uui-form>
-          <form name="form" id="form" @submit=${this.#onFormSubmit}>
-            <uui-box>
-              <uui-label for="filterName" required>Name</uui-label>
-              <small>The filter name must be unique. It is used to auto-generate the filter alias, which will be used
-                for querying the Delivery API.</small>
-              <umb-form-validation-message>
-                <uui-input
-                  id="filterName"
-                  label="Name"
-                  maxlength="40"
-                  required
-                  value="${this._filter.name}"
-                  @change=${this._nameChanged}
-                  ${umbFocus()}>
-                </uui-input>
-              </umb-form-validation-message>
+          <uui-box>
+            <uui-label for="filterName" required>Name</uui-label>
+            <small>The filter name must be unique. It is used to auto-generate the filter alias, which will be used
+              for querying the Delivery API.</small>
+            <umb-form-validation-message>
+              <uui-input
+                id="filterName"
+                label="Name"
+                maxlength="40"
+                required
+                value="${this._filter.name}"
+                @change=${this._nameChanged}
+                ${umbFocus()}>
+              </uui-input>
+            </umb-form-validation-message>
 
-              <uui-label class="spacing-above" for="newPropertyAlias" required>Property aliases</uui-label>
-              <small>The aliases of the content properties whose values should be used for filtering. The filter will be
-                evaluated against any of these properties.</small>
-              <umb-form-validation-message>
-                <div style="display: flex;">
+            <uui-label class="spacing-above" for="newPropertyAlias" required>Property aliases</uui-label>
+            <small>The aliases of the content properties whose values should be used for filtering. The filter will be
+              evaluated against any of these properties.</small>
+            <umb-form-validation-message>
+              <div style="display: flex;">
+                <div style="flex: auto;">
+                  <uui-input
+                    id="newPropertyAlias"
+                    label="Add new property alias"
+                    required=${this._propertyAliasRequired() || nothing}>
+                  </uui-input>
+                </div>
+                <div style="margin-left: 12px;">
+                  <uui-button look="secondary" label="Add" @click=${this._addPropertyAlias}></uui-button>
+                </div>
+              </div>
+            </umb-form-validation-message>
+            ${repeat(
+              this._filter.propertyAliases,
+              (propertyAlias) => propertyAlias,
+              (propertyAlias) => html`
+                <div class="property-alias-container">
+                  <uui-icon name="code" aria-hidden="true"></uui-icon>
                   <div style="flex: auto;">
-                    <uui-input
-                      id="newPropertyAlias"
-                      label="Add new property alias"
-                      required=${this._propertyAliasRequired() || nothing}>
+                    <uui-input readonly value=${propertyAlias}>
                     </uui-input>
                   </div>
-                  <div style="margin-left: 12px;">
-                    <uui-button look="secondary" label="Add" @click=${this._addPropertyAlias}></uui-button>
+                  <div>
+                    <uui-button look="outline" label="Remove" color="danger"
+                                @click=${() => this._removePropertyAlias(propertyAlias)}></uui-button>
                   </div>
                 </div>
-              </umb-form-validation-message>
-              ${repeat(
-                this._filter.propertyAliases,
-                (propertyAlias) => propertyAlias,
-                (propertyAlias) => html`
-                  <div class="property-alias-container">
-                    <uui-icon name="code" aria-hidden="true"></uui-icon>
-                    <div style="flex: auto;">
-                      <uui-input readonly value=${propertyAlias}>
-                      </uui-input>
-                    </div>
-                    <div>
-                      <uui-button look="outline" label="Remove" color="danger"
-                                  @click=${() => this._removePropertyAlias(propertyAlias)}></uui-button>
-                    </div>
-                  </div>
-                `)}
+              `)}
 
-              <uui-label class="spacing-above" for="fieldType" required class="spacing-above">Field type</uui-label>
-              <small>The field type determines how the filter evaluates against the content properties. String fields
-                allow for exact and partial matching, while Number and Date fields can be used for exact and range
-                matching.</small>
-              <umb-form-validation-message>
-                <uui-combobox id="fieldType"
-                              required
-                              readonly=${this._isEditing() ? "true" : nothing}
-                              @change=${(e: { target: { value: PrimitiveFieldTypeModel; }; }) => this._filter.fieldType = e.target.value}
-                              value="${this._filter.fieldType}">
-                  <uui-combobox-list>
-                    <uui-combobox-list-option value="String">String</uui-combobox-list-option>
-                    <uui-combobox-list-option value="Number">Number</uui-combobox-list-option>
-                    <uui-combobox-list-option value="Date">Date</uui-combobox-list-option>
-                  </uui-combobox-list>
-                </uui-combobox>
-              </umb-form-validation-message>
+            <uui-label class="spacing-above" for="fieldType" required class="spacing-above">Field type</uui-label>
+            <small>The field type determines how the filter evaluates against the content properties. String fields
+              allow for exact and partial matching, while Number and Date fields can be used for exact and range
+              matching.</small>
+            <umb-form-validation-message>
+              <uui-combobox id="fieldType"
+                            required
+                            readonly=${this._isEditing() ? "true" : nothing}
+                            @change=${(e: { target: { value: PrimitiveFieldTypeModel; }; }) => this._filter.fieldType = e.target.value}
+                            value="${this._filter.fieldType}">
+                <uui-combobox-list>
+                  <uui-combobox-list-option value="String">String</uui-combobox-list-option>
+                  <uui-combobox-list-option value="Number">Number</uui-combobox-list-option>
+                  <uui-combobox-list-option value="Date">Date</uui-combobox-list-option>
+                </uui-combobox-list>
+              </uui-combobox>
+            </umb-form-validation-message>
 
-              <uui-label class="spacing-above" for="matchType" required>Match type</uui-label>
-              <small>Use exact matching for filtering against known identifiers (e.g. content pickers or product SKUs).
-                Use partial matching for textual (wildcard) searches.</small>
-              <umb-form-validation-message>
-                <uui-combobox id
-                              required
-                              readonly=${this._isEditing() ? "true" : nothing}
-                              @change=${(e: { target: { value: FilterMatchTypeModel; }; }) => this._filter.matchType = e.target.value}
-                              value="${this._filter.matchType}">
-                  <uui-combobox-list>
-                    <uui-combobox-list-option value="Exact">Exact match</uui-combobox-list-option>
-                    <uui-combobox-list-option value="Partial">Partial match</uui-combobox-list-option>
-                  </uui-combobox-list>
-                </uui-combobox>
-              </umb-form-validation-message>
-            </uui-box>
-
-          </form>
+            <uui-label class="spacing-above" for="matchType" required>Match type</uui-label>
+            <small>Use exact matching for filtering against known identifiers (e.g. content pickers or product SKUs).
+              Use partial matching for textual (wildcard) searches.</small>
+            <umb-form-validation-message>
+              <uui-combobox id
+                            required
+                            readonly=${this._isEditing() ? "true" : nothing}
+                            @change=${(e: { target: { value: FilterMatchTypeModel; }; }) => this._filter.matchType = e.target.value}
+                            value="${this._filter.matchType}">
+                <uui-combobox-list>
+                  <uui-combobox-list-option value="Exact">Exact match</uui-combobox-list-option>
+                  <uui-combobox-list-option value="Partial">Partial match</uui-combobox-list-option>
+                </uui-combobox-list>
+              </uui-combobox>
+            </umb-form-validation-message>
+          </uui-box
         </uui-form>
 
         <div slot="actions">
@@ -205,19 +194,15 @@ export default class EditFilterModalElement
 
     // ensure name uniqueness
     if (this.data?.currentFilterNames.find(name => name.toLowerCase() === newName.toLowerCase())) {
-      this._filterNameElement?.setCustomValidity('Another filter with that name already exists.')
+      this._filterNameElement.setCustomValidity('Another filter with that name already exists.')
       return;
     }
 
-    this._filterNameElement?.setCustomValidity('');
+    this._filterNameElement.setCustomValidity('');
     this._filter.name = newName;
   }
 
   private _addPropertyAlias() {
-    if (!this._newPropertyAliasElement) {
-      return;
-    }
-
     const value = (this._newPropertyAliasElement.value as string)?.trim();
     if (!value) {
       return;

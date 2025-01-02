@@ -42,10 +42,10 @@ export default class EditSorterModalElement
   value?: SorterModalValue;
 
   @query('#sorterName')
-  private _sorterNameElement?: UUIInputElement;
+  private _sorterNameElement!: UUIInputElement;
 
-  @query('#form')
-  private _formElement!: HTMLFormElement;
+  @query('#propertyAlias')
+  private _propertyAliasElement!: UUIInputElement;
 
   @query('#submitButton')
   private _submitButtonElement!: HTMLFormElement;
@@ -65,15 +65,10 @@ export default class EditSorterModalElement
     this.modalContext?.reject();
   }
 
-  #submit() {
-    this._formElement.requestSubmit();
-  }
-
-  // TODO: prevent enter from submitting the modal --- how? it works for core modals such as add/edit property
-  #onFormSubmit(ev: Event) {
+  #submit(ev: Event) {
     ev.preventDefault();
 
-    if (!this._formElement.checkValidity()) {
+    if (!this._sorterNameElement.checkValidity() || !this._propertyAliasElement.checkValidity()) {
       this._submitButtonElement.state = 'failed';
       return;
     }
@@ -90,61 +85,58 @@ export default class EditSorterModalElement
     return html`
       <umb-body-layout headline="${this.data?.headline}">
         <uui-form>
-          <form name="form" id="form" @submit=${this.#onFormSubmit}>
-            <uui-box>
-              <uui-label for="sorterName" required>Name</uui-label>
-              <small>The sorter name must be unique. It is used to auto-generate the sorter alias, which will be used
-                for querying the Delivery API.</small>
-              <umb-form-validation-message>
-                <uui-input
-                  id="sorterName"
-                  label="Name"
-                  maxlength="40"
-                  required
-                  value="${this._sorter.name}"
-                  @change=${this._nameChanged}
-                  ${umbFocus()}>
-                </uui-input>
-              </umb-form-validation-message>
+          <uui-box>
+            <uui-label for="sorterName" required>Name</uui-label>
+            <small>The sorter name must be unique. It is used to auto-generate the sorter alias, which will be used
+              for querying the Delivery API.</small>
+            <umb-form-validation-message>
+              <uui-input
+                id="sorterName"
+                label="Name"
+                maxlength="40"
+                required
+                value="${this._sorter.name}"
+                @change=${this._nameChanged}
+                ${umbFocus()}>
+              </uui-input>
+            </umb-form-validation-message>
 
-              <uui-label for="propertyAlias" required class="spacing-above">Property alias</uui-label>
-              <small>The alias of the content property whose value should be used for sorting.</small>
-              <umb-form-validation-message>
-                <uui-input
-                  id="propertyAlias"
-                  label="Property alias"
-                  required
-                  value="${this._sorter.propertyAlias}"
-                  @change=${(e: { target: { value: string; }; }) => this._sorter.propertyAlias = e.target.value}>
-                </uui-input>
-              </umb-form-validation-message>
+            <uui-label for="propertyAlias" required class="spacing-above">Property alias</uui-label>
+            <small>The alias of the content property whose value should be used for sorting.</small>
+            <umb-form-validation-message>
+              <uui-input
+                id="propertyAlias"
+                label="Property alias"
+                required
+                value="${this._sorter.propertyAlias}"
+                @change=${(e: { target: { value: string; }; }) => this._sorter.propertyAlias = e.target.value}>
+              </uui-input>
+            </umb-form-validation-message>
 
-              <uui-label class="spacing-above" for="fieldType" required class="spacing-above">Field type</uui-label>
-              <small>
-                The field type determines how the sorting works:
-                <ul>
-                  <li>A Number field performs correct sorting of numeric values</li>
-                  <li>A Date field ensures correct sorting of date values.</li>
-                </ul>
-                Use a String field to perform alphanumeric sorting, if the property value is not expected to be a number
-                or a date.
-              </small>
-              <umb-form-validation-message>
-                <uui-combobox id="fieldType"
-                              required
-                              readonly=${this._isEditing() ? "true" : nothing}
-                              @change=${(e: { target: { value: PrimitiveFieldTypeModel; }; }) => this._sorter.fieldType = e.target.value}
-                              value="${this._sorter.fieldType}">
-                  <uui-combobox-list>
-                    <uui-combobox-list-option value="String">String</uui-combobox-list-option>
-                    <uui-combobox-list-option value="Number">Number</uui-combobox-list-option>
-                    <uui-combobox-list-option value="Date">Date</uui-combobox-list-option>
-                  </uui-combobox-list>
-                </uui-combobox>
-              </umb-form-validation-message>
-            </uui-box>
-
-          </form>
+            <uui-label class="spacing-above" for="fieldType" required class="spacing-above">Field type</uui-label>
+            <small>
+              The field type determines how the sorting works:
+              <ul>
+                <li>A Number field performs correct sorting of numeric values</li>
+                <li>A Date field ensures correct sorting of date values.</li>
+              </ul>
+              Use a String field to perform alphanumeric sorting, if the property value is not expected to be a number
+              or a date.
+            </small>
+            <umb-form-validation-message>
+              <uui-combobox id="fieldType"
+                            required
+                            readonly=${this._isEditing() ? "true" : nothing}
+                            @change=${(e: { target: { value: PrimitiveFieldTypeModel; }; }) => this._sorter.fieldType = e.target.value}
+                            value="${this._sorter.fieldType}">
+                <uui-combobox-list>
+                  <uui-combobox-list-option value="String">String</uui-combobox-list-option>
+                  <uui-combobox-list-option value="Number">Number</uui-combobox-list-option>
+                  <uui-combobox-list-option value="Date">Date</uui-combobox-list-option>
+                </uui-combobox-list>
+              </uui-combobox>
+            </umb-form-validation-message>
+          </uui-box>
         </uui-form>
 
         <div slot="actions">
@@ -167,11 +159,11 @@ export default class EditSorterModalElement
 
     // ensure name uniqueness
     if (this.data?.currentSorterNames.find(name => name.toLowerCase() === newName.toLowerCase())) {
-      this._sorterNameElement?.setCustomValidity('Another sorter with that name already exists.')
+      this._sorterNameElement.setCustomValidity('Another sorter with that name already exists.')
       return;
     }
 
-    this._sorterNameElement?.setCustomValidity('');
+    this._sorterNameElement.setCustomValidity('');
     this._sorter.name = newName;
   }
 

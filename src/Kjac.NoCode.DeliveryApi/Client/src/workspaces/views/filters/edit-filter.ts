@@ -1,5 +1,5 @@
 import {UmbModalToken} from '@umbraco-cms/backoffice/modal';
-import {html, property, customElement, css, nothing, query, repeat} from '@umbraco-cms/backoffice/external/lit';
+import {html, property, customElement, css, nothing, query, repeat, when} from '@umbraco-cms/backoffice/external/lit';
 import {umbFocus, UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import type {UmbModalContext, UmbModalExtensionElement} from '@umbraco-cms/backoffice/modal';
 import {UUIInputElement} from '@umbraco-cms/backoffice/external/uui';
@@ -56,8 +56,6 @@ export default class EditFilterModalElement
     super.connectedCallback();
     this._filter = this.data?.filter ?? {
       name: '',
-      // alias: '',
-      // fieldName: '',
       propertyAliases: [],
       fieldType: 'String',
       matchType: 'Exact'
@@ -146,7 +144,7 @@ export default class EditFilterModalElement
               <uui-combobox id="fieldType"
                             required
                             readonly=${this._isEditing() ? "true" : nothing}
-                            @change=${(e: { target: { value: PrimitiveFieldTypeModel; }; }) => this._filter.fieldType = e.target.value}
+                            @change=${this._fieldTypeChanged}
                             value="${this._filter.fieldType}">
                 <uui-combobox-list>
                   <uui-combobox-list-option value="String">String</uui-combobox-list-option>
@@ -156,22 +154,27 @@ export default class EditFilterModalElement
               </uui-combobox>
             </umb-form-validation-message>
 
-            <uui-label class="spacing-above" for="matchType" required>Match type</uui-label>
-            <small>Use exact matching for filtering against known identifiers (e.g. content pickers or product SKUs).
-              Use partial matching for textual (wildcard) searches.</small>
-            <umb-form-validation-message>
-              <uui-combobox id
-                            required
-                            readonly=${this._isEditing() ? "true" : nothing}
-                            @change=${(e: { target: { value: FilterMatchTypeModel; }; }) => this._filter.matchType = e.target.value}
-                            value="${this._filter.matchType}">
-                <uui-combobox-list>
-                  <uui-combobox-list-option value="Exact">Exact match</uui-combobox-list-option>
-                  <uui-combobox-list-option value="Partial">Partial match</uui-combobox-list-option>
-                </uui-combobox-list>
-              </uui-combobox>
-            </umb-form-validation-message>
-          </uui-box
+            ${when(
+              this._filter.fieldType === 'String',
+              () => html `
+                <uui-label class="spacing-above" for="matchType" required>Match type</uui-label>
+                <small>Use exact matching for filtering against known identifiers (e.g. content pickers or product SKUs).
+                  Use partial matching for textual (wildcard) searches.</small>
+                <umb-form-validation-message>
+                  <uui-combobox id="matchType"
+                                required
+                                readonly=${this._isEditing() ? "true" : nothing}
+                                @change=${this._matchTypeChanged}
+                                value="${this._filter.matchType}">
+                    <uui-combobox-list>
+                      <uui-combobox-list-option value="Exact">Exact match</uui-combobox-list-option>
+                      <uui-combobox-list-option value="Partial">Partial match</uui-combobox-list-option>
+                    </uui-combobox-list>
+                  </uui-combobox>
+                </umb-form-validation-message>
+              `
+            )}
+          </uui-box>
         </uui-form>
 
         <div slot="actions">
@@ -189,8 +192,8 @@ export default class EditFilterModalElement
 
   private _isEditing = () => !!this.data?.filter?.id
 
-  private _nameChanged(ev: Event) {
-    const newName = ((ev.target as UUIInputElement).value as string).trim();
+  private _nameChanged(ev: { target: UUIInputElement }) {
+    const newName = (ev.target.value as string).trim();
 
     // ensure name uniqueness
     if (this.data?.currentFilterNames.find(name => name.toLowerCase() === newName.toLowerCase())) {
@@ -200,6 +203,19 @@ export default class EditFilterModalElement
 
     this._filterNameElement.setCustomValidity('');
     this._filter.name = newName;
+  }
+
+  private _fieldTypeChanged(ev: { target: { value: PrimitiveFieldTypeModel } }) {
+    this._filter.fieldType = ev.target.value;
+    if (this._filter.fieldType !== 'String') {
+      this._filter.matchType = 'Exact';
+    }
+    this.requestUpdate();
+  }
+
+  private _matchTypeChanged(ev: { target: { value: FilterMatchTypeModel } }) {
+    this._filter.matchType = ev.target.value;
+    this.requestUpdate();
   }
 
   private _addPropertyAlias() {

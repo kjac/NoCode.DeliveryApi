@@ -87,15 +87,18 @@ For example, given the client origin `http://localhost:3000`:
 - The path `/trigger-preview?id={id}&root={start-path}` would yield a resulting link like `http://localhost:3000/trigger-preview?id=fb3086d5-3a50-4d68-85dc-32c6c786df37&root=home`.
 - The path `/{culture}/{path}` would yield a resulting link like `http://localhost:3000/en-US/path/to/content`.
 
-All of these placeholder values should be directly idenfifiable in the Delivery API output for any given content item.
+All of these placeholder values should be directly identifiable in the Delivery API output for any given content item.
 
 > [!TIP]
 > Refer to the "Concepts" section of the [Umbraco Delivery API docs](https://docs.umbraco.com/umbraco-cms/reference/content-delivery-api#concepts) for more information on both the placeholder values and how to handle preview.
 
-> [!NOTE]
-> Umbraco 15 does not yet support "additional preview URLs", so the preview trigger path configuration (item 3 in the list above) does not have any real effect at the moment.
->
-> The feature has been retained from Umbraco 13 to avoid accidental data loss, and because support for "additional preview URLs" are expected to come around again eventually.
+#### ⚠️ Known issues with clients in Umbraco 15
+
+At this time, Umbraco 15 does not yet offer the same support for custom/additional URLs as Umbraco 13 does.  
+
+This means that neither preview nor publish paths behave as described (items 3 through 5 in the list above). In fact, they do not have any effect at this time.
+
+The support is expected to be added within the scope of Umbraco 15, so the preview and publish paths have been retained as part of the package.
 
 ## Built-in filters
 

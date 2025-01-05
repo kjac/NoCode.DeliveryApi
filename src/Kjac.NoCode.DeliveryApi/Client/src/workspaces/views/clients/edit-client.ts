@@ -130,7 +130,7 @@ export default class EditClientModalElement
               @change=${this._previewUrlPathChanged}>
             </uui-input>
 
-            <uui-label class="spacing-above" for="publishedUrlPath" class="spacing-above">Preview path</uui-label>
+            <uui-label class="spacing-above" for="publishedUrlPath" class="spacing-above">Published path</uui-label>
             <small>
               To link directly from the document editor "Info" section to the client, enter the path to use for the
               link. The path will be appended to the origin.<br/>

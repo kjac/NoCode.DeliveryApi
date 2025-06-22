@@ -1,6 +1,5 @@
 import {ENTITY_ALIAS, PACKAGE_ALIAS, PACKAGE_NAME, WORKSPACE_ALIAS} from '../constants.ts';
-// TODO: use UMB_WORKSPACE_CONDITION_ALIAS instead of 'Umb.Condition.WorkspaceAlias' in V16
-// import {UMB_WORKSPACE_CONDITION_ALIAS} from '@umbraco-cms/backoffice/workspace';
+import {UMB_WORKSPACE_CONDITION_ALIAS} from '@umbraco-cms/backoffice/workspace';
 
 export const manifests: Array<UmbExtensionManifest> = [
   {
@@ -14,18 +13,16 @@ export const manifests: Array<UmbExtensionManifest> = [
     },
   },
   {
-    // TODO: change this to 'workspaceContext' when that works with custom root workspaces
-    type: 'globalContext',
+    type: 'workspaceContext',
     alias: `${PACKAGE_ALIAS}.Workspace.Context`,
     name: `${PACKAGE_NAME} Workspace Context`,
     api: () => import('./workspace.context.ts'),
-    // TODO: include conditions when 'workspaceContext' when works with custom root workspaces (V16 likely)
-    // conditions: [
-    //   {
-    //     alias: 'Umb.Condition.WorkspaceAlias',
-    //     match: WORKSPACE_ALIAS,
-    //   },
-    // ]
+    conditions: [
+      {
+        alias: UMB_WORKSPACE_CONDITION_ALIAS,
+        match: WORKSPACE_ALIAS,
+      },
+    ]
   },
   {
     type: 'workspaceView',
@@ -39,7 +36,7 @@ export const manifests: Array<UmbExtensionManifest> = [
     },
     conditions: [
       {
-        alias: 'Umb.Condition.WorkspaceAlias',
+        alias: UMB_WORKSPACE_CONDITION_ALIAS,
         match: WORKSPACE_ALIAS,
       },
     ],
@@ -56,7 +53,7 @@ export const manifests: Array<UmbExtensionManifest> = [
     },
     conditions: [
       {
-        alias: 'Umb.Condition.WorkspaceAlias',
+        alias: UMB_WORKSPACE_CONDITION_ALIAS,
         match: WORKSPACE_ALIAS,
       },
     ],
@@ -73,7 +70,7 @@ export const manifests: Array<UmbExtensionManifest> = [
     },
     conditions: [
       {
-        alias: 'Umb.Condition.WorkspaceAlias',
+        alias: UMB_WORKSPACE_CONDITION_ALIAS,
         match: WORKSPACE_ALIAS,
       },
     ],

@@ -1,5 +1,5 @@
 > [!NOTE]
-> The main branch of this repo contains the source code for the Umbraco 15 version of the package. If you're looking for the source code for the Umbraco 13 version, go to the [V13 branch](https://github.com/kjac/NoCode.DeliveryApi/tree/v13). 
+> The main branch of this repo contains the source code for the latest version of the package. If you're looking for the source code for the Umbraco 13 version, go to the [V13 branch](https://github.com/kjac/NoCode.DeliveryApi/tree/v13). 
 
 # No-Code Delivery API
 
@@ -91,14 +91,6 @@ All of these placeholder values should be directly identifiable in the Delivery 
 
 > [!TIP]
 > Refer to the "Concepts" section of the [Umbraco Delivery API docs](https://docs.umbraco.com/umbraco-cms/reference/content-delivery-api#concepts) for more information on both the placeholder values and how to handle preview.
-
-#### ⚠️ Known issues with clients in Umbraco 15
-
-At this time, Umbraco 15 does not yet offer the same support for custom/additional URLs as Umbraco 13 does.  
-
-This means that neither preview nor publish paths behave as described (items 3 through 5 in the list above). In fact, they do not have any effect at this time.
-
-The support is expected to be added within the scope of Umbraco 15, so the preview and publish paths have been retained as part of the package.
 
 ## Built-in filters
 

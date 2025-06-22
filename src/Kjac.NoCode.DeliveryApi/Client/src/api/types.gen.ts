@@ -3,14 +3,14 @@
 export type AddClientRequestModel = {
     name: string;
     origin: string;
-    previewUrlPath?: (string) | null;
-    publishedUrlPath?: (string) | null;
-    culture?: (string) | null;
+    previewUrlPath?: string | null;
+    publishedUrlPath?: string | null;
+    culture?: string | null;
 };
 
 export type AddFilterRequestModel = {
     name: string;
-    propertyAliases: Array<(string)>;
+    propertyAliases: Array<string>;
     filterMatchType: FilterMatchTypeModel;
     primitiveFieldType: PrimitiveFieldTypeModel;
 };
@@ -25,19 +25,28 @@ export type ClientModel = {
     id: string;
     name: string;
     origin: string;
-    previewUrlPath?: (string) | null;
-    publishedUrlPath?: (string) | null;
-    culture?: (string) | null;
+    previewUrlPath?: string | null;
+    publishedUrlPath?: string | null;
+    culture?: string | null;
 };
 
-export type EventMessageTypeModel = 'Default' | 'Info' | 'Error' | 'Success' | 'Warning';
+export enum EventMessageTypeModel {
+    DEFAULT = 'Default',
+    INFO = 'Info',
+    ERROR = 'Error',
+    SUCCESS = 'Success',
+    WARNING = 'Warning'
+}
 
 export type FilterListModel = {
-    filters: Array<(FilterModel)>;
+    filters: Array<FilterModel>;
     canAddFilter: boolean;
 };
 
-export type FilterMatchTypeModel = 'Exact' | 'Partial';
+export enum FilterMatchTypeModel {
+    EXACT = 'Exact',
+    PARTIAL = 'Partial'
+}
 
 export type FilterModel = {
     id: string;
@@ -45,7 +54,7 @@ export type FilterModel = {
     alias: string;
     fieldName: string;
     primitiveFieldType: PrimitiveFieldTypeModel;
-    propertyAliases: Array<(string)>;
+    propertyAliases: Array<string>;
     filterMatchType: FilterMatchTypeModel;
 };
 
@@ -55,19 +64,23 @@ export type NotificationHeaderModel = {
     type: EventMessageTypeModel;
 };
 
-export type PrimitiveFieldTypeModel = 'String' | 'Number' | 'Date';
+export enum PrimitiveFieldTypeModel {
+    STRING = 'String',
+    NUMBER = 'Number',
+    DATE = 'Date'
+}
 
 export type ProblemDetails = {
-    type?: (string) | null;
-    title?: (string) | null;
-    status?: (number) | null;
-    detail?: (string) | null;
-    instance?: (string) | null;
-    [key: string]: (unknown | string | number) | undefined;
+    type?: string | null;
+    title?: string | null;
+    status?: number | null;
+    detail?: string | null;
+    instance?: string | null;
+    [key: string]: unknown | (string | null) | (string | null) | (number | null) | (string | null) | (string | null) | undefined;
 };
 
 export type SortListModel = {
-    sorts: Array<(SortModel)>;
+    sorts: Array<SortModel>;
     canAddSort: boolean;
 };
 
@@ -83,14 +96,14 @@ export type SortModel = {
 export type UpdateClientRequestModel = {
     name: string;
     origin: string;
-    previewUrlPath?: (string) | null;
-    publishedUrlPath?: (string) | null;
-    culture?: (string) | null;
+    previewUrlPath?: string | null;
+    publishedUrlPath?: string | null;
+    culture?: string | null;
 };
 
 export type UpdateFilterRequestModel = {
     name: string;
-    propertyAliases: Array<(string)>;
+    propertyAliases: Array<string>;
 };
 
 export type UpdateSortRequestModel = {
@@ -98,65 +111,372 @@ export type UpdateSortRequestModel = {
     propertyAlias: string;
 };
 
-export type PostNoCodeDeliveryApiClientData = {
-    requestBody?: (AddClientRequestModel);
+export type GetNoCodeDeliveryApiClientData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/umbraco/management/api/v1/no-code-delivery-api/client';
 };
 
-export type PostNoCodeDeliveryApiClientResponse = (string);
+export type GetNoCodeDeliveryApiClientErrors = {
+    /**
+     * The resource is protected and requires an authentication token
+     */
+    401: unknown;
+    /**
+     * The authenticated user does not have access to this resource
+     */
+    403: unknown;
+};
 
-export type GetNoCodeDeliveryApiClientResponse = (Array<(ClientModel)>);
+export type GetNoCodeDeliveryApiClientResponses = {
+    /**
+     * OK
+     */
+    200: Array<ClientModel>;
+};
+
+export type GetNoCodeDeliveryApiClientResponse = GetNoCodeDeliveryApiClientResponses[keyof GetNoCodeDeliveryApiClientResponses];
+
+export type PostNoCodeDeliveryApiClientData = {
+    body?: AddClientRequestModel;
+    path?: never;
+    query?: never;
+    url: '/umbraco/management/api/v1/no-code-delivery-api/client';
+};
+
+export type PostNoCodeDeliveryApiClientErrors = {
+    /**
+     * Bad Request
+     */
+    400: unknown;
+    /**
+     * The resource is protected and requires an authentication token
+     */
+    401: unknown;
+    /**
+     * The authenticated user does not have access to this resource
+     */
+    403: unknown;
+};
+
+export type PostNoCodeDeliveryApiClientResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type DeleteNoCodeDeliveryApiClientByIdData = {
-    id: string;
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/umbraco/management/api/v1/no-code-delivery-api/client/{id}';
 };
 
-export type DeleteNoCodeDeliveryApiClientByIdResponse = (string);
+export type DeleteNoCodeDeliveryApiClientByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: unknown;
+    /**
+     * The resource is protected and requires an authentication token
+     */
+    401: unknown;
+    /**
+     * The authenticated user does not have access to this resource
+     */
+    403: unknown;
+};
+
+export type DeleteNoCodeDeliveryApiClientByIdResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type PutNoCodeDeliveryApiClientByIdData = {
-    id: string;
-    requestBody?: (UpdateClientRequestModel);
+    body?: UpdateClientRequestModel;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/umbraco/management/api/v1/no-code-delivery-api/client/{id}';
 };
 
-export type PutNoCodeDeliveryApiClientByIdResponse = (string);
+export type PutNoCodeDeliveryApiClientByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: unknown;
+    /**
+     * The resource is protected and requires an authentication token
+     */
+    401: unknown;
+    /**
+     * The authenticated user does not have access to this resource
+     */
+    403: unknown;
+};
+
+export type PutNoCodeDeliveryApiClientByIdResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type GetNoCodeDeliveryApiFilterData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/umbraco/management/api/v1/no-code-delivery-api/filter';
+};
+
+export type GetNoCodeDeliveryApiFilterErrors = {
+    /**
+     * The resource is protected and requires an authentication token
+     */
+    401: unknown;
+    /**
+     * The authenticated user does not have access to this resource
+     */
+    403: unknown;
+};
+
+export type GetNoCodeDeliveryApiFilterResponses = {
+    /**
+     * OK
+     */
+    200: FilterListModel;
+};
+
+export type GetNoCodeDeliveryApiFilterResponse = GetNoCodeDeliveryApiFilterResponses[keyof GetNoCodeDeliveryApiFilterResponses];
 
 export type PostNoCodeDeliveryApiFilterData = {
-    requestBody?: (AddFilterRequestModel);
+    body?: AddFilterRequestModel;
+    path?: never;
+    query?: never;
+    url: '/umbraco/management/api/v1/no-code-delivery-api/filter';
 };
 
-export type PostNoCodeDeliveryApiFilterResponse = (string);
+export type PostNoCodeDeliveryApiFilterErrors = {
+    /**
+     * Bad Request
+     */
+    400: ProblemDetails;
+    /**
+     * The resource is protected and requires an authentication token
+     */
+    401: unknown;
+    /**
+     * The authenticated user does not have access to this resource
+     */
+    403: unknown;
+};
 
-export type GetNoCodeDeliveryApiFilterResponse = ((FilterListModel));
+export type PostNoCodeDeliveryApiFilterError = PostNoCodeDeliveryApiFilterErrors[keyof PostNoCodeDeliveryApiFilterErrors];
+
+export type PostNoCodeDeliveryApiFilterResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type DeleteNoCodeDeliveryApiFilterByIdData = {
-    id: string;
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/umbraco/management/api/v1/no-code-delivery-api/filter/{id}';
 };
 
-export type DeleteNoCodeDeliveryApiFilterByIdResponse = (string);
+export type DeleteNoCodeDeliveryApiFilterByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: ProblemDetails;
+    /**
+     * The resource is protected and requires an authentication token
+     */
+    401: unknown;
+    /**
+     * The authenticated user does not have access to this resource
+     */
+    403: unknown;
+};
+
+export type DeleteNoCodeDeliveryApiFilterByIdError = DeleteNoCodeDeliveryApiFilterByIdErrors[keyof DeleteNoCodeDeliveryApiFilterByIdErrors];
+
+export type DeleteNoCodeDeliveryApiFilterByIdResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type PutNoCodeDeliveryApiFilterByIdData = {
-    id: string;
-    requestBody?: (UpdateFilterRequestModel);
+    body?: UpdateFilterRequestModel;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/umbraco/management/api/v1/no-code-delivery-api/filter/{id}';
 };
 
-export type PutNoCodeDeliveryApiFilterByIdResponse = (string);
+export type PutNoCodeDeliveryApiFilterByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: ProblemDetails;
+    /**
+     * The resource is protected and requires an authentication token
+     */
+    401: unknown;
+    /**
+     * The authenticated user does not have access to this resource
+     */
+    403: unknown;
+};
+
+export type PutNoCodeDeliveryApiFilterByIdError = PutNoCodeDeliveryApiFilterByIdErrors[keyof PutNoCodeDeliveryApiFilterByIdErrors];
+
+export type PutNoCodeDeliveryApiFilterByIdResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type GetNoCodeDeliveryApiSortData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/umbraco/management/api/v1/no-code-delivery-api/sort';
+};
+
+export type GetNoCodeDeliveryApiSortErrors = {
+    /**
+     * The resource is protected and requires an authentication token
+     */
+    401: unknown;
+    /**
+     * The authenticated user does not have access to this resource
+     */
+    403: unknown;
+};
+
+export type GetNoCodeDeliveryApiSortResponses = {
+    /**
+     * OK
+     */
+    200: SortListModel;
+};
+
+export type GetNoCodeDeliveryApiSortResponse = GetNoCodeDeliveryApiSortResponses[keyof GetNoCodeDeliveryApiSortResponses];
 
 export type PostNoCodeDeliveryApiSortData = {
-    requestBody?: (AddSortRequestModel);
+    body?: AddSortRequestModel;
+    path?: never;
+    query?: never;
+    url: '/umbraco/management/api/v1/no-code-delivery-api/sort';
 };
 
-export type PostNoCodeDeliveryApiSortResponse = (string);
+export type PostNoCodeDeliveryApiSortErrors = {
+    /**
+     * Bad Request
+     */
+    400: ProblemDetails;
+    /**
+     * The resource is protected and requires an authentication token
+     */
+    401: unknown;
+    /**
+     * The authenticated user does not have access to this resource
+     */
+    403: unknown;
+};
 
-export type GetNoCodeDeliveryApiSortResponse = ((SortListModel));
+export type PostNoCodeDeliveryApiSortError = PostNoCodeDeliveryApiSortErrors[keyof PostNoCodeDeliveryApiSortErrors];
+
+export type PostNoCodeDeliveryApiSortResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type DeleteNoCodeDeliveryApiSortByIdData = {
-    id: string;
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/umbraco/management/api/v1/no-code-delivery-api/sort/{id}';
 };
 
-export type DeleteNoCodeDeliveryApiSortByIdResponse = (string);
+export type DeleteNoCodeDeliveryApiSortByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: ProblemDetails;
+    /**
+     * The resource is protected and requires an authentication token
+     */
+    401: unknown;
+    /**
+     * The authenticated user does not have access to this resource
+     */
+    403: unknown;
+};
+
+export type DeleteNoCodeDeliveryApiSortByIdError = DeleteNoCodeDeliveryApiSortByIdErrors[keyof DeleteNoCodeDeliveryApiSortByIdErrors];
+
+export type DeleteNoCodeDeliveryApiSortByIdResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type PutNoCodeDeliveryApiSortByIdData = {
-    id: string;
-    requestBody?: (UpdateSortRequestModel);
+    body?: UpdateSortRequestModel;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/umbraco/management/api/v1/no-code-delivery-api/sort/{id}';
 };
 
-export type PutNoCodeDeliveryApiSortByIdResponse = (string);
+export type PutNoCodeDeliveryApiSortByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: ProblemDetails;
+    /**
+     * The resource is protected and requires an authentication token
+     */
+    401: unknown;
+    /**
+     * The authenticated user does not have access to this resource
+     */
+    403: unknown;
+};
+
+export type PutNoCodeDeliveryApiSortByIdError = PutNoCodeDeliveryApiSortByIdErrors[keyof PutNoCodeDeliveryApiSortByIdErrors];
+
+export type PutNoCodeDeliveryApiSortByIdResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type ClientOptions = {
+    baseUrl: 'https://localhost:44346' | (string & {});
+};

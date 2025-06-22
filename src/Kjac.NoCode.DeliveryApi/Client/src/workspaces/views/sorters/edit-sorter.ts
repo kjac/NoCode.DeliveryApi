@@ -1,7 +1,7 @@
-import {UmbModalToken} from '@umbraco-cms/backoffice/modal';
-import {html, property, customElement, css, nothing, query} from '@umbraco-cms/backoffice/external/lit';
-import {umbFocus, UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import type {UmbModalContext, UmbModalExtensionElement} from '@umbraco-cms/backoffice/modal';
+import {UmbModalToken} from '@umbraco-cms/backoffice/modal';
+import {css, customElement, html, nothing, property, query} from '@umbraco-cms/backoffice/external/lit';
+import {umbFocus, UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import {UUIInputElement} from '@umbraco-cms/backoffice/external/uui';
 import {PrimitiveFieldTypeModel} from '../../../api';
 import {PACKAGE_ALIAS} from '../../../constants.ts';
@@ -56,7 +56,7 @@ export default class EditSorterModalElement
     super.connectedCallback();
     this._sorter = this.data?.sorter ?? {
       name: '',
-      fieldType: 'String',
+      fieldType: PrimitiveFieldTypeModel.STRING,
       propertyAlias: ''
     };
   }
@@ -168,7 +168,11 @@ export default class EditSorterModalElement
   }
 
   static styles = css`
-    uui-input, uui-label, umb-form-validation-message, small {
+    uui-input {
+      width: 100%;
+    }
+
+    uui-label, umb-form-validation-message, small {
       display: block;
     }
 

@@ -1,11 +1,11 @@
-import {UmbModalToken} from '@umbraco-cms/backoffice/modal';
-import {html, property, customElement, css, nothing, query, repeat, when} from '@umbraco-cms/backoffice/external/lit';
-import {umbFocus, UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import type {UmbModalContext, UmbModalExtensionElement} from '@umbraco-cms/backoffice/modal';
+import {UmbModalToken} from '@umbraco-cms/backoffice/modal';
+import {css, customElement, html, nothing, property, query, repeat, when} from '@umbraco-cms/backoffice/external/lit';
+import {umbFocus, UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import {UUIInputElement} from '@umbraco-cms/backoffice/external/uui';
 import {FilterMatchTypeModel, PrimitiveFieldTypeModel} from '../../../api';
 import {PACKAGE_ALIAS} from '../../../constants.ts';
-import {FilterDetails, FilterBase} from '../../models/filter.ts';
+import {FilterBase, FilterDetails} from '../../models/filter.ts';
 
 export type FilterModalData = {
   headline: string;
@@ -57,8 +57,8 @@ export default class EditFilterModalElement
     this._filter = this.data?.filter ?? {
       name: '',
       propertyAliases: [],
-      fieldType: 'String',
-      matchType: 'Exact'
+      fieldType: PrimitiveFieldTypeModel.STRING,
+      matchType: FilterMatchTypeModel.EXACT
     };
   }
 
@@ -208,7 +208,7 @@ export default class EditFilterModalElement
   private _fieldTypeChanged(ev: { target: { value: PrimitiveFieldTypeModel } }) {
     this._filter.fieldType = ev.target.value;
     if (this._filter.fieldType !== 'String') {
-      this._filter.matchType = 'Exact';
+      this._filter.matchType = FilterMatchTypeModel.EXACT;
     }
     this.requestUpdate();
   }
@@ -242,7 +242,11 @@ export default class EditFilterModalElement
   private _propertyAliasRequired = () => this._filter.propertyAliases.length === 0;
 
   static styles = css`
-    uui-input, uui-label, umb-form-validation-message, small {
+    uui-input {
+      width: 100%;
+    }
+
+    uui-label, umb-form-validation-message, small {
       display: block;
     }
 

@@ -3,13 +3,13 @@ import {UmbContextToken} from '@umbraco-cms/backoffice/context-api';
 import type {UmbControllerHost} from '@umbraco-cms/backoffice/controller-api';
 import {PACKAGE_ALIAS} from '../constants.ts';
 import {ClientModel, ClientsService, FilterListModel, FiltersService, SortersService, SortListModel} from '../api';
-import {tryExecuteAndNotify} from '@umbraco-cms/backoffice/resources';
+import {tryExecute} from '@umbraco-cms/backoffice/resources';
 import {LanguageService} from '@umbraco-cms/backoffice/external/backend-api';
 import {FilterBase, FilterDetails} from './models/filter.ts';
 import {SorterBase, SorterDetails} from './models/sorter.ts';
 import {ClientBase, ClientDetails} from './models/client.ts';
 
-export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
+export class WorkspaceContext extends UmbContextBase {
 
   private _filterListModel?: FilterListModel;
   private _sorterListModel?: SortListModel;
@@ -43,10 +43,10 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
   }
 
   async addFilter(filter: FilterBase) {
-    const {error} = await tryExecuteAndNotify(
+    const {error} = await tryExecute(
       this,
       FiltersService.postNoCodeDeliveryApiFilter({
-        requestBody: {
+        body: {
           name: filter.name,
           propertyAliases: filter.propertyAliases,
           filterMatchType: filter.matchType,
@@ -59,11 +59,13 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
   }
 
   async updateFilter(id: string, filter: FilterBase) {
-    const {error} = await tryExecuteAndNotify(
+    const {error} = await tryExecute(
       this,
       FiltersService.putNoCodeDeliveryApiFilterById({
-        id: id,
-        requestBody: {
+        path: {
+          id: id
+        },
+        body: {
           name: filter.name,
           propertyAliases: filter.propertyAliases
         }
@@ -78,9 +80,13 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
       throw new Error("Filter must have an ID to be deleted");
     }
 
-    const {error} = await tryExecuteAndNotify(
+    const {error} = await tryExecute(
       this,
-      FiltersService.deleteNoCodeDeliveryApiFilterById({id: filter.id})
+      FiltersService.deleteNoCodeDeliveryApiFilterById({
+        path: {
+          id: filter.id
+        }
+      })
     );
 
     return await this._reloadFiltersOnSuccess(!error);
@@ -108,10 +114,10 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
   }
 
   async addSorter(sorter: SorterBase) {
-    const {error} = await tryExecuteAndNotify(
+    const {error} = await tryExecute(
       this,
       SortersService.postNoCodeDeliveryApiSort({
-        requestBody: {
+        body: {
           name: sorter.name,
           propertyAlias: sorter.propertyAlias,
           primitiveFieldType: sorter.fieldType
@@ -123,11 +129,13 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
   }
 
   async updateSorter(id: string, sorter: SorterBase) {
-    const {error} = await tryExecuteAndNotify(
+    const {error} = await tryExecute(
       this,
       SortersService.putNoCodeDeliveryApiSortById({
-        id: id,
-        requestBody: {
+        path: {
+          id: id
+        },
+        body: {
           name: sorter.name,
           propertyAlias: sorter.propertyAlias
         }
@@ -142,9 +150,13 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
       throw new Error("Sorter must have an ID to be deleted");
     }
 
-    const {error} = await tryExecuteAndNotify(
+    const {error} = await tryExecute(
       this,
-      SortersService.deleteNoCodeDeliveryApiSortById({id: sorter.id})
+      SortersService.deleteNoCodeDeliveryApiSortById({
+        path: {
+          id: sorter.id
+        }
+      })
     );
 
     return await this._reloadSortersOnSuccess(!error);
@@ -152,7 +164,7 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
 
   async getClients() {
     if (!this._clients) {
-      const {data} = await tryExecuteAndNotify(this, ClientsService.getNoCodeDeliveryApiClient());
+      const {data} = await tryExecute(this, ClientsService.getNoCodeDeliveryApiClient());
       this._clients = data;
     }
     return this._clients?.map(clientModel => {
@@ -169,10 +181,10 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
   }
 
   async addClient(client: ClientBase) {
-    const {error} = await tryExecuteAndNotify(
+    const {error} = await tryExecute(
       this,
       ClientsService.postNoCodeDeliveryApiClient({
-        requestBody: {
+        body: {
           name: client.name,
           culture: client.culture,
           origin: client.origin,
@@ -186,11 +198,13 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
   }
 
   async updateClient(id: string, client: ClientBase) {
-    const {error} = await tryExecuteAndNotify(
+    const {error} = await tryExecute(
       this,
       ClientsService.putNoCodeDeliveryApiClientById({
-        id: id,
-        requestBody: {
+        path: {
+          id: id
+        },
+        body: {
           name: client.name,
           culture: client.culture,
           origin: client.origin,
@@ -208,16 +222,24 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
       throw new Error("Client must have an ID to be deleted");
     }
 
-    const {error} = await tryExecuteAndNotify(
+    const {error} = await tryExecute(
       this,
-      ClientsService.deleteNoCodeDeliveryApiClientById({id: client.id})
+      ClientsService.deleteNoCodeDeliveryApiClientById({
+        path: {
+          id: client.id
+        }
+      })
     );
 
     return await this._reloadClientsOnSuccess(!error);
   }
 
   async getLanguages() {
-    const {data} = await tryExecuteAndNotify(this, LanguageService.getLanguage({take: 100}));
+    const {data} = await tryExecute(this, LanguageService.getLanguage({
+      query: {
+        take: 100
+      }
+    }));
     return data?.items;
   }
 
@@ -226,7 +248,7 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
       return;
     }
 
-    const {data} = await tryExecuteAndNotify(this, FiltersService.getNoCodeDeliveryApiFilter());
+    const {data} = await tryExecute(this, FiltersService.getNoCodeDeliveryApiFilter());
     this._filterListModel = data;
   }
 
@@ -235,7 +257,7 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
       return;
     }
 
-    const {data} = await tryExecuteAndNotify(this, SortersService.getNoCodeDeliveryApiSort());
+    const {data} = await tryExecute(this, SortersService.getNoCodeDeliveryApiSort());
     this._sorterListModel = data;
   }
 

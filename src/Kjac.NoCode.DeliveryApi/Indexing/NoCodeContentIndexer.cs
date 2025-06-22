@@ -66,7 +66,7 @@ public sealed class NoCodeContentIndexer : IContentIndexHandler
             { Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.MultiUrlPicker, new MultiUrlPickerParser(jsonSerializer) },
             { Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.MarkdownEditor, new MarkdownParser() },
             { Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.ImageCropper, new ImageCropperParser(jsonSerializer) },
-            { Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TinyMce, new RichTextParser(jsonSerializer, _logger) },
+            { Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.RichText, new RichTextParser(jsonSerializer, _logger) },
         };
         _fallbackPropertyTypeParser = new FallbackParser();
     }

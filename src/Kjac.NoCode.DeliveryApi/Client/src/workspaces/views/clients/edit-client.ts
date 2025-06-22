@@ -195,7 +195,11 @@ export default class EditClientModalElement
   }
 
   static styles = css`
-    uui-input, uui-label, umb-form-validation-message, small {
+    uui-input {
+      width: 100%;
+    }
+
+    uui-label, umb-form-validation-message, small {
       display: block;
     }
 

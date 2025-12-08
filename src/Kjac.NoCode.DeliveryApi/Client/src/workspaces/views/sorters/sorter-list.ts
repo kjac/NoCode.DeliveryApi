@@ -63,7 +63,7 @@ export default class SortersWorkspaceViewElement extends UmbLitElement {
                   (sorter) => html`
                     <uui-table-row>
                       <uui-table-cell>
-                        <uui-icon name="icon-filter" aria-hidden="true"></uui-icon>
+                        <uui-icon name="icon-filter-arrows" aria-hidden="true"></uui-icon>
                       </uui-table-cell>
                       <uui-table-cell>${sorter.name}</uui-table-cell>
                       <uui-table-cell>${sorter.alias}</uui-table-cell>

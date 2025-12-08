@@ -1,8 +1,8 @@
 ﻿using System.Text;
+using System.Text.Json.Nodes;
 using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Services;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Umbraco.Cms.Api.Delivery.Controllers.Content;
 using Umbraco.Cms.Core.DeliveryApi;
@@ -23,7 +23,7 @@ internal sealed class SwaggerDocumentationFilter : IParameterFilter
         _sortService = sortService;
     }
 
-    public void Apply(OpenApiParameter parameter, ParameterFilterContext context)
+    public void Apply(IOpenApiParameter parameter, ParameterFilterContext context)
     {
         if (context.ParameterInfo.Member.DeclaringType?.Implements<ContentApiControllerBase>() is not true)
         {
@@ -41,7 +41,7 @@ internal sealed class SwaggerDocumentationFilter : IParameterFilter
         }
     }
 
-    private void AddFilterDocumentation(OpenApiParameter parameter)
+    private void AddFilterDocumentation(IOpenApiParameter parameter)
     {
         IEnumerable<FilterModel> filters = _filterService.GetAllAsync().GetAwaiter().GetResult();
         foreach (FilterModel filter in filters)
@@ -49,29 +49,20 @@ internal sealed class SwaggerDocumentationFilter : IParameterFilter
             parameter.Examples[$"No-Code: {filter.Name}"] = new OpenApiExample
             {
                 Description = FilterDescription(filter),
-                Value = new OpenApiArray
-                {
-                    new OpenApiString($"{filter.Alias}:{FilterValue(filter)}")
-                }
+                Value = new JsonArray($"{filter.Alias}:{FilterValue(filter)}")
             };
         }
 
         parameter.Examples["No-Code: Is Not"] = new OpenApiExample
         {
             Description = "This filter ensures that a specific content item (identified by its key) is excluded from the query result.",
-            Value = new OpenApiArray
-            {
-                new OpenApiString($"nocIsNot:content-key")
-            }
+            Value = new JsonArray("nocIsNot:content-key")
         };
 
         parameter.Examples["No-Code: Level"] = new OpenApiExample
         {
             Description = $"This filter allows for querying the content level in the content tree.\n\nUse whole numbers (integers) only.\n\nMultiple values can be supplied, causing the filter to perform a logical OR between these values. Use a comma to separate values, e.g. `nocLevel:2,3,4`.{RangeSyntaxDescription()}{ReadMoreDescription()}",
-            Value = new OpenApiArray
-            {
-                new OpenApiString($"nocLevel:2")
-            }
+            Value = new JsonArray("nocLevel:2")
         };
     }
 
@@ -125,7 +116,7 @@ internal sealed class SwaggerDocumentationFilter : IParameterFilter
             _ => throw new ArgumentOutOfRangeException(nameof(FilterModel.IndexFieldType))
         };
 
-    private void AddSortDocumentation(OpenApiParameter parameter)
+    private void AddSortDocumentation(IOpenApiParameter parameter)
     {
         IEnumerable<SortModel> sorts = _sortService.GetAllAsync().GetAwaiter().GetResult();
         foreach (SortModel sort in sorts)
@@ -133,19 +124,13 @@ internal sealed class SwaggerDocumentationFilter : IParameterFilter
             parameter.Examples[$"No-Code: {sort.Name} (ascending)"] = new OpenApiExample
             {
                 Description = SortDescription(sort),
-                Value = new OpenApiArray
-                {
-                    new OpenApiString($"{sort.Alias}:asc")
-                }
+                Value = new JsonArray($"{sort.Alias}:asc")
             };
 
             parameter.Examples[$"No-Code: {sort.Name} (descending)"] = new OpenApiExample
             {
                 Description = SortDescription(sort),
-                Value = new OpenApiArray
-                {
-                    new OpenApiString($"{sort.Alias}:desc")
-                }
+                Value = new JsonArray($"{sort.Alias}:desc")
             };
         }
     }

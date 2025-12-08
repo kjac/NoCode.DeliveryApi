@@ -9,7 +9,7 @@ using Umbraco.Cms.Infrastructure.Migrations.Upgrade;
 
 namespace Kjac.NoCode.DeliveryApi.Migrations;
 
-public sealed class MigrationComponent : IComponent
+public sealed class MigrationComponent : IAsyncComponent
 {
     private readonly ICoreScopeProvider _coreScopeProvider;
     private readonly IMigrationPlanExecutor _migrationPlanExecutor;
@@ -28,7 +28,7 @@ public sealed class MigrationComponent : IComponent
         _runtimeState = runtimeState;
     }
 
-    public void Initialize()
+    public async Task InitializeAsync(bool isRestarting, CancellationToken cancellationToken)
     {
         if (_runtimeState.Level < RuntimeLevel.Run)
         {
@@ -41,10 +41,9 @@ public sealed class MigrationComponent : IComponent
             .To<AddInitialTablesMigration>("FDD108ED-4E13-4CA8-BF14-EBB2ADD48C9E");
 
         var upgrader = new Upgrader(migrationPlan);
-        upgrader.Execute(_migrationPlanExecutor, _coreScopeProvider, _keyValueService);
+        await upgrader.ExecuteAsync(_migrationPlanExecutor, _coreScopeProvider, _keyValueService);
     }
 
-    public void Terminate()
-    {
-    }
+    public Task TerminateAsync(bool isRestarting, CancellationToken cancellationToken)
+        => Task.CompletedTask;
 }

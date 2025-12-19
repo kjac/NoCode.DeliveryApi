@@ -27,8 +27,9 @@ internal static partial class ClientModelExtensions
                 "{path}" => contentRoute.Path,
                 "{start-id}" => contentRoute.StartItem.Id.ToString(),
                 "{start-path}" => contentRoute.StartItem.Path,
-                "{culture}" => culture
-            })
+                "{culture}" => culture,
+                _ => null
+            } ?? string.Empty)
             .Replace("//", "/")
             .TrimStart(Umbraco.Cms.Core.Constants.CharArrays.ForwardSlash);
 

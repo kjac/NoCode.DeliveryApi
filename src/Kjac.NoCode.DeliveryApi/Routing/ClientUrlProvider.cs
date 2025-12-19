@@ -2,6 +2,7 @@
 using Kjac.NoCode.DeliveryApi.Models;
 using Kjac.NoCode.DeliveryApi.Services;
 using Umbraco.Cms.Core.DeliveryApi;
+using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.DeliveryApi;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.PublishedCache;
@@ -17,18 +18,24 @@ internal sealed class ClientUrlProvider : IUrlProvider
     private readonly IClientService _clientService;
     private readonly IApiContentRouteBuilder _apiContentRouteBuilder;
     private readonly IUmbracoContextAccessor _umbracoContextAccessor;
-    private readonly ILocalizationService _localizationService;
+    private readonly ILanguageService _languageService;
 
-    public ClientUrlProvider(IClientService clientService, IApiContentRouteBuilder apiContentRouteBuilder, IUmbracoContextAccessor umbracoContextAccessor, ILocalizationService localizationService)
+    public string Alias => "NoCodeDeliveryApiClientUrlProvider";
+
+    public ClientUrlProvider(IClientService clientService, IApiContentRouteBuilder apiContentRouteBuilder, IUmbracoContextAccessor umbracoContextAccessor, ILanguageService languageService)
     {
         _clientService = clientService;
         _apiContentRouteBuilder = apiContentRouteBuilder;
         _umbracoContextAccessor = umbracoContextAccessor;
-        _localizationService = localizationService;
+        _languageService = languageService;
     }
 
     public UrlInfo? GetUrl(IPublishedContent content, UrlMode mode, string? culture, Uri current)
         => null;
+
+    // TODO: Use this to support "additional preview URLs"
+    public Task<UrlInfo?> GetPreviewUrlAsync(IContent content, string? culture, string? segment)
+        => Task.FromResult<UrlInfo?>(null);
 
     public IEnumerable<UrlInfo> GetOtherUrls(int id, Uri current)
     {
@@ -48,7 +55,7 @@ internal sealed class ClientUrlProvider : IUrlProvider
         }
 
         var variesByCulture = content.ContentType.VariesByCulture();
-        var correctlyCasedCultures = _localizationService.GetAllLanguages().Select(language => language.IsoCode).ToArray();
+        var correctlyCasedCultures = _languageService.GetAllAsync().GetAwaiter().GetResult().Select(language => language.IsoCode).ToArray();
         var cultures = variesByCulture
             ? correctlyCasedCultures.Where(content.Cultures.Keys.InvariantContains).ToArray()
             : correctlyCasedCultures;
@@ -68,7 +75,7 @@ internal sealed class ClientUrlProvider : IUrlProvider
             return applicableClients.Select(client =>
             {
                 var url = client.ParsePublishedUrl(content.Key, route, culture);
-                return new UrlInfo(url, true, culture);
+                return UrlInfo.AsUrl(url, Alias, culture, true);
             }).ToArray();
         }).ToArray();
     }

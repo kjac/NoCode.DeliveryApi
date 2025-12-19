@@ -7,10 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kjac.NoCode.DeliveryApi", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kjac.NoCode.DeliveryApi.Site", "src\Kjac.NoCode.DeliveryApi.Site\Kjac.NoCode.DeliveryApi.Site.csproj", "{6766845F-8F12-4805-BDB1-3DCECEB2778B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{20840517-0943-47FA-9814-8243BAE5E90B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{20840517-0943-47FA-9814-8243BAE5E90B}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 		umbraco-marketplace.json = umbraco-marketplace.json
+		global.json = global.json
+		src\Kjac.NoCode.DeliveryApi\Client\package.json = src\Kjac.NoCode.DeliveryApi\Client\package.json
 	EndProjectSection
 EndProject
 Global

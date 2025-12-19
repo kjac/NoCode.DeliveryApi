@@ -4,14 +4,14 @@ using Umbraco.Cms.Infrastructure.Migrations;
 
 namespace Kjac.NoCode.DeliveryApi.Migrations.V1_0;
 
-internal sealed class AddInitialTablesMigration : MigrationBase
+internal sealed class AddInitialTablesMigration : AsyncMigrationBase
 {
     public AddInitialTablesMigration(IMigrationContext context)
         : base(context)
     {
     }
 
-    protected override void Migrate()
+    protected override Task MigrateAsync()
     {
         if (TableExists(TableNames.FilterTable) is false)
         {
@@ -27,5 +27,7 @@ internal sealed class AddInitialTablesMigration : MigrationBase
         {
             Create.Table<ClientDto>().Do();
         }
+
+        return Task.CompletedTask;
     }
 }

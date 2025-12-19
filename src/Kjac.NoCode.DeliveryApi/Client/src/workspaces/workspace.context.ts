@@ -2,7 +2,7 @@ import {UmbContextBase} from '@umbraco-cms/backoffice/class-api';
 import {UmbContextToken} from '@umbraco-cms/backoffice/context-api';
 import type {UmbControllerHost} from '@umbraco-cms/backoffice/controller-api';
 import {PACKAGE_ALIAS} from '../constants.ts';
-import {ClientModel, ClientsService, FilterListModel, FiltersService, SortersService, SortListModel} from '../api';
+import {ClientModel, Clients, FilterListModel, Filters, Sorters, SortListModel} from '../api';
 import {tryExecute} from '@umbraco-cms/backoffice/resources';
 import {LanguageService} from '@umbraco-cms/backoffice/external/backend-api';
 import {FilterBase, FilterDetails} from './models/filter.ts';
@@ -45,7 +45,7 @@ export class WorkspaceContext extends UmbContextBase {
   async addFilter(filter: FilterBase) {
     const {error} = await tryExecute(
       this,
-      FiltersService.postNoCodeDeliveryApiFilter({
+      Filters.postNoCodeDeliveryApiFilter({
         body: {
           name: filter.name,
           propertyAliases: filter.propertyAliases,
@@ -61,7 +61,7 @@ export class WorkspaceContext extends UmbContextBase {
   async updateFilter(id: string, filter: FilterBase) {
     const {error} = await tryExecute(
       this,
-      FiltersService.putNoCodeDeliveryApiFilterById({
+      Filters.putNoCodeDeliveryApiFilterById({
         path: {
           id: id
         },
@@ -82,7 +82,7 @@ export class WorkspaceContext extends UmbContextBase {
 
     const {error} = await tryExecute(
       this,
-      FiltersService.deleteNoCodeDeliveryApiFilterById({
+      Filters.deleteNoCodeDeliveryApiFilterById({
         path: {
           id: filter.id
         }
@@ -116,7 +116,7 @@ export class WorkspaceContext extends UmbContextBase {
   async addSorter(sorter: SorterBase) {
     const {error} = await tryExecute(
       this,
-      SortersService.postNoCodeDeliveryApiSort({
+      Sorters.postNoCodeDeliveryApiSort({
         body: {
           name: sorter.name,
           propertyAlias: sorter.propertyAlias,
@@ -131,7 +131,7 @@ export class WorkspaceContext extends UmbContextBase {
   async updateSorter(id: string, sorter: SorterBase) {
     const {error} = await tryExecute(
       this,
-      SortersService.putNoCodeDeliveryApiSortById({
+      Sorters.putNoCodeDeliveryApiSortById({
         path: {
           id: id
         },
@@ -152,7 +152,7 @@ export class WorkspaceContext extends UmbContextBase {
 
     const {error} = await tryExecute(
       this,
-      SortersService.deleteNoCodeDeliveryApiSortById({
+      Sorters.deleteNoCodeDeliveryApiSortById({
         path: {
           id: sorter.id
         }
@@ -164,7 +164,7 @@ export class WorkspaceContext extends UmbContextBase {
 
   async getClients() {
     if (!this._clients) {
-      const {data} = await tryExecute(this, ClientsService.getNoCodeDeliveryApiClient());
+      const {data} = await tryExecute(this, Clients.getNoCodeDeliveryApiClient());
       this._clients = data;
     }
     return this._clients?.map(clientModel => {
@@ -183,7 +183,7 @@ export class WorkspaceContext extends UmbContextBase {
   async addClient(client: ClientBase) {
     const {error} = await tryExecute(
       this,
-      ClientsService.postNoCodeDeliveryApiClient({
+      Clients.postNoCodeDeliveryApiClient({
         body: {
           name: client.name,
           culture: client.culture,
@@ -200,7 +200,7 @@ export class WorkspaceContext extends UmbContextBase {
   async updateClient(id: string, client: ClientBase) {
     const {error} = await tryExecute(
       this,
-      ClientsService.putNoCodeDeliveryApiClientById({
+      Clients.putNoCodeDeliveryApiClientById({
         path: {
           id: id
         },
@@ -224,7 +224,7 @@ export class WorkspaceContext extends UmbContextBase {
 
     const {error} = await tryExecute(
       this,
-      ClientsService.deleteNoCodeDeliveryApiClientById({
+      Clients.deleteNoCodeDeliveryApiClientById({
         path: {
           id: client.id
         }
@@ -248,7 +248,7 @@ export class WorkspaceContext extends UmbContextBase {
       return;
     }
 
-    const {data} = await tryExecute(this, FiltersService.getNoCodeDeliveryApiFilter());
+    const {data} = await tryExecute(this, Filters.getNoCodeDeliveryApiFilter());
     this._filterListModel = data;
   }
 
@@ -257,7 +257,7 @@ export class WorkspaceContext extends UmbContextBase {
       return;
     }
 
-    const {data} = await tryExecute(this, SortersService.getNoCodeDeliveryApiSort());
+    const {data} = await tryExecute(this, Sorters.getNoCodeDeliveryApiSort());
     this._sorterListModel = data;
   }
 
